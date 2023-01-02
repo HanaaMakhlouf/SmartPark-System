@@ -22,6 +22,7 @@ int num_of_rows;
     @Column(name = "num_of_parking_spots")
     int parking_spots;
 
+
     public ParkingLots() {
 
     }

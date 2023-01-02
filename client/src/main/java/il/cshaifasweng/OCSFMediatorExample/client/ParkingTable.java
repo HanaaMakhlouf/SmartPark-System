@@ -1,47 +1,17 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-        import il.cshaifasweng.OCSFMediatorExample.entities.Message;
+        import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
         import il.cshaifasweng.OCSFMediatorExample.entities.ParkingLots;
-        import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
         import javafx.collections.FXCollections;
         import javafx.collections.ObservableList;
         import javafx.fxml.FXML;
-        import javafx.scene.control.Button;
         import javafx.scene.control.TableColumn;
         import javafx.scene.control.TableView;
-        import javafx.scene.control.TextField;
         import javafx.scene.control.cell.PropertyValueFactory;
-        import javafx.stage.Stage;
         import org.greenrobot.eventbus.EventBus;
         import org.greenrobot.eventbus.Subscribe;
         import java.io.IOException;
-        import java.time.LocalTime;
-        import java.time.format.DateTimeFormatter;
 
-        import il.cshaifasweng.OCSFMediatorExample.entities.Message;
-        import il.cshaifasweng.OCSFMediatorExample.entities.ParkingLots;
-        import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
-        import javafx.animation.Animation;
-        import javafx.animation.KeyFrame;
-        import javafx.animation.Timeline;
-        import javafx.application.Platform;
-        import javafx.collections.FXCollections;
-        import javafx.collections.ObservableList;
-        import javafx.event.ActionEvent;
-        import javafx.fxml.FXML;
-        import javafx.fxml.FXMLLoader;
-        import javafx.scene.Node;
-        import javafx.scene.Parent;
-        import javafx.scene.Scene;
-        import javafx.scene.control.*;
-        import javafx.scene.control.cell.PropertyValueFactory;
-        import javafx.stage.Stage;
-        import javafx.stage.StageStyle;
-        import javafx.util.Duration;
-        import org.greenrobot.eventbus.EventBus;
-        import org.greenrobot.eventbus.Subscribe;
-
-        import java.io.IOException;
         import java.util.List;
 
 public class ParkingTable {
@@ -68,19 +38,19 @@ public class ParkingTable {
         parkingLotsList=parkingLotsList1;
     }
     @FXML
-    void initData(List<ParkingLots> parkingLotsList1){
+    public void initData(List<ParkingLots> parkingLotsList1){
 
         parkingLotsList=parkingLotsList1;
     }
 
 
     @FXML
-    void setMsgId(int msgId1){
+    public void setMsgId(int msgId1){
         this.msgId = msgId1;
     }
 
     @FXML
-    void setTable(){
+    public void setTable(){
         try {
             Message message = new Message(msgId, "print parking table");
             SimpleClient.getClient().sendToServer(message);
@@ -93,7 +63,6 @@ public class ParkingTable {
     @Subscribe
     public void setTableviewFromServer(showTableEvent event)
     {
-
         idpark.setCellValueFactory(new PropertyValueFactory<>("id"));
         rowsnum.setCellValueFactory(new PropertyValueFactory<>("num_of_rows"));
         spots.setCellValueFactory(new PropertyValueFactory<>("parking_spots"));

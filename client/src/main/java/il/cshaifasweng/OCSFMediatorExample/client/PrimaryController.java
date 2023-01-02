@@ -2,44 +2,45 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 
 import java.io.IOException;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Message;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.ParkingLots;
 import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class PrimaryController {
 
+	@FXML
+	private Button changepricesbtn;
 
+	@FXML
+	private Button showBtn;
 
-		@FXML
-		private Button changepricesbtn;
+	@FXML
+	private Button showpBtn;
 
-		@FXML
-		private Button showBtn;
+	@FXML // fx:id="idTxt"
+	private TextField idTxt; // Value injected by FXMLLoader
 
-		@FXML
-		private Button showpBtn;
+	@FXML // fx:id="loginBtn"
+	private Button loginBtn; // Value injected by FXMLLoader
+
+	@FXML // fx:id="passTxt"
+	private TextField passTxt; // Value injected by FXMLLoader
+
 	private int msgId;
 
 
@@ -51,7 +52,49 @@ public class PrimaryController {
 		stage.show();
 	}
 
+	@Subscribe
+	public void logInProcess(logInEvent event) throws IOException {
+		if (event.isResult()){
+			Platform.runLater(new Runnable() {
+				public void run() {
+//					Stage stage = new Stage(StageStyle.UNDECORATED);
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("userBoundary.fxml"));
+					Stage stage = new Stage();
+					try {
+						stage.setScene(new Scene(loader.load()));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					stage.show();
+				}
+			});
+		}
+		else {
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+			Platform.runLater(() -> {
+				Alert alert = new Alert(Alert.AlertType.ERROR, "Incorrect User or Password");
+				alert.setTitle("Error!");
+				alert.setHeaderText("Error:");
+				alert.show();
+			});
+		}
+	}
 
+
+	@FXML
+	void login(ActionEvent event) throws IOException {
+		String userId = idTxt.getText();
+		String userPass = passTxt.getText();
+		logInMessage msg = new logInMessage(userId,userPass);
+		SimpleClient.getClient().sendToServer(msg);
+//		FXMLLoader loader = new FXMLLoader(getClass().getResource("userBoundary.fxml"));
+//		System.out.println("here1");
+//		Stage stage = new Stage();
+//		System.out.println("here2");
+//		stage.setScene(new Scene(loader.load()));
+//		System.out.println("here3");
+//		stage.show();
+	}
 
 //IMPORTANT
 	public void showpTable(ActionEvent actionEvent) throws IOException {
@@ -68,7 +111,7 @@ public class PrimaryController {
 	}
 
 	//might be helpful in the future, dont delete
-	//		Parent tableViewParent = FXMLLoader.load(getClass().getResource("pricesTable.fxml"));
+//		Parent tableViewParent = FXMLLoader.load(getClass().getResource("pricesTable.fxml"));
 //		Scene tableViewScene = new Scene(tableViewParent);
 //		Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 //		window.setScene(tableViewScene);
@@ -120,13 +163,8 @@ public class PrimaryController {
 	@FXML
 	void initialize() {
 		EventBus.getDefault().register(this);
-
 		msgId=0;
-
-
-
 // Set the items of the TableView to the ObservableList
-
 		try {
 			Message message = new Message(msgId, "add client");
 			SimpleClient.getClient().sendToServer(message);

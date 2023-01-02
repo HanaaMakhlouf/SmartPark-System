@@ -1,6 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Message;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -31,15 +31,25 @@ public class Changeprices {
     @FXML
     void updateDB(ActionEvent event) throws IOException {
         int fullmember = -1;
-        if(!fullmem.getText().isEmpty())  fullmember = Integer.parseInt(fullmem.getText());
+        if(!fullmem.getText().isEmpty())  {
+            fullmember = Integer.parseInt(fullmem.getText());
+        }
         int inadva = -1;
-        if(!inadv.getText().isEmpty())  inadva = Integer.parseInt(inadv.getText());
+        if(!inadv.getText().isEmpty()){
+            inadva = Integer.parseInt(inadv.getText());
+        }
         int inpla = -1;
-        if(!inplace.getText().isEmpty()) inpla = Integer.parseInt(inplace.getText());
+        if(!inplace.getText().isEmpty()){
+            inpla = Integer.parseInt(inplace.getText());
+        }
         int regm = -1;
-        if(!regmultiple.getText().isEmpty()) regm = Integer.parseInt(regmultiple.getText());
+        if(!regmultiple.getText().isEmpty()){
+            regm = Integer.parseInt(regmultiple.getText());
+        }
         int regs = -1;
-        if(!regsingle.getText().isEmpty()) regs = Integer.parseInt(regsingle.getText());
+        if(!regsingle.getText().isEmpty()){
+            regs = Integer.parseInt(regsingle.getText());
+        }
         fullmem.clear();
         inadv.clear();
         inplace.clear();
@@ -49,13 +59,6 @@ public class Changeprices {
         Message msg = new Message(arr);
         msg.setMessage("attempt to change data");
         SimpleClient.getClient().sendToServer(msg);
-
-
-
-
-
-
-
     }
 
 }
