@@ -4,6 +4,9 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
+import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.ParkingLots;
 import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
 import javafx.application.Platform;
