@@ -1,6 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
-
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SignUpMessage;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
 
@@ -18,7 +18,11 @@ public class SimpleClient extends AbstractClient {
 	protected void handleMessageFromServer(Object msg) {
 		if(msg instanceof logInMessage){
 			logInMessage message = (logInMessage) msg;
-			EventBus.getDefault().post(new logInEvent(message.isResult()));
+			EventBus.getDefault().post(new logInEvent(message.getResult()));
+		}else if(msg instanceof SignUpMessage){
+			SignUpMessage message = (SignUpMessage) msg;
+			EventBus.getDefault().post(new SignUpEvent(message.getResult()));
+
 		}
 		else {
 			Message message = (Message) msg;

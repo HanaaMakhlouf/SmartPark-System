@@ -1,4 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +11,11 @@ import javax.persistence.criteria.Root;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 //import il.cshaifasweng.OCSFMediatorExample.
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SignUpMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
+import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
+import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SignUpValidator;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -72,10 +76,11 @@ private static List<Prices> data2 = new ArrayList<>();
         session.save(u2);
         session.save(u3);
         session.flush();
-//        session.getTransaction().commit();
+        //   session.getTransaction().commit();
     }
 
-        private static void initializeData() throws Exception {
+    private static void initializeData() throws Exception {
+        session.beginTransaction();
         initParkingLots();
         initPrices();
         initUser();
@@ -124,8 +129,21 @@ private static List<Prices> data2 = new ArrayList<>();
             if(msg instanceof logInMessage){
                 logInMessage message = (logInMessage) msg;
                 List<User> userList = getAll(User.class);
-                logInController logInCntrl = new logInController(message.getUserId(),message.getUserPass());
+                LogInController logInCntrl = new LogInController(message.getUserId(),message.getUserPass());
                 message.setResult(logInCntrl.validateUserCredentials(userList));
+                client.sendToClient(message);
+            }else if(msg instanceof SignUpMessage){
+                SignUpMessage message = (SignUpMessage) msg;
+                List<User> userList = getAll(User.class);
+                SignUpValidator validator = new SignUpValidator(message.getUserId(),message.getUserPass(), message.getUserEmail());
+                message.setResult(validator.validateUserCredentials(userList));
+                if(message.getResult()){
+                    session.beginTransaction();
+                    User newUser = new User(Integer.parseInt(message.getUserId()), message.getUserEmail(), message.getUserPass());
+                    session.save(newUser);
+                    session.flush();
+                    session.getTransaction().commit();
+                }
                 client.sendToClient(message);
             }
         } catch (Exception e) {
@@ -145,7 +163,7 @@ private static List<Prices> data2 = new ArrayList<>();
 
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "b7badeeb95glcd")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "Polkmn7220@")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM parkinglotss");
                         data.clear();
@@ -176,7 +194,7 @@ private static List<Prices> data2 = new ArrayList<>();
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
 
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "b7badeeb95glcd")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "Polkmn7220@")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
                         data2.clear();
@@ -243,9 +261,9 @@ private static List<Prices> data2 = new ArrayList<>();
         System.out.println("Server says : hi ");
         try {
         session = sessionFactory.openSession();
-        session.beginTransaction();
 
-        initializeData();
+
+       // initializeData();
 
         } catch (HibernateException e)
         {
