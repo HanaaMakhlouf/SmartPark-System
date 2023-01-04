@@ -10,7 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +35,8 @@ public class SignUp {
 
     @FXML
     private Button signUpBtn;
+    @FXML
+    private Label status;
 
     @FXML
     void SignUp(ActionEvent event) throws IOException {
@@ -47,15 +51,11 @@ public class SignUp {
     public void SignUpProcess(SignUpEvent event) throws IOException {
         if (event.getResult()){
             Platform.runLater(new Runnable() {
+                @Override
                 public void run() {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
-                    Stage stage = new Stage();
-                    try {
-                        stage.setScene(new Scene(loader.load(),640,480));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    stage.show();
+                    status.setText("Sign Up Successful!");
+                    status.setTextFill(Paint.valueOf("#228c22"));
+
                 }
             });
         }
