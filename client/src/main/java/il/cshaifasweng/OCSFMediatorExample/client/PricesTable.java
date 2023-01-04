@@ -1,6 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
 import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
