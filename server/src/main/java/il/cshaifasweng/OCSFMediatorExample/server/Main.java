@@ -269,8 +269,5 @@ private static List<Prices> data2 = new ArrayList<>();
         {
             e.printStackTrace();
         }
-
-
-
     }
 }
