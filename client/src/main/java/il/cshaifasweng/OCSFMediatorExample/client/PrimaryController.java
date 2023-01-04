@@ -4,8 +4,6 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.ParkingLots;
 import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
 import javafx.application.Platform;
@@ -16,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

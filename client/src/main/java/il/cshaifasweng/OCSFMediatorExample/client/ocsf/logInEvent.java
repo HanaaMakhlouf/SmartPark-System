@@ -1,11 +1,11 @@
-package il.cshaifasweng.OCSFMediatorExample.client;
+package il.cshaifasweng.OCSFMediatorExample.client.ocsf;
 import javafx.event.ActionEvent;
 
-public class SignUpEvent extends ActionEvent{
+public class logInEvent extends ActionEvent{
 
     boolean result;
 
-    public SignUpEvent(boolean result) {
+    public logInEvent(boolean result) {
         this.result = result;
     }
 
