@@ -9,8 +9,8 @@ il\cshaifasweng\OCSFMediatorExample\client\showTableEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleChatClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Changeprices.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
-il\cshaifasweng\OCSFMediatorExample\client\logInEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PricesTable.class
+il\cshaifasweng\OCSFMediatorExample\client\ocsf\logInEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\NewSubscriberEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\Navigate.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class
