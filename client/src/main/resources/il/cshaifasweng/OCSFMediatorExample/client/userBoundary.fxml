@@ -5,14 +5,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.Boundaries.UserBoundaryController">
    <children>
-      <Label layoutX="196.0" layoutY="177.0" prefHeight="31.0" prefWidth="209.0" text="HELLO THERE">
+      <Label layoutX="200.0" layoutY="14.0" prefHeight="46.0" prefWidth="261.0" text="Welcome To CPS">
          <font>
-            <Font size="31.0" />
+            <Font size="23.0" />
          </font>
       </Label>
       <Button fx:id="backBtn" layoutX="509.0" layoutY="336.0" mnemonicParsing="false" onAction="#goBack" text="Back" />
+      <Button fx:id="enterWithOrderBt" layoutX="83.0" layoutY="79.0" mnemonicParsing="false" onAction="#enterWithOrder" prefHeight="25.0" prefWidth="165.0" text="Enter With Order" />
+      <Button fx:id="enterWithOutOrderBt" layoutX="83.0" layoutY="142.0" mnemonicParsing="false" onAction="#enterWithOutOrder" prefHeight="25.0" prefWidth="165.0" text="Enter WithOut Order" />
+      <Button fx:id="inAdvancedOrderBt" layoutX="83.0" layoutY="200.0" mnemonicParsing="false" onAction="#inAdvancedOrder" prefHeight="25.0" prefWidth="165.0" text="In Advanced Order" />
+      <Button fx:id="registerAsAMemberBt" layoutX="83.0" layoutY="254.0" mnemonicParsing="false" onAction="#registerAsAMember" prefHeight="25.0" prefWidth="165.0" text="Register As A Member" />
+      <Button fx:id="trackBt" layoutX="343.0" layoutY="142.0" mnemonicParsing="false" onAction="#trackOrder" prefHeight="25.0" prefWidth="165.0" text=" Track Order" />
+      <Button fx:id="complaintBt" layoutX="343.0" layoutY="200.0" mnemonicParsing="false" onAction="#sendComplaint" prefHeight="25.0" prefWidth="165.0" text="Send Complaint" />
+      <Button fx:id="exitBt" layoutX="343.0" layoutY="254.0" mnemonicParsing="false" onAction="#exitParkingLot" prefHeight="25.0" prefWidth="165.0" text="Exit Parking Lot" />
+      <Button fx:id="cancelBt" layoutX="343.0" layoutY="79.0" mnemonicParsing="false" onAction="#cancelOrder" prefHeight="25.0" prefWidth="165.0" text="Cancel Order " />
    </children>
 </AnchorPane>
