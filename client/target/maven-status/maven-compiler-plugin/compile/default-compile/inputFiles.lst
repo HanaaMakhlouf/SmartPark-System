@@ -1,15 +1,17 @@
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PricesTableController.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SimpleChatClient.java
+C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\showptableEvent.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SecondaryController.java
+C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PrimaryController.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Changeprices.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ParkingTable.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\showTableEvent.java
+C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterWithOutOrder.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\SignUp.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\MainPage.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PricesTable.java
-C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvancedOrder.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\MessageEvent.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\AbstractClient.java
@@ -17,6 +19,8 @@ C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorE
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\NewSubscriberEvent.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\logInEvent.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\Navigate.java
+C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\StandardMembership.java
+C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\RegisterAsAMember.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Main.java
 C:\java\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\UserBoundaryController.java

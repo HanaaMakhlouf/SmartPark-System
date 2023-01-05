@@ -13,14 +13,19 @@ import java.io.Serializable;
 @Entity
 @Table(name = "parkinglotss")
 public class ParkingLots implements Serializable {
-@Id
-@Column(name = "id")
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-int id;
-@Column(name = "num_of_rows")
-int num_of_rows;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int id;
+    @Column(name = "Name ")
+    String name;
+
+    @Column(name = "num_of_rows")
+    int num_of_rows;
+
     @Column(name = "num_of_parking_spots")
     int parking_spots;
+
 
 
     public ParkingLots() {
@@ -47,14 +52,17 @@ int num_of_rows;
         this.parking_spots = parking_spots;
     }
 
-    public ParkingLots(int id, int num_of_rows, int parking_spots) {
+    public ParkingLots(int id , int num_of_rows,  int parking_spots, String name) {
         this.id = id;
         this.num_of_rows = num_of_rows;
+        this.name = name;
         this.parking_spots = parking_spots;
     }
 
-    public ParkingLots(int num_of_rows) {
+
+    public ParkingLots(int num_of_rows, String name) {
         this.num_of_rows = num_of_rows;
+        this.name = name;
         this.parking_spots = 9*num_of_rows;
     }
 
