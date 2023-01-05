@@ -15,7 +15,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SignUpMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
-import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SignUpValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -52,15 +52,15 @@ private static List<Prices> data2 = new ArrayList<>();
     }
 
     private static void initParkingLots(){
-        ParkingLots p1 = new ParkingLots(2);
-        ParkingLots p2 = new ParkingLots(5);
-        ParkingLots p3 = new ParkingLots(7);
+        ParkingLots p1 = new ParkingLots(2 ,"Haifa Port" );
+        ParkingLots p2 = new ParkingLots(5, "Carmel");
+        ParkingLots p3 = new ParkingLots(7, "Central Station");
 
         session.save(p1);
         session.save(p2);
         session.save(p3);
         session.flush();
-//        session.getTransaction().commit();
+        //session.getTransaction().commit();
     }
     private static void initPrices() {
         Prices pr1 = new Prices(20, 30, 40, 50, 60);
@@ -169,14 +169,16 @@ private static List<Prices> data2 = new ArrayList<>();
                         data.clear();
                         while (rs.next()) {
                             // Add the data to the ObservableList
-                            data.add(new ParkingLots(rs.getInt("id"), rs.getInt("num_of_rows"), rs.getInt("num_of_parking_spots")));
+                            data.add(new ParkingLots(rs.getInt("id"), rs.getInt("num_of_rows"),
+                                    rs.getInt("num_of_parking_spots") , rs.getString("Name")));
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
 // Set the items of the TableView to the ObservableList
                     for (ParkingLots p : data) {
-                        System.out.println("id is " + p.getId() + "num of rows is " + p.getNum_of_rows() + "num of spots is" + p.getParking_spots());
+                        System.out.println("id is " + p.getId() + "num of rows is " + p.getNum_of_rows() +
+                                "num of spots is" + p.getParking_spots());
 
                     }
                     System.out.println("we here");

@@ -13,8 +13,29 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "Orders")
 public class Order {
-    int id;
-    Car car;
+    @Id
+    @Column(name = "id")
+    private int id;
+    @Column(name = "Car Number")
+    private String carNumber;
+    @Column(name = "Email")
+    private  String email ;
+    @Column(name = "Leaving Minutes")
+    private String leavingMinutes ;
+    @Column(name = "Leaving Date")
+    private String leavingDate ;
+    @Column(name = "Leaving Hours")
+    private String leavingHours ;
+
+    public Order(String carNumber, String email, String leavingMinutes, String leavingDate, String leavingHours) {
+        this.carNumber = carNumber;
+        this.email = email;
+        this.leavingMinutes = leavingMinutes;
+        this.leavingDate = leavingDate;
+        this.leavingHours = leavingHours;
+    }
 
 }

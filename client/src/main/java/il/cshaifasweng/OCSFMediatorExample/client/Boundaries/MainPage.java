@@ -73,7 +73,7 @@ public class MainPage {
                         currentWindow.show();
                         UserBoundaryController user = tableViewParent.getController();
                         user.setUser(idTxt.getText());
-                        System.out.println(idTxt.getText());
+                       // System.out.println(idTxt.getText());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
