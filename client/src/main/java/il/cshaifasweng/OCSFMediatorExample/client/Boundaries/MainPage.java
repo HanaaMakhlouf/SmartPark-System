@@ -1,6 +1,7 @@
 
 package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
+import il.cshaifasweng.OCSFMediatorExample.client.PricesTable;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
@@ -13,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.Subscribe;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.time.format.DateTimeFormatter;
 
 import javafx.application.Platform;
@@ -62,12 +64,16 @@ public class MainPage {
         if (event.getResult()){
             Platform.runLater(new Runnable() {
                 public void run() {
-                    Parent tableViewParent = null;
+                    FXMLLoader tableViewParent = null;
                     try {
-                        tableViewParent = FXMLLoader.load(getClass().getResource("../userBoundary.fxml"));
-                        Scene tableViewScene = new Scene(tableViewParent);
+                        tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
+                        Scene tableViewScene = new Scene(tableViewParent.load());
+
                         currentWindow.setScene(tableViewScene);
                         currentWindow.show();
+                        UserBoundaryController user = tableViewParent.getController();
+                        user.setUser(idTxt.getText());
+                        System.out.println(idTxt.getText());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
