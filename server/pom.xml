@@ -42,7 +42,13 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>5.4.24.Final</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>il.cshaifasweng.OCSFMediatorExample</groupId>
+            <artifactId>client</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

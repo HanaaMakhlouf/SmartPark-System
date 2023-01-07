@@ -1,7 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.entities.Messages;
 
 public class InAdvanceOrderMessage {
-    private int id;
     private String carNumber;
     private String leavingMinutes ;
     private String leavingDate ;
@@ -16,9 +15,8 @@ public class InAdvanceOrderMessage {
 
 
 
-    public InAdvanceOrderMessage(int id, String carNumber, String leavingMinutes, String leavingDate
+    public InAdvanceOrderMessage(String carNumber, String leavingMinutes, String leavingDate
             , String leavingHours, String arrivingMinutes, String arrivingDate, String arrivingHours, String pLot) {
-        this.id = id;
         this.carNumber = carNumber;
         this.leavingMinutes = leavingMinutes;
         this.leavingDate = leavingDate;
@@ -74,9 +72,6 @@ public class InAdvanceOrderMessage {
         return parkingLot;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public void setCarNumber(String carNumber) {
         this.carNumber = carNumber;
@@ -95,9 +90,6 @@ public class InAdvanceOrderMessage {
         this.leavingHours = leavingHours;
     }
 
-    public int getId() {
-        return id;
-    }
 
     public String getCarNumber() {
         return carNumber;

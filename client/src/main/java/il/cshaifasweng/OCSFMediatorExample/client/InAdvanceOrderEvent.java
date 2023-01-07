@@ -15,7 +15,7 @@ public class InAdvanceOrderEvent extends ActionEvent{
         this.result = result;
     }
 
-    public boolean isResult() {
+    public boolean getResult() {
         return result;
     }
 
