@@ -14,5 +14,6 @@ il\cshaifasweng\OCSFMediatorExample\entities\ParkingLotEmployee.class
 il\cshaifasweng\OCSFMediatorExample\entities\Car.class
 il\cshaifasweng\OCSFMediatorExample\entities\Spot.class
 il\cshaifasweng\OCSFMediatorExample\entities\Complaint.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\InAdvanceOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\InAdvanceOrderEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\SignUpMessage.class

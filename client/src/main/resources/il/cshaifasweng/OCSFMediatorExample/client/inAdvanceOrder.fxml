@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="582.0" prefWidth="637.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder">
    <children>
       <Label layoutX="153.0" layoutY="81.0" prefHeight="25.0" prefWidth="101.0" text="Car Number">
@@ -41,12 +40,6 @@
          </items>
       </MenuButton>
       <DatePicker fx:id="arrivalDate" layoutX="290.0" layoutY="198.0" prefHeight="25.0" prefWidth="175.0" />
-      <Label layoutX="154.0" layoutY="446.0" prefHeight="25.0" prefWidth="101.0" text="Email">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Label>
-      <TextField fx:id="email" layoutX="289.0" layoutY="446.0" prefHeight="25.0" prefWidth="175.0" />
       <Label layoutX="154.0" layoutY="315.0" prefHeight="25.0" prefWidth="101.0" text="Leaving  Date">
          <font>
             <Font size="16.0" />
@@ -100,5 +93,6 @@
             <Font size="17.0" />
          </font>
       </Button>
+      <Label fx:id="status" layoutX="288.0" layoutY="478.0" prefHeight="17.0" prefWidth="174.0" />
    </children>
 </AnchorPane>

@@ -55,7 +55,6 @@ public class SignUp {
                 public void run() {
                     status.setText("Sign Up Successful!");
                     status.setTextFill(Paint.valueOf("#228c22"));
-
                 }
             });
         }
