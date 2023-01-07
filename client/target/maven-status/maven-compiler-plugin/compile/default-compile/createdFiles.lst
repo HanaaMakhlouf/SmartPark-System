@@ -7,6 +7,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Changeprices.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
 il\cshaifasweng\OCSFMediatorExample\client\PricesTable.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\RegisterAsAMember.class
+il\cshaifasweng\OCSFMediatorExample\client\Boundaries\CancelOrder.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\logInEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\InAdvanceOrderEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\NewSubscriberEvent.class
@@ -25,6 +26,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\SignUp.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleChatClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder.class
+il\cshaifasweng\OCSFMediatorExample\client\Boundaries\SendComplaint.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\StandardMembership.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class

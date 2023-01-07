@@ -49,8 +49,8 @@ public class UserBoundaryController {
     }
 
     @FXML
-    void cancelOrder(ActionEvent event) {
-
+    void cancelOrder(ActionEvent event) throws IOException{
+        Navigate.navigate(event , "../cancelOrder.fxml");
     }
 
     @FXML
@@ -84,8 +84,8 @@ public class UserBoundaryController {
     }
 
     @FXML
-    void sendComplaint(ActionEvent event) {
-
+    void sendComplaint(ActionEvent event) throws IOException {
+        Navigate.navigate(event , "../sendComplaint.fxml");
     }
 
     @FXML
