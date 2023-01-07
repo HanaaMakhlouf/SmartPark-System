@@ -55,7 +55,6 @@ public class SignUp {
                 public void run() {
                     status.setText("Sign Up Successful!");
                     status.setTextFill(Paint.valueOf("#228c22"));
-
                 }
             });
         }
@@ -72,6 +71,7 @@ public class SignUp {
 
     @FXML
     void initialize() {
+
         EventBus.getDefault().register(this);
     }
 

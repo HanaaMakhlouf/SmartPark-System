@@ -59,8 +59,8 @@ public class UserBoundaryController {
     }
 
     @FXML
-    void enterWithOutOrder(ActionEvent event) {
-
+    void enterWithOutOrder(ActionEvent event)throws IOException {
+        Navigate.navigate(event , "../enterWithOutOrder.fxml");
     }
 
     @FXML
@@ -75,12 +75,12 @@ public class UserBoundaryController {
 
     @FXML
     void inAdvancedOrder(ActionEvent event)throws IOException {
-        Navigate.navigate(event , "../inAdvancedOrder.fxml");
+        Navigate.navigate(event , "../inAdvanceOrder.fxml");
     }
 
     @FXML
-    void registerAsAMember(ActionEvent event) {
-
+    void registerAsAMember(ActionEvent event) throws IOException {
+        Navigate.navigate(event , "../registerAsAMember.fxml");
     }
 
     @FXML
