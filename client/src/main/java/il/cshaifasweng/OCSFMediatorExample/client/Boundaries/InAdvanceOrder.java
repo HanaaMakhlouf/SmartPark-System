@@ -51,7 +51,29 @@ public class InAdvanceOrder {
     private Label status;
     private int id;
 
+    public DatePicker getArrivalDate() {
+        return arrivalDate;
+    }
 
+    public MenuButton getArrivalHours() {
+        return arrivalHours;
+    }
+
+    public MenuButton getArrivalMinutes() {
+        return arrivalMinutes;
+    }
+
+    public DatePicker getLeavingDate() {
+        return leavingDate;
+    }
+
+    public MenuButton getLeavingHours() {
+        return leavingHours;
+    }
+
+    public MenuButton getLeavingMinutes() {
+        return leavingMinutes;
+    }
 
     @FXML
     void initialize() {
@@ -79,14 +101,34 @@ public class InAdvanceOrder {
         String leavingHour = leavingHours.getText() ;
         String leavingDate1 = leavingDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         String leavingMinute = leavingMinutes.getText();
-        InAdvanceOrderMessage inAdvanceOrderMessage = new InAdvanceOrderMessage(id,carNumb,leavingMinute,leavingDate1
+        InAdvanceOrderMessage inAdvanceOrderMessage = new InAdvanceOrderMessage(carNumb,leavingMinute,leavingDate1
         ,leavingHour,arrivalMinute,arrivalDate1,arrivalHour,pLot);
         SimpleClient.getClient().sendToServer(inAdvanceOrderMessage);
     }
+    @Subscribe
+    public void PayProcess(InAdvanceOrderEvent event) throws IOException {
+        if (event.getResult()){
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Navigate.navigate(event,"../payInAdvanceOrder.fxml");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+        else {
+            status.setText("Could not place order. Please pick another time.");
+            status.setTextFill(Paint.valueOf("#df2c14"));
+            };
+        }
+
 
     @Subscribe
     public void CalculateFeeAndPay(InAdvanceOrderEvent event) throws IOException{
-        if (event.isResult()){
+        if (event.getResult()){
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {

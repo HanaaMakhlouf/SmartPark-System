@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
@@ -77,10 +78,12 @@ private static List<Prices> data2 = new ArrayList<>();
     }
 
     private static void initInAdvanceOrders() {
-        InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567","15","02/06/2023"
-                ,"16","15","02/06/2023","12","Haifa Port");
-        session.save(inAdvanceOrder1);
-        session.flush();
+        for(int i=0; i<20; i++) {
+            InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567", "15", "02/06/2023"
+                    , "16", "15", "02/06/2023", "12", "Haifa Port");
+            session.save(inAdvanceOrder1);
+            session.flush();
+        }
 //        session.getTransaction().commit();
     }
 
@@ -100,6 +103,7 @@ private static List<Prices> data2 = new ArrayList<>();
         initParkingLots();
         initPrices();
         initUser();
+         initInAdvanceOrders();
         session.getTransaction().commit();
     }
 
@@ -190,18 +194,20 @@ private static List<Prices> data2 = new ArrayList<>();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
                 String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
 
+                List<ParkingLots> parkingLots = getAll(ParkingLots.class);
+                List<InAdvanceOrder> inAdvanceOrders = getAll(InAdvanceOrder.class);
                 InAdvanceOrderValidator validator= new InAdvanceOrderValidator(carNum,parkingLot,arrivingHours
-                        ,arrivingDate,arrivingMin,leavingHours,leavingDate,leavingMin);
+                        ,arrivingDate,arrivingMin,leavingHours,leavingDate,leavingMin, parkingLots, inAdvanceOrders);
                 message.setResult(validator.validateOrder());
-                if(message.isResult()){
-                    session.beginTransaction();
-                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,leavingMin,leavingDate
-                            ,leavingHours,arrivingMin,arrivingDate, arrivingHours, parkingLot);
-                    session.save(newInAdvance);
-                    session.flush();
-                    session.getTransaction().commit();
-                    message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
-                }
+//                if(message.isResult()){
+//                    session.beginTransaction();
+//                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,leavingMin,leavingDate
+//                            ,leavingHours,arrivingMin,arrivingDate, arrivingHours, parkingLot);
+//                    session.save(newInAdvance);
+//                    session.flush();
+//                    session.getTransaction().commit();
+//                    message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
+//                }
                 client.sendToClient(message);
             }
         } catch (Exception e) {
@@ -221,7 +227,7 @@ private static List<Prices> data2 = new ArrayList<>();
 
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "b7badeeb95glcd")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM parkinglotss");
                         data.clear();
@@ -254,7 +260,7 @@ private static List<Prices> data2 = new ArrayList<>();
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
 
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "b7badeeb95glcd")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
                         data2.clear();
@@ -323,7 +329,7 @@ private static List<Prices> data2 = new ArrayList<>();
         session = sessionFactory.openSession();
 
 
-//        initializeData();
+        initializeData();
 
         } catch (HibernateException e)
         {
