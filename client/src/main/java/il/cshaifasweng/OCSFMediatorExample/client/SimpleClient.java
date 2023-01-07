@@ -23,7 +23,6 @@ public class SimpleClient extends AbstractClient {
 		}else if(msg instanceof SignUpMessage){
 			SignUpMessage message = (SignUpMessage) msg;
 			EventBus.getDefault().post(new SignUpEvent(message.getResult()));
-
 		}
 		else {
 			Message message = (Message) msg;

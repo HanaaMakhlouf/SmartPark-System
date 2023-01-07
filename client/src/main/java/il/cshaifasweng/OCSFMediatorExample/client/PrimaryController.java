@@ -54,7 +54,7 @@ public class PrimaryController {
 
 	@Subscribe
 	public void logInProcess(logInEvent event) throws IOException {
-		if (event.getResult()){
+		if (event.getResult() != 0){
 			Platform.runLater(new Runnable() {
 				public void run() {
 //					Stage stage = new Stage(StageStyle.UNDECORATED);

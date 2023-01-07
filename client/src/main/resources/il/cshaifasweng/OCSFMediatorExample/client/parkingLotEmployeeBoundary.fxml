@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ParkingLotEmployeeController">
+   <children>
+      <Button fx:id="setupBtn" layoutX="263.0" layoutY="116.0" mnemonicParsing="false" onAction="#setup" text="Setup" />
+      <Button fx:id="saveSpotBtn" layoutX="211.0" layoutY="220.0" mnemonicParsing="false" onAction="#saveParkingSpot" prefHeight="25.0" prefWidth="151.0" text="Save a parking spot" />
+      <Button fx:id="registerUnavailableSpotBtn" layoutX="223.0" layoutY="165.0" mnemonicParsing="false" onAction="#registerUnavailableSpot" prefHeight="25.0" prefWidth="127.0" text="Register unavaliable" />
+      <Button fx:id="sendToAltBtn" layoutX="198.0" layoutY="275.0" mnemonicParsing="false" onAction="#sendToAltPark" text="Send to alternative parking lot" />
+      <Text fontSmoothingType="LCD" layoutX="166.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Employee's workspace">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Text>
+      <Button fx:id="goBackBtn" layoutX="487.0" layoutY="336.0" mnemonicParsing="false" onAction="#goBack" prefHeight="35.0" prefWidth="64.0" text="Back" />
+   </children>
+</AnchorPane>

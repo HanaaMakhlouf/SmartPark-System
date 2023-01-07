@@ -43,6 +43,10 @@ private static List<Prices> data2 = new ArrayList<>();
         configuration.addAnnotatedClass(ParkingLots.class);
         configuration.addAnnotatedClass(Prices.class);
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(ParkingLotEmployee.class);
+        configuration.addAnnotatedClass(Manager.class);
+        configuration.addAnnotatedClass(GeneralManager.class);
+        configuration.addAnnotatedClass(CustomerServiceEmployee.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -78,12 +82,63 @@ private static List<Prices> data2 = new ArrayList<>();
         session.flush();
         //   session.getTransaction().commit();
     }
+    private static void initParkingLotEmployee(){
+        ParkingLotEmployee u1 = new ParkingLotEmployee(111222333,"employee1@gmail.com",
+                "111222333",1);
+        ParkingLotEmployee u2 = new ParkingLotEmployee(444555666,"employee2@gmail.com",
+                "444555666",2);
+        ParkingLotEmployee u3 = new ParkingLotEmployee(777888999,"employee3@gmail.com",
+                "777888999",3);
+        session.save(u1);
+        session.save(u2);
+        session.save(u3);
+        session.flush();
+       // session.getTransaction().commit();
+    }
 
+    private static void initManagers(){
+        Manager u1 = new Manager(111111333,"manager1@gmail.com",
+                "111111333",1);
+        Manager u2 = new Manager(444444666,"manager2@gmail.com",
+                "444444666",2);
+        Manager u3 = new Manager(777777999,"manager3@gmail.com",
+                "777777999",3);
+        session.save(u1);
+        session.save(u2);
+        session.save(u3);
+        session.flush();
+        // session.getTransaction().commit();
+    }
+
+    private static void initGeneralManager(){
+        GeneralManager u1 = new GeneralManager(999999999,"bigBoss@gmail.com", "999");
+        session.save(u1);
+        session.flush();
+        // session.getTransaction().commit();
+    }
+
+    private static void initCustomerServiceEmployee(){
+        CustomerServiceEmployee u1 = new CustomerServiceEmployee(111111111,"CSemployee1@gmail.com",
+                "111111111");
+        CustomerServiceEmployee u2 = new CustomerServiceEmployee(222222222,"CSemployee2@gmail.com",
+                "222222222");
+        CustomerServiceEmployee u3 = new CustomerServiceEmployee(333333333,"CSemployee3@gmail.com",
+                "333333333");
+        session.save(u1);
+        session.save(u2);
+        session.save(u3);
+        session.flush();
+        // session.getTransaction().commit();
+    }
     private static void initializeData() throws Exception {
         session.beginTransaction();
-        initParkingLots();
-        initPrices();
-        initUser();
+//        initParkingLots();
+//        initPrices();
+//        initUser();
+//        initParkingLotEmployee();
+//        initManagers();
+//        initGeneralManager();
+//        initCustomerServiceEmployee();
         session.getTransaction().commit();
     }
 
@@ -129,8 +184,12 @@ private static List<Prices> data2 = new ArrayList<>();
             if(msg instanceof logInMessage){
                 logInMessage message = (logInMessage) msg;
                 List<User> userList = getAll(User.class);
+                List<Manager> managerList = getAll(Manager.class);
+                List<ParkingLotEmployee> employeeList = getAll(ParkingLotEmployee.class);
+                List<GeneralManager> gmList = getAll(GeneralManager.class);
+                List<CustomerServiceEmployee> cs_employeeListgetAll= getAll(CustomerServiceEmployee.class);
                 LogInController logInCntrl = new LogInController(message.getUserId(),message.getUserPass());
-                message.setResult(logInCntrl.validateUserCredentials(userList));
+                message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll));
                 client.sendToClient(message);
             }else if(msg instanceof SignUpMessage){
                 SignUpMessage message = (SignUpMessage) msg;
@@ -263,7 +322,7 @@ private static List<Prices> data2 = new ArrayList<>();
         session = sessionFactory.openSession();
 
 
-       // initializeData();
+        initializeData();
 
         } catch (HibernateException e)
         {

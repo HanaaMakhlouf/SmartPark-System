@@ -5,13 +5,13 @@ import java.io.Serializable;
 public class logInMessage implements Serializable {
     String userId;
     String userPass;
-    boolean result;
+    int result;
 
-    public void setResult(boolean result) {
+    public void setResult(int result) {
         this.result = result;
     }
 
-    public boolean getResult() {
+    public int getResult() {
         return result;
     }
 
