@@ -1,6 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.entities.Messages;
 
-public class InAdvanceOrderMessage {
+import java.io.Serializable;
+
+public class InAdvanceOrderMessage implements Serializable {
     private String carNumber;
     private String leavingMinutes ;
     private String leavingDate ;

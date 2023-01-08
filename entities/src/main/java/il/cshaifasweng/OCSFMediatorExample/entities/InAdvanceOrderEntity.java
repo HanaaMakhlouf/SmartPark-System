@@ -38,6 +38,78 @@ public class InAdvanceOrderEntity{
         this.parkingLotName = parkingLotName;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
+    }
+
+    public void setLeavingMinutes(String leavingMinutes) {
+        this.leavingMinutes = leavingMinutes;
+    }
+
+    public void setLeavingDate(String leavingDate) {
+        this.leavingDate = leavingDate;
+    }
+
+    public void setLeavingHours(String leavingHours) {
+        this.leavingHours = leavingHours;
+    }
+
+    public void setArrivalMinutes(String arrivalMinutes) {
+        this.arrivalMinutes = arrivalMinutes;
+    }
+
+    public void setArrivalDate(String arrivalDate) {
+        this.arrivalDate = arrivalDate;
+    }
+
+    public void setArrivalHours(String arrivalHours) {
+        this.arrivalHours = arrivalHours;
+    }
+
+    public void setParkingLotName(String parkingLotName) {
+        this.parkingLotName = parkingLotName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getCarNumber() {
+        return carNumber;
+    }
+
+    public String getLeavingMinutes() {
+        return leavingMinutes;
+    }
+
+    public String getLeavingDate() {
+        return leavingDate;
+    }
+
+    public String getLeavingHours() {
+        return leavingHours;
+    }
+
+    public String getArrivalMinutes() {
+        return arrivalMinutes;
+    }
+
+    public String getArrivalDate() {
+        return arrivalDate;
+    }
+
+    public String getArrivalHours() {
+        return arrivalHours;
+    }
+
+    public String getParkingLotName() {
+        return parkingLotName;
+    }
+
     public InAdvanceOrderEntity() {
 
     }
