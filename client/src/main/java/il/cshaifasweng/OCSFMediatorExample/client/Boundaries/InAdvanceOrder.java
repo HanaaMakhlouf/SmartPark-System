@@ -14,6 +14,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.format.DateTimeFormatter;
 
 public class InAdvanceOrder {
@@ -80,13 +81,21 @@ public class InAdvanceOrder {
       EventBus.getDefault().register(this);
        // MenuButton
         for(int i = 0 ; i<24 ; i++) {
+//            MenuItem menuItem1 = new MenuItem(String.valueOf(i));
+//            MenuItem menuItem2 = new MenuItem(String.valueOf(i));
             arrivalHours.getItems().addAll(new MenuItem(String.valueOf(i)));
+//            menuItem1.setOnAction(e -> {
+//                arrivalHours.setText(String.valueOf(0));
+//            });
             leavingHours.getItems().addAll(new MenuItem(String.valueOf(i)));
-
         }
         for(int i = 0 ; i<60 ; i+=5) {
+//            MenuItem menuItem1 = new MenuItem(String.valueOf(i));
+//            MenuItem menuItem2 = new MenuItem(String.valueOf(i));
             arrivalMinutes.getItems().addAll(new MenuItem(String.valueOf(i)));
+//            menuItem1.setOnAction(this::setArrivalMin);
             leavingMinutes.getItems().addAll(new MenuItem(String.valueOf(i)));
+//            menuItem2.setOnAction(this::setLeavingMin);
         }
     }
 
@@ -126,27 +135,27 @@ public class InAdvanceOrder {
         }
 
 
-    @Subscribe
-    public void CalculateFeeAndPay(InAdvanceOrderEvent event) throws IOException{
-        if (event.getResult()){
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-
-//                    status.setText("Order");
-//                    status.setTextFill(Paint.valueOf("#228c22"));
-
-                }
-            });
-        }
-        else {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-            Platform.runLater(() -> {
-                status.setText("Order creation was unsuccessful!");
-                status.setTextFill(Paint.valueOf("#228c22"));
-            });
-        }
-    }
+//    @Subscribe
+//    public void CalculateFeeAndPay(InAdvanceOrderEvent event) throws IOException{
+//        if (event.getResult()){
+//            Platform.runLater(new Runnable() {
+//                @Override
+//                public void run() {
+//
+////                    status.setText("Order");
+////                    status.setTextFill(Paint.valueOf("#228c22"));
+//
+//                }
+//            });
+//        }
+//        else {
+//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+//            Platform.runLater(() -> {
+//                status.setText("Order creation was unsuccessful!");
+//                status.setTextFill(Paint.valueOf("#228c22"));
+//            });
+//        }
+//    }
 
     @FXML
     void back(ActionEvent event) throws IOException {

@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -96,8 +97,22 @@ public class UserBoundaryController {
 }
 
 
+//   MIGHT NEED IN THE FUTURE
 
-
+//        FXMLLoader tableViewParent = null;
+//        try {
+//            tableViewParent = new FXMLLoader(getClass().getResource("../inAdvanceOrder.fxml"));
+//            Scene tableViewScene = new Scene(tableViewParent.load());
+//            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+//            window.setScene(tableViewScene);
+//            window.show();
+//            InAdvanceOrder inAdvanceOrder = tableViewParent.getController();
+//            inAdvanceOrder.setUp();
+////            user.setUser(idTxt.getText());
+//            // System.out.println(idTxt.getText());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 
 

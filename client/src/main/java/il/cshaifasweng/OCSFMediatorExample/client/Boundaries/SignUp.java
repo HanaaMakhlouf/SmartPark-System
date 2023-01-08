@@ -71,7 +71,6 @@ public class SignUp {
 
     @FXML
     void initialize() {
-
         EventBus.getDefault().register(this);
     }
 
