@@ -132,16 +132,7 @@ public class PrimaryController {
 	}
 
 
-	@Subscribe
-	public void getStarterData(NewSubscriberEvent event) {
-		try {
-			Message message = new Message(msgId, "send Submitters IDs");
-			SimpleClient.getClient().sendToServer(message);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 
 	@Subscribe
 	public void errorEvent(ErrorEvent event){

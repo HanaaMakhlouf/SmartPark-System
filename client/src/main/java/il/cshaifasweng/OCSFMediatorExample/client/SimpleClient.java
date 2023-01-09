@@ -1,11 +1,15 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.AdminMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SignUpMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
 import org.greenrobot.eventbus.EventBus;
 
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
+
+import java.util.ArrayList;
 
 public class SimpleClient extends AbstractClient {
 	
@@ -20,10 +24,23 @@ public class SimpleClient extends AbstractClient {
 		if(msg instanceof logInMessage){
 			logInMessage message = (logInMessage) msg;
 			EventBus.getDefault().post(new logInEvent(message.getResult()));
-		}else if(msg instanceof SignUpMessage){
+		}
+
+
+		else if(msg instanceof SignUpMessage){
 			SignUpMessage message = (SignUpMessage) msg;
 			EventBus.getDefault().post(new SignUpEvent(message.getResult()));
 		}
+
+
+		else if(msg instanceof AdminMessage) {
+			AdminMessage message = (AdminMessage) msg;
+			ArrayList<Subscriber> lst = message.getLst();
+			EventBus.getDefault().post(new showSubsForAdminEvent(lst));
+		}
+
+
+
 		else {
 			Message message = (Message) msg;
 			if (message.getMessage().equals("update submitters IDs")) {

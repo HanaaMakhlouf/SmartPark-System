@@ -66,6 +66,12 @@ public class MainPage {
                 public void run() {
                     FXMLLoader tableViewParent = null;
                     try {
+                        if(event.getResult() == 6) {  tableViewParent = new FXMLLoader(getClass().getResource("../admin.fxml"));
+                            Scene tableViewScene = new Scene(tableViewParent.load());
+                            currentWindow.setScene(tableViewScene);
+                            currentWindow.show();
+                            CustomerServiceEmployeeController cs_employee = tableViewParent.getController();
+                            cs_employee.setCS_employee(idTxt.getText()); }
                         if(event.getResult() == 5) {
                             tableViewParent = new FXMLLoader(getClass().getResource("../customerServiceEmployeeBoundary.fxml"));
                             Scene tableViewScene = new Scene(tableViewParent.load());

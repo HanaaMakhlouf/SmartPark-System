@@ -12,13 +12,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
+import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SignUpMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.InAdvanceOrderMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
@@ -36,7 +34,7 @@ private Message serverMSG;
 private static SessionFactory sessionFactory = getSessionFactory();
 private static List<ParkingLots> data = new ArrayList<>();
 private static List<Prices> data2 = new ArrayList<>();
-
+private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
 
     public Main(int port) {
@@ -55,6 +53,7 @@ private static List<Prices> data2 = new ArrayList<>();
         configuration.addAnnotatedClass(Manager.class);
         configuration.addAnnotatedClass(GeneralManager.class);
         configuration.addAnnotatedClass(CustomerServiceEmployee.class);
+        configuration.addAnnotatedClass(Subscriber.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -78,7 +77,7 @@ private static List<Prices> data2 = new ArrayList<>();
         Prices pr1 = new Prices(20, 30, 40, 50, 60);
         session.save(pr1);
         session.flush();
-//        session.getTransaction().commit();
+
     }
 
     private static void initInAdvanceOrders() {
@@ -147,21 +146,18 @@ private static List<Prices> data2 = new ArrayList<>();
         session.save(u2);
         session.save(u3);
         session.flush();
-        // session.getTransaction().commit();
+
     }
     private static void initializeData() throws Exception {
         session.beginTransaction();
         initParkingLots();
         initPrices();
         initUser();
-         initInAdvanceOrders();
-//        initParkingLots();
-//        initPrices();
-//        initUser();
-//        initParkingLotEmployee();
-//        initManagers();
-//        initGeneralManager();
-//        initCustomerServiceEmployee();
+        initInAdvanceOrders();
+        initParkingLotEmployee();
+        initManagers();
+        initGeneralManager();
+        initCustomerServiceEmployee();
         session.getTransaction().commit();
     }
 
@@ -189,6 +185,8 @@ private static List<Prices> data2 = new ArrayList<>();
 //        List<User> users = session.createQuery(query).getResultList();
 //        return users;
 //    }
+
+
 
     public static <T> List<T> getAll(Class<T> object) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -243,11 +241,33 @@ private static List<Prices> data2 = new ArrayList<>();
                 if(message.getResult()){
                     session.beginTransaction();
                     User newUser = new User(Integer.parseInt(message.getUserId()), message.getUserEmail(), message.getUserPass());
+                    SubscribedClient connection = new SubscribedClient(client);
+                    connection.setClientID(Integer.parseInt(message.getUserId()));
+                    Subscriber s = new Subscriber(connection.getClientID());
+                    SubscribersList.add(connection);
                     session.save(newUser);
+                    session.flush();
+                    session.save(s);
                     session.flush();
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
+            }
+            else if(msg instanceof AdminMessage)
+            {
+                AdminMessage message = (AdminMessage) msg;
+                ArrayList<Subscriber> lst = new ArrayList<>();
+                for(SubscribedClient p : SubscribersList) {
+                    System.out.println("faaaat");
+                    Subscriber subscriber = new Subscriber(p.getClientID());
+                    lst.add(subscriber);
+
+                }
+                message.setLst(lst);
+                client.sendToClient(message);
+
+
+
             }
             else if(msg instanceof InAdvanceOrderMessage){
                 InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
@@ -285,7 +305,9 @@ private static List<Prices> data2 = new ArrayList<>();
                 if (request.isBlank()) {
                     message.setMessage("Error! we got an empty message");
                     client.sendToClient(message);
-                } else if (request.equals("print parking table")) {
+                }
+
+                else if (request.equals("print parking table")) {
 
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
