@@ -34,9 +34,9 @@
       </Label>
       <MenuButton fx:id="parkingLot" layoutX="288.0" layoutY="138.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="175.0" text="Choose Parking Lot">
          <items>
-            <MenuItem mnemonicParsing="false" text="Haifa Port" />
-            <MenuItem mnemonicParsing="false" text="Carmel" />
-             <MenuItem mnemonicParsing="false" text="Central Station" />
+            <MenuItem mnemonicParsing="false" text="Haifa Port" onAction="#HaifaPort"/>
+            <MenuItem mnemonicParsing="false" text="Carmel" onAction="#Carmel"/>
+             <MenuItem mnemonicParsing="false" text="Central Station" onAction="#Central_Station" />
          </items>
       </MenuButton>
       <DatePicker fx:id="arrivalDate" layoutX="290.0" layoutY="198.0" prefHeight="25.0" prefWidth="175.0" />

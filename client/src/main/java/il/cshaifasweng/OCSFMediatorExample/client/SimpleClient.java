@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.InAdvanceOrderMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SignUpMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
@@ -23,7 +24,10 @@ public class SimpleClient extends AbstractClient {
 		}else if(msg instanceof SignUpMessage){
 			SignUpMessage message = (SignUpMessage) msg;
 			EventBus.getDefault().post(new SignUpEvent(message.getResult()));
-
+		}
+		else if(msg instanceof InAdvanceOrderMessage){
+			InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
+			EventBus.getDefault().post(new InAdvanceOrderEvent(message.getResult()));
 		}
 		else {
 			Message message = (Message) msg;

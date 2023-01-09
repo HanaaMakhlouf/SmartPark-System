@@ -165,7 +165,6 @@ private static List<Prices> data2 = new ArrayList<>();
 
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-        System.out.println("handler here");
         try {
             if(msg instanceof logInMessage){
                 logInMessage message = (logInMessage) msg;
@@ -188,7 +187,6 @@ private static List<Prices> data2 = new ArrayList<>();
                 client.sendToClient(message);
             }
             else if(msg instanceof InAdvanceOrderMessage){
-                System.out.println("in advance here");
                 InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
 //                int tmpId = 208110130;
                 String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
@@ -209,6 +207,8 @@ private static List<Prices> data2 = new ArrayList<>();
 //                    session.getTransaction().commit();
 //                    message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
 //                }
+                System.out.println("about to send msg to client");
+                System.out.println(message.getResult());
                 client.sendToClient(message);
             }
         } catch (Exception e) {

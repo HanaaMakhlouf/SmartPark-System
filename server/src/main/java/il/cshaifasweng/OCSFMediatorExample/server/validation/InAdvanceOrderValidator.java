@@ -79,14 +79,13 @@ public class InAdvanceOrderValidator {
             }
         }
         int counter = 0;
-
-
         for(InAdvanceOrderEntity order : orders){
             String orderArrivalTime = order.getArrivalDate()+ " " + order.getArrivalHours() + ":" + order.getArrivalMinutes();
             String orderLeavingTime = order.getLeavingDate() + " " + order.getLeavingHours() + ":" + order.getLeavingMinutes();
             LocalDateTime orderArrival = LocalDateTime.parse(orderArrivalTime,formatter);
             LocalDateTime orderLeaving = LocalDateTime.parse(orderLeavingTime,formatter);
-            if(orderArrival.isBefore(dateTimeLeaving) || dateTimeArrival.isBefore(orderLeaving)){
+            if((orderArrival.isBefore(dateTimeLeaving) && !orderLeaving.isBefore(dateTimeArrival))
+                    || (dateTimeArrival.isBefore(orderLeaving) && !dateTimeLeaving.isBefore(orderArrival))){
                 counter++;
             }
         }

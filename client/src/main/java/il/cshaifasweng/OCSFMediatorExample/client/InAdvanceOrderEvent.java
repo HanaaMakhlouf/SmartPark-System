@@ -10,6 +10,10 @@ public class InAdvanceOrderEvent extends ActionEvent{
         this.fee = fee;
         this.result = result;
     }
+    public InAdvanceOrderEvent(boolean result) {
+        this.fee = 0;
+        this.result = result;
+    }
 
     public void setResult(boolean result) {
         this.result = result;
