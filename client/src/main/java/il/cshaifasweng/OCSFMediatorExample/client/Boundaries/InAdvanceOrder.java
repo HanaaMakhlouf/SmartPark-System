@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
 
 import il.cshaifasweng.OCSFMediatorExample.client.InAdvanceOrderEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.PayInAdvanceOrder;
 import il.cshaifasweng.OCSFMediatorExample.client.ParkingTable;
 import il.cshaifasweng.OCSFMediatorExample.client.SignUpEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
@@ -140,9 +141,9 @@ public class InAdvanceOrder {
 
     @Subscribe
     public void PayProcess(InAdvanceOrderEvent event) throws IOException {
-        System.out.println("im in PayProcess");
-        System.out.println(event.getResult());
-        if (event.getResult()){
+//        System.out.println("im in PayProcess");
+//        System.out.println(event.getResult());
+        if (event.getMessage().getResult()){
             Platform.runLater(new Runnable() {
                 public void run() {
 //                    try {
@@ -154,6 +155,18 @@ public class InAdvanceOrder {
                     Stage stage = new Stage();
                     try {
                         stage.setScene(new Scene(loader.load()));
+                        PayInAdvanceOrder payInAdvanceOrder = loader.getController();
+                        payInAdvanceOrder.setFee(event.getMessage().getFee());
+                        payInAdvanceOrder.setOrderNum("10"+event.getMessage().getOrderId());
+
+                        payInAdvanceOrder.setCarNumber(event.getMessage().getCarNumber());
+                        payInAdvanceOrder.setArrivingDate(event.getMessage().getArrivingDate());
+                        payInAdvanceOrder.setArrivingHours(event.getMessage().getArrivingHours());
+                        payInAdvanceOrder.setArrivingMinutes(event.getMessage().getArrivingMinutes());
+                        payInAdvanceOrder.setLeavingDate(event.getMessage().getLeavingDate());
+                        payInAdvanceOrder.setLeavingHours(event.getMessage().getLeavingHours());
+                        payInAdvanceOrder.setLeavingMinutes(event.getMessage().getLeavingMinutes());
+                        payInAdvanceOrder.setParkingLot(event.getMessage().getParkingLot());
                         stage.show();
                     } catch (IOException e) {
                         e.printStackTrace();

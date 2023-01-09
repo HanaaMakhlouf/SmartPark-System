@@ -1,9 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.InAdvanceOrderMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SignUpMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import org.greenrobot.eventbus.EventBus;
 
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
@@ -27,7 +24,11 @@ public class SimpleClient extends AbstractClient {
 		}
 		else if(msg instanceof InAdvanceOrderMessage){
 			InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
-			EventBus.getDefault().post(new InAdvanceOrderEvent(message.getResult()));
+			EventBus.getDefault().post(new InAdvanceOrderEvent(message));
+		}
+		else if(msg instanceof PayInAdvanceOrderMessage){
+			PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+			EventBus.getDefault().post(new PayInAdvanceOrderEvent(message));
 		}
 		else {
 			Message message = (Message) msg;

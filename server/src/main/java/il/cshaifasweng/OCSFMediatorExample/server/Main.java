@@ -15,10 +15,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SignUpMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.InAdvanceOrderMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
@@ -81,7 +78,10 @@ private static List<Prices> data2 = new ArrayList<>();
         for(int i=0; i<20; i++) {
             InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567", "15", "02/06/2023"
                     , "16", "15", "02/06/2023", "12", "Haifa Port");
+
             session.save(inAdvanceOrder1);
+            session.flush();
+            inAdvanceOrder1.setOrderID("10" + String.valueOf(inAdvanceOrder1.getId()));
             session.flush();
         }
 //        session.getTransaction().commit();
@@ -147,6 +147,7 @@ private static List<Prices> data2 = new ArrayList<>();
         CriteriaQuery<T> query = builder.createQuery(object);
         query.from(Prices.class);
         List<T> data = session.createQuery(query).getResultList();
+        session.getTransaction().commit();
         return data.get(0);
     }
 
@@ -188,7 +189,6 @@ private static List<Prices> data2 = new ArrayList<>();
             }
             else if(msg instanceof InAdvanceOrderMessage){
                 InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
-//                int tmpId = 208110130;
                 String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
                 String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
@@ -207,9 +207,29 @@ private static List<Prices> data2 = new ArrayList<>();
 //                    session.getTransaction().commit();
 //                    message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
 //                }
-                System.out.println("about to send msg to client");
-                System.out.println(message.getResult());
+//                System.out.println("about to send msg to client");
+//                System.out.println(message.getResult());
+                message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
+                message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
+//                message.setInAdvanceOrder(newInAdvance);
                 client.sendToClient(message);
+            }
+            else if(msg instanceof PayInAdvanceOrderMessage) {
+                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
+                InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,leavingMin,leavingDate
+                        ,leavingHours,arrivingMin,arrivingDate, arrivingHours, parkingLot);
+                session.beginTransaction();
+                session.save(newInAdvance);
+                session.flush();
+                newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
+                session.getTransaction().commit();
+                /* needed
+                make InAdvanceOrderEntity and add to DB
+                validate payment
+                 */
             }
         } catch (Exception e) {
             e.printStackTrace();

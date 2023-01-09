@@ -9,6 +9,8 @@ public class InAdvanceOrderEntity{
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "OrderID")
+    private String orderID;
     @Column(name = "CarNumber")
     private String carNumber;
     @Column(name = "LeavingMinutes")
@@ -36,6 +38,14 @@ public class InAdvanceOrderEntity{
         this.arrivalDate = arrivalDate;
         this.arrivalHours = arrivalHours;
         this.parkingLotName = parkingLotName;
+    }
+
+    public String getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(String orderID) {
+        this.orderID = orderID;
     }
 
     public void setId(int id) {

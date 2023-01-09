@@ -1,8 +1,22 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.InAdvanceOrderMessage;
 import javafx.event.ActionEvent;
-import javafx.event.EventTarget;
 
 public class InAdvanceOrderEvent extends ActionEvent{
+    InAdvanceOrderMessage message;
+
+    public InAdvanceOrderEvent(InAdvanceOrderMessage message) {
+        this.message = message;
+    }
+
+    public void setMessage(InAdvanceOrderMessage message) {
+        this.message = message;
+    }
+
+    public InAdvanceOrderMessage getMessage() {
+        return message;
+    }
+
     double fee;
     boolean result;
 
