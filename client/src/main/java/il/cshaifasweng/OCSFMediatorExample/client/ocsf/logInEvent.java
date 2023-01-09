@@ -3,17 +3,17 @@ import javafx.event.ActionEvent;
 
 public class logInEvent extends ActionEvent{
 
-    boolean result;
+    int result;
 
-    public logInEvent(boolean result) {
+    public logInEvent(int result) {
         this.result = result;
     }
 
-    public void setResult(boolean result) {
+    public void setResult(int result) {
         this.result = result;
     }
 
-    public boolean getResult() {
+    public int getResult() {
         return result;
     }
 }
