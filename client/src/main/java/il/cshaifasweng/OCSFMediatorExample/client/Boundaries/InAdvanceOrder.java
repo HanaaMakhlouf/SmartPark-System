@@ -125,15 +125,20 @@ public class InAdvanceOrder {
 
     @FXML
     void Pay(ActionEvent event) throws IOException {
+        String arrivalDate1 = null ;
+        String leavingDate1 = null ;
         String carNumb = carNumber.getText();
         String pLot = parkingLot.getText();
         String arrivalHour = arrivalHours.getText();
-        String arrivalDate1 = arrivalDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        String arrivalMinute = arrivalMinutes.getText() ;
+        String arrivalMinute = arrivalMinutes.getText();
 
-        String leavingHour = leavingHours.getText() ;
-        String leavingDate1 = leavingDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String leavingHour = leavingHours.getText();
         String leavingMinute = leavingMinutes.getText();
+        if(arrivalDate.getValue() != null && leavingDate.getValue() != null) {
+           arrivalDate1 = arrivalDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+           leavingDate1 = leavingDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        }
+
         InAdvanceOrderMessage inAdvanceOrderMessage = new InAdvanceOrderMessage(carNumb,leavingMinute,leavingDate1
         ,leavingHour,arrivalMinute,arrivalDate1,arrivalHour,pLot);
         SimpleClient.getClient().sendToServer(inAdvanceOrderMessage);
@@ -141,11 +146,13 @@ public class InAdvanceOrder {
 
     @Subscribe
     public void PayProcess(InAdvanceOrderEvent event) throws IOException {
+        //System.out.println(event.getMessage().getResult());
 //        System.out.println("im in PayProcess");
 //        System.out.println(event.getResult());
         if (event.getMessage().getResult()){
             Platform.runLater(new Runnable() {
                 public void run() {
+                    status.setText("");
 //                    try {
 //                        Navigate.navigate(event,"../payInAdvanceOrder.fxml");
 //                    } catch (IOException e) {
@@ -188,10 +195,16 @@ public class InAdvanceOrder {
             });
         }
         else {
-            status.setText("Could not place order. Please pick another time.");
-            status.setTextFill(Paint.valueOf("#df2c14"));
-            };
+            Platform.runLater(new Runnable() {
+                public void run() {
+                    System.out.println(event.getMessage().getResult());
+                    status.setText("Could not place order. Please pick another time.");
+                    status.setTextFill(Paint.valueOf("#df2c14"));
+                }
+
+             });
         }
+    }
 
 
 //    @Subscribe

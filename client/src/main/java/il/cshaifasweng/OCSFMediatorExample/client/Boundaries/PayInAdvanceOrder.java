@@ -5,10 +5,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.PayInAdvanceOrderMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -60,6 +57,9 @@ public class PayInAdvanceOrder {
     @FXML
     void initialize() {
         EventBus.getDefault().register(this);
+        setMenuItemsMonths();
+        setMenuItemsYears();
+
     }
 
 
@@ -102,7 +102,7 @@ public class PayInAdvanceOrder {
         String cardYear = yearPayment.getText();
         String cardMonth = monthPayment.getText();
         PayInAdvanceOrderMessage message = new PayInAdvanceOrderMessage(cardName,cardNum,carNumber,leavingDate,leavingHours
-                ,leavingMinutes,arrivingDate,arrivingHours,arrivingMinutes,parkingLot,orderId);
+                ,leavingMinutes,arrivingDate,arrivingHours,arrivingMinutes,parkingLot,orderId , cvvNum, cardYear ,cardMonth);
         SimpleClient.getClient().sendToServer(message);
     }
 
@@ -187,6 +187,85 @@ public class PayInAdvanceOrder {
         return parkingLot;
     }
 
+    private void setMenuItemsMonths() {
+        MenuItem menuItem1 = new MenuItem("01");
+        MenuItem menuItem2 = new MenuItem("02");
+        MenuItem menuItem3 = new MenuItem("03");
+        MenuItem menuItem4 = new MenuItem("04");
+        MenuItem menuItem5 = new MenuItem("05");
+        MenuItem menuItem6 = new MenuItem("06");
+        MenuItem menuItem7 = new MenuItem("07");
+        MenuItem menuItem8 = new MenuItem("08");
+        MenuItem menuItem9 = new MenuItem("09");
+        MenuItem menuItem10 = new MenuItem("10");
+        MenuItem menuItem11 = new MenuItem("11");
+        MenuItem menuItem12 = new MenuItem("12");
+        menuItem1.setOnAction(e -> {
+            monthPayment.setText("01");
+        });
+        menuItem2.setOnAction(e -> {
+            monthPayment.setText("02");
+        });
+        menuItem3.setOnAction(e -> {
+            monthPayment.setText("03");
+        });
+        menuItem4.setOnAction(e -> {
+            monthPayment.setText("04");
+        });
+        menuItem5.setOnAction(e -> {
+            monthPayment.setText("05");
+        });
+        menuItem6.setOnAction(e -> {
+            monthPayment.setText("06");
+        });
+        menuItem7.setOnAction(e -> {
+            monthPayment.setText("07");
+        });
+        menuItem8.setOnAction(e -> {
+            monthPayment.setText("08");
+        });
+        menuItem9.setOnAction(e -> {
+            monthPayment.setText("09");
+        });
+        menuItem10.setOnAction(e -> {
+            monthPayment.setText("10");
+        });
+        menuItem11.setOnAction(e -> {
+            monthPayment.setText(String.valueOf(11));
+        });
+        menuItem12.setOnAction(e -> {
+            monthPayment.setText(String.valueOf(12));
+        });
+        monthPayment.getItems().addAll(menuItem1, menuItem2, menuItem3,
+                menuItem4, menuItem5, menuItem6, menuItem7, menuItem8
+                , menuItem9, menuItem10, menuItem11, menuItem12);
 
+    }
+    private void setMenuItemsYears() {
+        MenuItem item24 = new MenuItem("24");
+        MenuItem item25 = new MenuItem("25");
+        MenuItem item26 = new MenuItem("26");
+        MenuItem item27 = new MenuItem("27");
+        MenuItem item28 = new MenuItem("28");
 
+        item24.setOnAction(e -> {
+            yearPayment.setText("24");
+        });
+        item25.setOnAction(e -> {
+            yearPayment.setText("25");
+        });
+        item26.setOnAction(e -> {
+            yearPayment.setText("26");
+        });
+        item27.setOnAction(e -> {
+            yearPayment.setText("27");
+        });
+        item28.setOnAction(e -> {
+            yearPayment.setText("28");
+        });
+
+        yearPayment.getItems().addAll(item24, item25, item26,
+                item27, item28);
+
+    }
 }
