@@ -13,5 +13,6 @@
           <TableColumn fx:id="subs" prefWidth="199.0" text="subscribers " />
         </columns>
       </TableView>
+      <Button fx:id="backBtn" layoutX="499.0" layoutY="331.0" mnemonicParsing="false" onAction="#goBack" text="Back" />
    </children>
 </AnchorPane>

@@ -21,6 +21,8 @@ il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\GeneralManagerController.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterWithOutOrder.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
+il\cshaifasweng\OCSFMediatorExample\client\SendParkNumEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\ParkingLotEmployeeController$1.class
 il\cshaifasweng\OCSFMediatorExample\client\ParkingLotEmployeeController.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder$2.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\SignUp$1.class

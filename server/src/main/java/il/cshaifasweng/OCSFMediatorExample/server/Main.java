@@ -12,7 +12,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
-import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
@@ -35,6 +34,10 @@ private static SessionFactory sessionFactory = getSessionFactory();
 private static List<ParkingLots> data = new ArrayList<>();
 private static List<Prices> data2 = new ArrayList<>();
 private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
+
+public static ArrayList<Spot> spots_1 = new ArrayList<>();
+public static ArrayList<Spot> spots_2 = new ArrayList<>();
+public static ArrayList<Spot> spots_3 = new ArrayList<>();
 
 
     public Main(int port) {
@@ -63,9 +66,9 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
     }
 
     private static void initParkingLots(){
-        ParkingLots p1 = new ParkingLots(2 ,"Haifa Port" );
-        ParkingLots p2 = new ParkingLots(5, "Carmel");
-        ParkingLots p3 = new ParkingLots(7, "Central Station");
+        ParkingLots p1 = new ParkingLots(4 ,"Haifa Port" );
+        ParkingLots p2 = new ParkingLots(6, "Carmel");
+        ParkingLots p3 = new ParkingLots(8, "Central Station");
 
         session.save(p1);
         session.save(p2);
@@ -129,7 +132,7 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
     }
 
     private static void initGeneralManager(){
-        GeneralManager u1 = new GeneralManager(999999999,"bigBoss@gmail.com", "999");
+        GeneralManager u1 = new GeneralManager(999999999,"bigBoss@gmail.com", "999999999");
         session.save(u1);
         session.flush();
         // session.getTransaction().commit();
@@ -150,14 +153,14 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
     }
     private static void initializeData() throws Exception {
         session.beginTransaction();
-        initParkingLots();
-        initPrices();
-        initUser();
-        initInAdvanceOrders();
-        initParkingLotEmployee();
-        initManagers();
-        initGeneralManager();
-        initCustomerServiceEmployee();
+//        initParkingLots();
+//        initPrices();
+//        initUser();
+//        initInAdvanceOrders();
+//        initParkingLotEmployee();
+//        initManagers();
+//        initGeneralManager();
+//        initCustomerServiceEmployee();
         session.getTransaction().commit();
     }
 
@@ -219,6 +222,33 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
         return (double) ((dur.toHours()+(dur.toMinutesPart()/60))*perHour);
     }
 
+
+    void setUpPark(int parkNum)
+    {
+        int spotsToSetUp = 0;
+        if(parkNum == 1) {
+            spotsToSetUp = 36;
+            fillUp(spotsToSetUp, spots_1);
+        }
+        else if (parkNum == 2) {
+            spotsToSetUp = 54;
+            fillUp(spotsToSetUp, spots_2);
+        }
+        else if (parkNum == 3) {
+                spotsToSetUp = 72;
+            fillUp(spotsToSetUp, spots_3);
+        }
+    }
+
+    private void fillUp(int spotsToSetUp, ArrayList<Spot> spots) {
+        for (int i = 0 ; i < 3 ; i++)
+            for (int j = 0 ; j < 3;j++)
+                for (int k = 0 ; k < spotsToSetUp;k++) {
+                    Spot s = new Spot(i, j, k, true, false);
+                    spots.add(s);
+                }
+    }
+
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         System.out.println("handler here");
@@ -258,15 +288,12 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
                 AdminMessage message = (AdminMessage) msg;
                 ArrayList<Subscriber> lst = new ArrayList<>();
                 for(SubscribedClient p : SubscribersList) {
-                    System.out.println("faaaat");
                     Subscriber subscriber = new Subscriber(p.getClientID());
                     lst.add(subscriber);
 
                 }
                 message.setLst(lst);
                 client.sendToClient(message);
-
-
 
             }
             else if(msg instanceof InAdvanceOrderMessage){
@@ -291,6 +318,21 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 //                    message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
 //                }
                 client.sendToClient(message);
+            }
+            else if(msg instanceof GetParkingLotByEmployeeId){
+                GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
+                List<ParkingLotEmployee> employeeList = getAll(ParkingLotEmployee.class);
+                int park_num = 0;
+                for (ParkingLotEmployee em:employeeList){
+                    if(em.getId() == message.getId()) {
+                        park_num = em.getParkingLot();
+                    }
+                }
+                message.setPark_num(park_num);
+                client.sendToClient(message);
+            }
+            else if(msg instanceof SetUpMessage){
+                setUpPark(((SetUpMessage) msg).getPark_num());
             }
         } catch (Exception e) {
             e.printStackTrace();

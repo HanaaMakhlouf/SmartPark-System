@@ -1,9 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.AdminMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SignUpMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,7 +29,10 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new SignUpEvent(message.getResult()));
 		}
 
-
+		else if(msg instanceof GetParkingLotByEmployeeId){
+			GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
+			EventBus.getDefault().post(new SendParkNumEvent(message.getPark_num()));
+		}
 		else if(msg instanceof AdminMessage) {
 			AdminMessage message = (AdminMessage) msg;
 			ArrayList<Subscriber> lst = message.getLst();

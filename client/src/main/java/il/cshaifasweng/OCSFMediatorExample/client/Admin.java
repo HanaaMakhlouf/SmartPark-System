@@ -1,27 +1,28 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.Navigate;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.AdminMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SetUpMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
 
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Paint;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
+import java.net.URL;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 
 public class Admin {
@@ -35,6 +36,13 @@ public class Admin {
     @FXML
     private TableColumn<Subscriber, Integer> subs;
 
+    @FXML
+    private Button backBtn;
+
+    @FXML
+    void goBack(ActionEvent event) throws IOException {
+        Navigate.navigate(event , "../mainPage.fxml");
+    }
     @FXML
     void showAllsubs(ActionEvent event) throws IOException {
         AdminMessage message = new AdminMessage(list);
@@ -66,11 +74,7 @@ public class Admin {
 
         EventBus.getDefault().register(this);
     }
-
-
-
-    }
-
+}
 
 
 

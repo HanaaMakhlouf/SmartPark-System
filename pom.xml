@@ -10,7 +10,7 @@
 	<modules>
 		<module>server</module>
 		<module>entities</module>
-		<module>client</module>
+
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

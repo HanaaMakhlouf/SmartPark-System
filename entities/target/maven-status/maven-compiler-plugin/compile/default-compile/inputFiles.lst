@@ -17,5 +17,7 @@ C:\Users\lmleo\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\csha
 C:\Users\lmleo\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\SignUpMessage.java
 C:\Users\lmleo\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Manager.java
 C:\Users\lmleo\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\InAdvanceOrderMessage.java
+C:\Users\lmleo\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\SetUpMessage.java
 C:\Users\lmleo\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\AdminMessage.java
 C:\Users\lmleo\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\User.java
+C:\Users\lmleo\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetParkingLotByEmployeeId.java
