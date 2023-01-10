@@ -22,6 +22,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\SignUp$1.class
 il\cshaifasweng\OCSFMediatorExample\client\ParkingTable.class
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryController.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\SignUp.class
+il\cshaifasweng\OCSFMediatorExample\client\PayInAdvanceOrderEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleChatClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder.class
