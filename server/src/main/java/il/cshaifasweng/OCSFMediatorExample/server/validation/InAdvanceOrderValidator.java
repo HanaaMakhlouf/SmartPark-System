@@ -60,6 +60,11 @@ public class InAdvanceOrderValidator {
 //        if(!(email.equals(user.getEmail()))){
 //            return false;
 //        }
+
+        if(arrivalDate == null || arrivalHours == null  || arrivalMinutes == null  ||
+        leavingDate == null || leavingHours == null  || leavingMinutes == null  || carNumber == null || parkingLot == null ) {
+            return false ;
+        }
         String arrivalTimeAndDate = arrivalDate + " " + arrivalHours + ":" + arrivalMinutes;
         String leavingTimeAndDate = leavingDate + " " + leavingHours + ":" + leavingMinutes;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //  ??dd/MM/yyyy HH:mm instead??

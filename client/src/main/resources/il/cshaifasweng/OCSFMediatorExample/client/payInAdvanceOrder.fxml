@@ -35,14 +35,12 @@
       <TextField fx:id="cvv" layoutX="354.0" layoutY="283.0" prefHeight="25.0" prefWidth="86.0" />
       <MenuButton fx:id="monthPayment" layoutX="100.0" layoutY="283.0" mnemonicParsing="false" text="MM">
         <items>
-          <MenuItem mnemonicParsing="false" text="Action 1" />
-          <MenuItem mnemonicParsing="false" text="Action 2" />
+
         </items>
       </MenuButton>
       <MenuButton fx:id="yearPayment" layoutX="198.0" layoutY="283.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="54.0" text="YY">
          <items>
-            <MenuItem mnemonicParsing="false" text="Action 1" />
-            <MenuItem mnemonicParsing="false" text="Action 2" />
+
          </items>
       </MenuButton>
       <Label layoutX="100.0" layoutY="247.0" prefHeight="17.0" prefWidth="125.0" text="Expiration date">
