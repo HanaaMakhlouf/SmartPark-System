@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.*;
 
 
@@ -22,11 +23,24 @@ public class User implements Serializable {
     private String Email;
     @Column(name = "Password")
     private String Password;
-//    @Column(name = "complaints")
+    @Column(name = "Balance")
+    private Double balance=0.0;
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    //    @Column(name = "complaints")
 //    private ArrayList<Complaint> complaintList;
 //    @Column(name = "orders")
 //    private ArrayList<Order> ordersList;
-
+        /*@OneToMany(mappedBy="id")
+        private Set<InAdvanceOrderEntity> items1;
+*/
     public User(int id, String email,String Password) {
         this.id = id;
         this.Email = email;

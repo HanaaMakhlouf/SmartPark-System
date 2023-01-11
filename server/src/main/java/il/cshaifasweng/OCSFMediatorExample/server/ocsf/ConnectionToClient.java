@@ -64,6 +64,15 @@ public class ConnectionToClient extends Thread
   * A reference to the Server that created this instance.
   */
   private AbstractServer server;
+  int id ;
+
+  public int getIdofClientC() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
 
   /**
   * Sockets are used in the operating system as channels
@@ -71,6 +80,10 @@ public class ConnectionToClient extends Thread
   * @see java.net.Socket
   */
   private Socket clientSocket;
+
+  public Socket getClientSocket() {
+    return clientSocket;
+  }
 
   /**
   * Stream used to read from the client.
@@ -110,8 +123,8 @@ public class ConnectionToClient extends Thread
    * @exception IOException if an I/O error occur when creating
    *        the connection.
    */
-  protected ConnectionToClient(ThreadGroup group, Socket clientSocket,
-    AbstractServer server) throws IOException
+  public ConnectionToClient(ThreadGroup group, Socket clientSocket,
+                            AbstractServer server) throws IOException
   {
     super(group,(Runnable)null);
     // Initialize variables

@@ -1,14 +1,17 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "InAdvanceOrders")
-public class InAdvanceOrderEntity{
+public class InAdvanceOrderEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name ="Userid")
+    private String UserID;
     @Column(name = "OrderID")
     private String orderID;
     @Column(name = "CarNumber")
@@ -28,9 +31,10 @@ public class InAdvanceOrderEntity{
     @Column(name = "parking_lot_name")
     String parkingLotName ;
 
-    public InAdvanceOrderEntity(String carNumber, String leavingMinutes, String leavingDate, String leavingHours, String arrivalMinutes,
+    public InAdvanceOrderEntity(String carNumber,String clientId, String leavingMinutes, String leavingDate, String leavingHours, String arrivalMinutes,
                                 String arrivalDate, String arrivalHours, String parkingLotName) {
         this.carNumber = carNumber;
+        this.UserID = clientId;
         this.leavingMinutes = leavingMinutes;
         this.leavingDate = leavingDate;
         this.leavingHours = leavingHours;
@@ -38,6 +42,14 @@ public class InAdvanceOrderEntity{
         this.arrivalDate = arrivalDate;
         this.arrivalHours = arrivalHours;
         this.parkingLotName = parkingLotName;
+    }
+
+    public String getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(String userID) {
+        UserID = userID;
     }
 
     public String getOrderID() {

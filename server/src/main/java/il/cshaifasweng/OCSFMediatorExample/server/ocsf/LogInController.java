@@ -19,7 +19,7 @@ public class LogInController {
     public int validateUserCredentials(List<User> userList, List<Manager> managerList,
                                        List<ParkingLotEmployee> employeeList, List<GeneralManager> gmList,
                                        List<CustomerServiceEmployee> cs_employeeList) {
-        if (Integer.parseInt(userId) == 0000 && userPass.equals("Admin"))
+        if ((Integer.parseInt(userId) == 0000  || Integer.parseInt(userId) == 0001) && userPass.equals("Admin"))
         return 6;
 
         for (CustomerServiceEmployee cs_employee : cs_employeeList) {

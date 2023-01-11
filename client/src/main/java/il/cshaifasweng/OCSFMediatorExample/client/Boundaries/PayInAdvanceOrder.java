@@ -101,7 +101,7 @@ public class PayInAdvanceOrder {
         String cvvNum = cvv.getText();
         String cardYear = yearPayment.getText();
         String cardMonth = monthPayment.getText();
-        PayInAdvanceOrderMessage message = new PayInAdvanceOrderMessage(cardName,cardNum,carNumber,leavingDate,leavingHours
+        PayInAdvanceOrderMessage message = new PayInAdvanceOrderMessage(cardName,Integer.toString(id),cardNum,carNumber,leavingDate,leavingHours
                 ,leavingMinutes,arrivingDate,arrivingHours,arrivingMinutes,parkingLot,orderId , cvvNum, cardYear ,cardMonth);
         SimpleClient.getClient().sendToServer(message);
     }

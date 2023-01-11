@@ -1,5 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -12,6 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
+import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
@@ -36,12 +40,23 @@ private static SessionFactory sessionFactory = getSessionFactory();
 private static List<ParkingLots> data = new ArrayList<>();
 private static List<Prices> data2 = new ArrayList<>();
 private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
+private static ArrayList<ConnectionToClient> clientsConn = new ArrayList<>();
+
+private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadGroup");
 
 
     public Main(int port) {
         super(port);
     }
+    private List<ConnectionToClient> clients=new ArrayList<>();
 
+    public void addClient(ConnectionToClient client) {
+        clients.add(client);
+    }
+
+    public List<ConnectionToClient> getClients() {
+        return clients;
+    }
 
 
     private static SessionFactory getSessionFactory() throws HibernateException {
@@ -83,13 +98,25 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
     private static void initInAdvanceOrders() {
         for(int i=0; i<20; i++) {
-            InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567", "00", "20/01/2023"
+            InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567","123454321", "00", "20/01/2023"
                     , "16", "00", "20/01/2023", "12", "Haifa Port");
 
             session.save(inAdvanceOrder1);
             session.flush();
             inAdvanceOrder1.setOrderID("10" + String.valueOf(inAdvanceOrder1.getId()));
             session.flush();
+        }
+
+        for(int i=0;i<5;i++)
+        {
+            InAdvanceOrderEntity inAdvanceOrder2 = new InAdvanceOrderEntity("304955","123456789", "00", "20/02/2023"
+                    , "16", "05", "20/02/2023", "16", "Carmel");
+
+            session.save(inAdvanceOrder2);
+            session.flush();
+            inAdvanceOrder2.setOrderID("10" + String.valueOf(inAdvanceOrder2.getId()));
+            session.flush();
+
         }
 //        session.getTransaction().commit();
     }
@@ -104,9 +131,14 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
         session.flush();
         //   session.getTransaction().commit();
     }
-    private static void initParkingLotEmployee(){
+    private static void initParkingLotEmployee() throws IOException {
         ParkingLotEmployee u1 = new ParkingLotEmployee(111222333,"employee1@gmail.com",
                 "111222333",1);
+       /* ConnectionToClient c = new ConnectionToClient(threadGroup,new Socket("localhost",3030),server);
+        SubscribedClient connection = new SubscribedClient(c);
+        connection.setClientID(111222333);
+        Subscriber s = new Subscriber(connection.getClientID());
+        SubscribersList.add(connection);*/
         ParkingLotEmployee u2 = new ParkingLotEmployee(444555666,"employee2@gmail.com",
                 "444555666",2);
         ParkingLotEmployee u3 = new ParkingLotEmployee(777888999,"employee3@gmail.com",
@@ -132,18 +164,36 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
         // session.getTransaction().commit();
     }
 
-    private static void initGeneralManager(){
+    private static void initGeneralManager() throws IOException {
         GeneralManager u1 = new GeneralManager(999999999,"bigBoss@gmail.com", "999");
+       /* ConnectionToClient cc = new ConnectionToClient(threadGroup,new Socket("localhost",3030),server);
+        SubscribedClient connection2 = new SubscribedClient(cc);
+        connection2.setClientID(999999999);
+        Subscriber ss = new Subscriber(connection2.getClientID());
+        SubscribersList.add(connection2);
+        cc.start();*/
+       /* session.save(ss);*/
         session.save(u1);
         session.flush();
         // session.getTransaction().commit();
     }
 
-    private static void initCustomerServiceEmployee(){
+    private static void initCustomerServiceEmployee() throws IOException {
         CustomerServiceEmployee u1 = new CustomerServiceEmployee(111111111,"CSemployee1@gmail.com",
                 "111111111");
+        /*ConnectionToClient c = new ConnectionToClient(threadGroup,new Socket("localhost",3030),server);
+        SubscribedClient connection = new SubscribedClient(c);
+        connection.setClientID(111111111);
+        Subscriber s = new Subscriber(connection.getClientID());
+        SubscribersList.add(connection);*/
+
         CustomerServiceEmployee u2 = new CustomerServiceEmployee(222222222,"CSemployee2@gmail.com",
                 "222222222");
+        /*ConnectionToClient cc = new ConnectionToClient(threadGroup,new Socket("localhost",3030),server);
+        SubscribedClient connection2 = new SubscribedClient(cc);
+        connection2.setClientID(222222222);
+        Subscriber ss = new Subscriber(connection2.getClientID());
+        SubscribersList.add(connection2);*/
         CustomerServiceEmployee u3 = new CustomerServiceEmployee(333333333,"CSemployee3@gmail.com",
                 "333333333");
         session.save(u1);
@@ -165,7 +215,13 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
         session.getTransaction().commit();
     }
 
+    private static ConnectionToClient getConnection(int id)
+    {
+        for(ConnectionToClient c : clientsConn)
+            if(c.getIdofClientC()==id) return c;
 
+        return null;
+    }
     /*private static List<ParkingLots> getAllParkinglots() throws Exception {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<ParkingLots> query = builder.createQuery(ParkingLots.class);
@@ -190,7 +246,15 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 //        return users;
 //    }
 
+    public static <T> List<T> getAllWhereIdEquals(Class<T> object,String id,String field) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
+        Root<T> rootEntry = criteriaQuery.from(object);
+        criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field), id));
+        TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
+        return allQuery.getResultList();
 
+    }
 
     public static <T> List<T> getAll(Class<T> object) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -224,6 +288,22 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
         return  ((dur.toHours()+(double)(dur.toMinutesPart()/60))*perHour);
     }
 
+
+
+    public boolean sendtoSpecificClient(int clientId, MessageBetweenClients message) throws IOException {
+        for(SubscribedClient s : SubscribersList)
+        {
+            if(s.getClientID()==clientId)
+            {
+                s.getClient().sendToClient(message);
+                return true;
+            }
+
+        }
+         return false;
+
+    }
+
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         try {
@@ -236,8 +316,85 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
                 List<CustomerServiceEmployee> cs_employeeListgetAll= getAll(CustomerServiceEmployee.class);
                 LogInController logInCntrl = new LogInController(message.getUserId(),message.getUserPass());
                 message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll));
+
+                SubscribedClient connection = new SubscribedClient(client);
+                connection.setClientID(Integer.parseInt(message.getUserId()));
+                SubscribersList.add(connection);
+                SimpleClient.setId_of_client(message.getUserId());
+
+
+
+
                 client.sendToClient(message);
-            }else if(msg instanceof SignUpMessage){
+
+
+
+
+            }
+            else if(msg instanceof  OrderToDeleteMsg) {
+                OrderToDeleteMsg message = (OrderToDeleteMsg) msg;
+
+                List<InAdvanceOrderEntity> List = getAllWhereIdEquals(InAdvanceOrderEntity.class,message.getId(),"orderID");
+                session.beginTransaction();
+
+                for(InAdvanceOrderEntity E : List)
+                {
+                session.delete(E);
+
+                }
+                session.flush();
+                session.getTransaction().commit();
+
+                session.beginTransaction();
+                InAdvanceOrderEntity ent = List.get(0);
+                String id_of_client = ent.getUserID();
+                Double refund = 0.0;
+                LocalDateTime today = LocalDateTime.now();
+                int arrmonthdiff = Integer.parseInt(ent.getUserID().substring(3,5))-today.getMonthValue();
+                int arrdate_diff = Integer.parseInt(ent.getUserID().substring(0,2))-today.getDayOfMonth();
+                int hours_diff = Integer.parseInt(ent.getArrivalHours())-today.getHour();
+                int min_diff = Integer.parseInt(ent.getArrivalMinutes())-today.getMinute();
+                List<Prices> inadvlst = getAllWhereIdEquals(Prices.class,"1","id");
+                int inadvPrice = inadvlst.get(0).getIn_Advance_price();
+                if(arrmonthdiff==0) {
+                    if (arrdate_diff == 0) {
+                        int diff = hours_diff * 60 + min_diff;
+                        if (hours_diff * 60 + min_diff > 180) refund = 0.9 * inadvPrice;
+                        else if (diff <= 180 && diff >= 60) refund = 0.5 * inadvPrice;
+                        else refund = 0.0;
+
+                    }
+
+                    else if (arrdate_diff > 0) refund = 0.9 * inadvPrice;
+                }
+                else refund = 0.9*inadvPrice;
+                System.out.println(message.getId());
+                List<User> lstUsers = getAllWhereIdEquals(User.class,id_of_client,"id");
+                User us = lstUsers.get(0);
+                System.out.println("refund is ");
+                System.out.println(refund);
+                us.setBalance(refund);
+
+                session.update(us);
+                session.getTransaction().commit();
+
+                OrderToDeleteMsg new_msg = new OrderToDeleteMsg(message.getId());
+                new_msg.setBalance(refund);
+                client.sendToClient(new_msg);
+
+            }
+            else if(msg instanceof  GetallOrdersOfClient) {
+
+                GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
+                List<InAdvanceOrderEntity> List = getAllWhereIdEquals(InAdvanceOrderEntity.class, message.getId(), "UserID");
+                System.out.println("attepmpt to print from list ");
+                System.out.println(List.get(0).getUserID());
+                System.out.println("up?");
+                GetallOrdersOfClient new_f = new GetallOrdersOfClient(List,List.get(0).getUserID());
+                client.sendToClient(new_f);
+
+            }
+            else if(msg instanceof SignUpMessage){
                 SignUpMessage message = (SignUpMessage) msg;
                 List<User> userList = getAll(User.class);
                 SignUpValidator validator = new SignUpValidator(message.getUserId(),message.getUserPass(), message.getUserEmail());
@@ -245,17 +402,40 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
                 if(message.getResult()){
                     session.beginTransaction();
                     User newUser = new User(Integer.parseInt(message.getUserId()), message.getUserEmail(), message.getUserPass());
+                  /*  client.setId(Integer.parseInt(message.getUserId()));
                     SubscribedClient connection = new SubscribedClient(client);
                     connection.setClientID(Integer.parseInt(message.getUserId()));
                     Subscriber s = new Subscriber(connection.getClientID());
-                    SubscribersList.add(connection);
+                    SubscribersList.add(connection);*/
                     session.save(newUser);
                     session.flush();
-                    session.save(s);
-                    session.flush();
+                  /*  session.save(s);
+                    session.flush();*/
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
+            }else if(msg instanceof MessageBetweenClients)
+            {
+                MessageBetweenClients message = (MessageBetweenClients) msg;
+                int id = message.getRecepientID();
+               /* ConnectionToClient clientToSendTo = getConnection(id);*/
+              boolean b = sendtoSpecificClient(id,message);
+                if(!b){
+                    message.setResult(0);
+                    SendFailedMessage s = new SendFailedMessage(id);
+                    client.sendToClient(s);
+                }
+                else
+                {
+                    message.setResult(1);
+                    client.sendToClient(("send success"));
+                    /*clientToSendTo.sendToClient(message);*/
+                    sendtoSpecificClient(id,message);
+                }
+
+
+
+
             }
             else if(msg instanceof AdminMessage)
             {
@@ -309,7 +489,7 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
                 PayInAdvanceOrderValidator validator= new PayInAdvanceOrderValidator(cardNum ,cvvCard,yearCard,monthCard);
                 message.setResult(validator.validatePayment());
                 if(message.isResult()) {
-                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum, leavingMin, leavingDate
+                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getUserid(), leavingMin, leavingDate
                             , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
                     session.beginTransaction();
                     session.save(newInAdvance);
@@ -436,7 +616,7 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
 
-        server = new Main(3030);
+        server = new Main(3005);
         server.listen();
         System.out.println("Server says : hi ");
         try {
