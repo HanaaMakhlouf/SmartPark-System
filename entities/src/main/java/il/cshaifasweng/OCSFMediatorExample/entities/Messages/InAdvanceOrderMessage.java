@@ -1,5 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities.Messages;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
+
 import java.io.Serializable;
 
 public class InAdvanceOrderMessage implements Serializable {
@@ -11,11 +13,19 @@ public class InAdvanceOrderMessage implements Serializable {
     private String arrivingDate ;
     private String arrivingHours ;
     private String parkingLot;
+    private String orderId;
+
     private double fee;
     boolean result;
+//    InAdvanceOrderEntity inAdvanceOrder;
 
-
-
+//    public void setInAdvanceOrder(InAdvanceOrderEntity inAdvanceOrder) {
+//        this.inAdvanceOrder = inAdvanceOrder;
+//    }
+//
+//    public InAdvanceOrderEntity getInAdvanceOrder() {
+//        return inAdvanceOrder;
+//    }
 
     public InAdvanceOrderMessage(String carNumber, String leavingMinutes, String leavingDate
             , String leavingHours, String arrivingMinutes, String arrivingDate, String arrivingHours, String pLot) {
@@ -113,7 +123,15 @@ public class InAdvanceOrderMessage implements Serializable {
         this.result = result;
     }
 
-    public boolean isResult() {
+    public boolean getResult() {
         return result;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getOrderId() {
+        return orderId;
     }
 }

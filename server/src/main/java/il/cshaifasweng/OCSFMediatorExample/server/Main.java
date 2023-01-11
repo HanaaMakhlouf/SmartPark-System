@@ -20,6 +20,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.PayInAdvanceOrderValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -82,9 +83,12 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
     private static void initInAdvanceOrders() {
         for(int i=0; i<20; i++) {
-            InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567", "15", "02/06/2023"
-                    , "16", "15", "02/06/2023", "12", "Haifa Port");
+            InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567", "00", "20/01/2023"
+                    , "16", "00", "20/01/2023", "12", "Haifa Port");
+
             session.save(inAdvanceOrder1);
+            session.flush();
+            inAdvanceOrder1.setOrderID("10" + String.valueOf(inAdvanceOrder1.getId()));
             session.flush();
         }
 //        session.getTransaction().commit();
@@ -203,6 +207,7 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
         CriteriaQuery<T> query = builder.createQuery(object);
         query.from(Prices.class);
         List<T> data = session.createQuery(query).getResultList();
+        session.getTransaction().commit();
         return data.get(0);
     }
 
@@ -216,12 +221,11 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
         LocalDateTime dateTimeStart = LocalDateTime.parse(arrivalTimeAndDate,formatter);
         LocalDateTime dateTimeEnd = LocalDateTime.parse(leavingTimeAndDate,formatter);
         Duration dur = Duration.between(dateTimeStart,dateTimeEnd);
-        return (double) ((dur.toHours()+(dur.toMinutesPart()/60))*perHour);
+        return  ((dur.toHours()+(double)(dur.toMinutesPart()/60))*perHour);
     }
 
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-        System.out.println("handler here");
         try {
             if(msg instanceof logInMessage){
                 logInMessage message = (logInMessage) msg;
@@ -270,9 +274,7 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
             }
             else if(msg instanceof InAdvanceOrderMessage){
-                System.out.println("in advance here");
                 InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
-//                int tmpId = 208110130;
                 String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
                 String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
@@ -291,7 +293,34 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 //                    session.getTransaction().commit();
 //                    message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
 //                }
+//                System.out.println("about to send msg to client");
+//                System.out.println(message.getResult());
+                message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
+                message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
+//                message.setInAdvanceOrder(newInAdvance);
                 client.sendToClient(message);
+            }
+            else if(msg instanceof PayInAdvanceOrderMessage) {
+                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
+                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
+                PayInAdvanceOrderValidator validator= new PayInAdvanceOrderValidator(cardNum ,cvvCard,yearCard,monthCard);
+                message.setResult(validator.validatePayment());
+                if(message.isResult()) {
+                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum, leavingMin, leavingDate
+                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
+                    session.beginTransaction();
+                    session.save(newInAdvance);
+                    session.flush();
+                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
+                    session.getTransaction().commit();
+                }
+                /* needed
+                make InAdvanceOrderEntity and add to DB
+                validate payment
+                 */
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -312,7 +341,7 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "Polkmn7220@")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM parkinglotss");
                         data.clear();
@@ -345,7 +374,7 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
 
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "Polkmn7220@")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
                         data2.clear();
