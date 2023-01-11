@@ -14,24 +14,50 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 import javax.persistence.*;
+@Entity
+@Table (name= "complaints")
+public class Complaint implements Serializable{
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int complaintId;
+    @Column(name = "sender_id")
+    private String id;
+    @Column(name = "Date")
+    private Date date;
+    @Column(name = "Description")
+    private String description;
+    @Column(name = "park_id")
+    private int park_id;
+    @Column(name = "Response")
+    private String response = "";
 
-public class Complaint {
-    int id;
-    LocalDateTime date;
-    String description;
-    String response;
 
-    public Complaint(int id, LocalDateTime date, String description) {
+    public int getPark_id() {
+        return park_id;
+    }
+
+    public void setPark_id(int park_id) {
+        this.park_id = park_id;
+    }
+
+    public Complaint(String id, Date date, String description,int parkId) {
         this.id = id;
         this.date = date;
         this.description = description;
+        this.park_id = parkId;
     }
 
-    public int getId() {
+    public Complaint() {
+
+    }
+
+    public String getId() {
         return id;
     }
+    public void setId(String id) { this.id = id; }
 
-    public LocalDateTime getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -43,11 +69,7 @@ public class Complaint {
         return response;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setDate(LocalDateTime date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
