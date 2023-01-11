@@ -1,9 +1,11 @@
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AbstractClient.class
+il\cshaifasweng\OCSFMediatorExample\client\StandardMembershipEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\showptableEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SignUpEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryController$1.class
 il\cshaifasweng\OCSFMediatorExample\client\showTableEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Changeprices.class
+il\cshaifasweng\OCSFMediatorExample\client\FullMembershipEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
 il\cshaifasweng\OCSFMediatorExample\client\PricesTable.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\RegisterAsAMember.class

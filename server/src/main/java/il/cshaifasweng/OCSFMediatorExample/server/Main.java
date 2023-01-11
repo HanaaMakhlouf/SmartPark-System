@@ -12,15 +12,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
+import il.cshaifasweng.OCSFMediatorExample.client.StandardMembershipEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
-import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
-import il.cshaifasweng.OCSFMediatorExample.server.validation.PayInAdvanceOrderValidator;
-import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.*;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -49,6 +48,8 @@ private static List<Prices> data2 = new ArrayList<>();
         configuration.addAnnotatedClass(Prices.class);
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(InAdvanceOrderEntity.class);
+        configuration.addAnnotatedClass(FullMemberShipEntity.class);
+        configuration.addAnnotatedClass(StandardMemberShipEntity.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -104,7 +105,16 @@ private static List<Prices> data2 = new ArrayList<>();
         initParkingLots();
         initPrices();
         initUser();
-         initInAdvanceOrders();
+        initInAdvanceOrders();
+        FullMemberShipEntity tmp = new FullMemberShipEntity(208110120,"1234568","29/01/2023");
+        session.save(tmp);
+        session.flush();
+        tmp.setMembershipID("10"+tmp.getId());
+        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(208110120,"1234568"
+                ,"29/01/2023","Haifa Port");
+        session.save(tmp2);
+        session.flush();
+        tmp2.setMembershipID("20"+tmp2.getId());
         session.getTransaction().commit();
     }
 
@@ -229,13 +239,47 @@ private static List<Prices> data2 = new ArrayList<>();
                     session.beginTransaction();
                     session.save(newInAdvance);
                     session.flush();
-                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
                     session.getTransaction().commit();
                 }
                 /* needed
                 make InAdvanceOrderEntity and add to DB
                 validate payment
                  */
+            }
+            else if(msg instanceof FullMembershipMessage){
+                FullMembershipMessage message = (FullMembershipMessage) msg;
+                FullMembershipValidator validator = new FullMembershipValidator(message.getCarNumber()
+                        , message.getStartDate());
+                message.setResult(validator.validateMembership());
+                if (message.isResult()){
+                    FullMemberShipEntity fullMemberShipEntity = new FullMemberShipEntity(Integer.parseInt(message.getId())
+                            ,message.getCarNumber(),message.getStartDate());
+                    session.beginTransaction();
+                    session.save(fullMemberShipEntity);
+                    session.flush();
+                    fullMemberShipEntity.setMembershipID("10"+fullMemberShipEntity.getId());
+                    message.setMembershipId(fullMemberShipEntity.getMembershipID());
+                    session.getTransaction().commit();
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof StandardMembershipMessage){
+                StandardMembershipMessage message = (StandardMembershipMessage) msg;
+                StandardMembershipValidator validator = new StandardMembershipValidator(message.getCarNumber()
+                        , message.getStartDate(),message.getParkingLot());
+                message.setResult(validator.validateMembership());
+                System.out.println(message.isResult());
+                if (message.isResult()){
+                    StandardMemberShipEntity standardMemberShipEntity = new StandardMemberShipEntity(Integer.parseInt(message.getId())
+                            ,message.getCarNumber(),message.getStartDate(),message.getParkingLot());
+                    session.beginTransaction();
+                    session.save(standardMemberShipEntity);
+                    session.flush();
+                    standardMemberShipEntity.setMembershipID("20"+standardMemberShipEntity.getId());
+                    message.setMembershipId(standardMemberShipEntity.getMembershipID());
+                    session.getTransaction().commit();
+                }
+                client.sendToClient(message);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -254,7 +298,7 @@ private static List<Prices> data2 = new ArrayList<>();
 
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "Polkmn7220@")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM parkinglotss");
                         data.clear();
@@ -287,7 +331,7 @@ private static List<Prices> data2 = new ArrayList<>();
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
 
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "Polkmn7220@")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
                         data2.clear();
