@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
@@ -100,6 +101,14 @@ public class SimpleClient extends AbstractClient {
 			GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
 			EventBus.getDefault().post(new SendParkNumEvent(message.getPark_num()));
 		}
+//		else if(msg instanceof InAdvanceOrderMessage){
+//			InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
+//			EventBus.getDefault().post(new InAdvanceOrderEvent(message));
+//		}
+//		else if(msg instanceof PayInAdvanceOrderMessage){
+//			PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+//			EventBus.getDefault().post(new PayInAdvanceOrderEvent(message));
+//		}
 		else if(msg instanceof AdminMessage) {
 			AdminMessage message = (AdminMessage) msg;
 			ArrayList<Subscriber> lst = message.getLst();

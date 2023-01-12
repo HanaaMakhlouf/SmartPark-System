@@ -14,8 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
-import il.cshaifasweng.OCSFMediatorExample.client.StandardMembershipEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
@@ -24,6 +23,9 @@ import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.PayInAdvanceOrderValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.*;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -75,6 +77,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         configuration.addAnnotatedClass(GeneralManager.class);
         configuration.addAnnotatedClass(CustomerServiceEmployee.class);
         configuration.addAnnotatedClass(Subscriber.class);
+        configuration.addAnnotatedClass(Complaint.class);
         configuration.addAnnotatedClass(FullMemberShipEntity.class);
         configuration.addAnnotatedClass(StandardMemberShipEntity.class);
 
@@ -352,11 +355,6 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 SubscribedClient connection = new SubscribedClient(client);
                 connection.setClientID(Integer.parseInt(message.getUserId()));
                 SubscribersList.add(connection);
-                SimpleClient.setId_of_client(message.getUserId());
-
-
-
-
                 client.sendToClient(message);
 
 
@@ -565,6 +563,11 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     message.setMembershipId(standardMemberShipEntity.getMembershipID());
                     session.getTransaction().commit();
                 }
+//                System.out.println("about to send msg to client");
+//                System.out.println(message.getResult());
+             //   message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
+             //   message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
+//                message.setInAdvanceOrder(newInAdvance);
                 client.sendToClient(message);
             }
             else if(msg instanceof GetParkingLotByEmployeeId){
@@ -582,6 +585,39 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
             else if(msg instanceof SetUpMessage){
                 setUpPark(((SetUpMessage) msg).getPark_num());
             }
+            else if(msg instanceof SendComplaintMsg){
+                SendComplaintMsg message = (SendComplaintMsg) msg;
+                Complaint complaint = new Complaint(message.getSender_id(),message.getCurrDate()
+                        ,message.getComplaint(),message.getPark_id());
+                System.out.println(message.getComplaint());
+                session.beginTransaction();
+                session.save(complaint);
+                session.flush();
+                session.getTransaction().commit();
+            }
+            else if(msg instanceof PayInAdvanceOrderMessage) {
+                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
+                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
+                PayInAdvanceOrderValidator validator= new PayInAdvanceOrderValidator(cardNum ,cvvCard,yearCard,monthCard);
+                message.setResult(validator.validatePayment());
+                if(message.isResult()) {
+                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getOrderId(), leavingMin, leavingDate
+                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
+                    session.beginTransaction();
+                    session.save(newInAdvance);
+                    session.flush();
+                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
+                    session.getTransaction().commit();
+                }
+                /* needed
+                make InAdvanceOrderEntity and add to DB
+                validate payment
+                 */
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -595,9 +631,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 if (request.isBlank()) {
                     message.setMessage("Error! we got an empty message");
                     client.sendToClient(message);
-                }
-
-                else if (request.equals("print parking table")) {
+                } else if (request.equals("print parking table")) {
 
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
