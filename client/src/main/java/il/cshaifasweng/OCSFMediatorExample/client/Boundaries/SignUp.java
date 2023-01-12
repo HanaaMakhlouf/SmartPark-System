@@ -51,7 +51,6 @@ public class SignUp {
     public void SignUpProcess(SignUpEvent event) throws IOException {
         if (event.getResult()){
             Platform.runLater(new Runnable() {
-                @Override
                 public void run() {
                     status.setText("Sign Up Successful!");
                     status.setTextFill(Paint.valueOf("#228c22"));
@@ -71,7 +70,6 @@ public class SignUp {
 
     @FXML
     void initialize() {
-
         EventBus.getDefault().register(this);
     }
 

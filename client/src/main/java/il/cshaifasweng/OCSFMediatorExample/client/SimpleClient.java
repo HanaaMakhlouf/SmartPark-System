@@ -28,6 +28,22 @@ public class SimpleClient extends AbstractClient {
 			SignUpMessage message = (SignUpMessage) msg;
 			EventBus.getDefault().post(new SignUpEvent(message.getResult()));
 		}
+		else if(msg instanceof InAdvanceOrderMessage){
+			InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
+			EventBus.getDefault().post(new InAdvanceOrderEvent(message));
+		}
+		else if(msg instanceof PayInAdvanceOrderMessage){
+			PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+			EventBus.getDefault().post(new PayInAdvanceOrderEvent(message));
+		}
+		else if(msg instanceof StandardMembershipMessage){
+			StandardMembershipMessage message = (StandardMembershipMessage) msg;
+			EventBus.getDefault().post(new StandardMembershipEvent(message));
+		}
+		else if(msg instanceof FullMembershipMessage){
+			FullMembershipMessage message = (FullMembershipMessage) msg;
+			EventBus.getDefault().post(new FullMembershipEvent(message));
+		}
 
 		else if(msg instanceof GetParkingLotByEmployeeId){
 			GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;

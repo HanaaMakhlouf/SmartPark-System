@@ -12,14 +12,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
+import il.cshaifasweng.OCSFMediatorExample.client.StandardMembershipEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
-import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
-import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.*;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -57,6 +57,8 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         configuration.addAnnotatedClass(GeneralManager.class);
         configuration.addAnnotatedClass(CustomerServiceEmployee.class);
         configuration.addAnnotatedClass(Subscriber.class);
+        configuration.addAnnotatedClass(FullMemberShipEntity.class);
+        configuration.addAnnotatedClass(StandardMemberShipEntity.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -85,9 +87,12 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
 
     private static void initInAdvanceOrders() {
         for(int i=0; i<20; i++) {
-            InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567", "15", "02/06/2023"
-                    , "16", "15", "02/06/2023", "12", "Haifa Port");
+            InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567", "00", "20/01/2023"
+                    , "16", "00", "20/01/2023", "12", "Haifa Port");
+
             session.save(inAdvanceOrder1);
+            session.flush();
+            inAdvanceOrder1.setOrderID("10" + String.valueOf(inAdvanceOrder1.getId()));
             session.flush();
         }
 //        session.getTransaction().commit();
@@ -153,6 +158,15 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
     }
     private static void initializeData() throws Exception {
         session.beginTransaction();
+        FullMemberShipEntity tmp = new FullMemberShipEntity(208110120,"1234568","29/01/2023");
+        session.save(tmp);
+        session.flush();
+        tmp.setMembershipID("10"+tmp.getId());
+        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(208110120,"1234568"
+                ,"29/01/2023","Haifa Port");
+        session.save(tmp2);
+        session.flush();
+        tmp2.setMembershipID("20"+tmp2.getId());
 //        initParkingLots();
 //        initPrices();
 //        initUser();
@@ -206,6 +220,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         CriteriaQuery<T> query = builder.createQuery(object);
         query.from(Prices.class);
         List<T> data = session.createQuery(query).getResultList();
+        session.getTransaction().commit();
         return data.get(0);
     }
 
@@ -219,7 +234,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         LocalDateTime dateTimeStart = LocalDateTime.parse(arrivalTimeAndDate,formatter);
         LocalDateTime dateTimeEnd = LocalDateTime.parse(leavingTimeAndDate,formatter);
         Duration dur = Duration.between(dateTimeStart,dateTimeEnd);
-        return (double) ((dur.toHours()+(dur.toMinutesPart()/60))*perHour);
+        return  ((dur.toHours()+(double)(dur.toMinutesPart()/60))*perHour);
     }
 
 
@@ -304,7 +319,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
 
                 List<ParkingLots> parkingLots = getAll(ParkingLots.class);
-                List<InAdvanceOrder> inAdvanceOrders = getAll(InAdvanceOrder.class);
+                List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
                 InAdvanceOrderValidator validator= new InAdvanceOrderValidator(carNum,parkingLot,arrivingHours
                         ,arrivingDate,arrivingMin,leavingHours,leavingDate,leavingMin, parkingLots, inAdvanceOrders);
                 message.setResult(validator.validateOrder());
@@ -317,6 +332,67 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
 //                    session.getTransaction().commit();
 //                    message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
 //                }
+//                System.out.println("about to send msg to client");
+//                System.out.println(message.getResult());
+                message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
+                message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
+//                message.setInAdvanceOrder(newInAdvance);
+                client.sendToClient(message);
+            }
+            else if(msg instanceof PayInAdvanceOrderMessage) {
+                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
+                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
+                PayInAdvanceOrderValidator validator= new PayInAdvanceOrderValidator(cardNum ,cvvCard,yearCard,monthCard);
+                message.setResult(validator.validatePayment());
+                if(message.isResult()) {
+                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum, leavingMin, leavingDate
+                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
+                    session.beginTransaction();
+                    session.save(newInAdvance);
+                    session.flush();
+                    session.getTransaction().commit();
+                }
+                /* needed
+                make InAdvanceOrderEntity and add to DB
+                validate payment
+                 */
+            }
+            else if(msg instanceof FullMembershipMessage){
+                FullMembershipMessage message = (FullMembershipMessage) msg;
+                FullMembershipValidator validator = new FullMembershipValidator(message.getCarNumber()
+                        , message.getStartDate());
+                message.setResult(validator.validateMembership());
+                if (message.isResult()){
+                    FullMemberShipEntity fullMemberShipEntity = new FullMemberShipEntity(Integer.parseInt(message.getId())
+                            ,message.getCarNumber(),message.getStartDate());
+                    session.beginTransaction();
+                    session.save(fullMemberShipEntity);
+                    session.flush();
+                    fullMemberShipEntity.setMembershipID("10"+fullMemberShipEntity.getId());
+                    message.setMembershipId(fullMemberShipEntity.getMembershipID());
+                    session.getTransaction().commit();
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof StandardMembershipMessage){
+                StandardMembershipMessage message = (StandardMembershipMessage) msg;
+                StandardMembershipValidator validator = new StandardMembershipValidator(message.getCarNumber()
+                        , message.getStartDate(),message.getParkingLot());
+                message.setResult(validator.validateMembership());
+                System.out.println(message.isResult());
+                if (message.isResult()){
+                    StandardMemberShipEntity standardMemberShipEntity = new StandardMemberShipEntity(Integer.parseInt(message.getId())
+                            ,message.getCarNumber(),message.getStartDate(),message.getParkingLot());
+                    session.beginTransaction();
+                    session.save(standardMemberShipEntity);
+                    session.flush();
+                    standardMemberShipEntity.setMembershipID("20"+standardMemberShipEntity.getId());
+                    message.setMembershipId(standardMemberShipEntity.getMembershipID());
+                    session.getTransaction().commit();
+                }
                 client.sendToClient(message);
             }
             else if(msg instanceof GetParkingLotByEmployeeId){
@@ -353,7 +429,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
 
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "b7badeeb95glcd")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM parkinglotss");
                         data.clear();
@@ -386,7 +462,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
 
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "b7badeeb95glcd")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
                         data2.clear();

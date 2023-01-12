@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.validation;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.InAdvanceOrderMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Order;
@@ -29,14 +30,14 @@ public class InAdvanceOrderValidator {
     String arrivalHours, arrivalDate , arrivalMinutes ;
     String leavingHours, leavingDate , leavingMinutes ;
     List<ParkingLots> parkingLots;
-    List<InAdvanceOrder> orders;
+    List<InAdvanceOrderEntity> orders;
 
     public static void  validateInAdvaceOrder(){
 
     }
 
     public InAdvanceOrderValidator(String carNumber, String parkingLot, String arrivalHours
-            , String arrivalDate, String arrivalMinutes, String leavingHours, String leavingDate, String leavingMinutes, List<ParkingLots> parkingLots, List<InAdvanceOrder> orders) {
+            , String arrivalDate, String arrivalMinutes, String leavingHours, String leavingDate, String leavingMinutes, List<ParkingLots> parkingLots, List<InAdvanceOrderEntity> orders) {
         this.carNumber = carNumber;
         this.parkingLot = parkingLot;
         this.arrivalHours = arrivalHours;
@@ -59,6 +60,11 @@ public class InAdvanceOrderValidator {
 //        if(!(email.equals(user.getEmail()))){
 //            return false;
 //        }
+
+        if(arrivalDate == null || arrivalHours == null  || arrivalMinutes == null  ||
+        leavingDate == null || leavingHours == null  || leavingMinutes == null  || carNumber == null || parkingLot == null ) {
+            return false ;
+        }
         String arrivalTimeAndDate = arrivalDate + " " + arrivalHours + ":" + arrivalMinutes;
         String leavingTimeAndDate = leavingDate + " " + leavingHours + ":" + leavingMinutes;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //  ??dd/MM/yyyy HH:mm instead??
@@ -78,14 +84,13 @@ public class InAdvanceOrderValidator {
             }
         }
         int counter = 0;
-
-
-        for(InAdvanceOrder order : orders){
-            String orderArrivalTime = order.getArrivalDate() + " " + order.getArrivalHours() + ":" + order.getArrivalMinutes();
+        for(InAdvanceOrderEntity order : orders){
+            String orderArrivalTime = order.getArrivalDate()+ " " + order.getArrivalHours() + ":" + order.getArrivalMinutes();
             String orderLeavingTime = order.getLeavingDate() + " " + order.getLeavingHours() + ":" + order.getLeavingMinutes();
             LocalDateTime orderArrival = LocalDateTime.parse(orderArrivalTime,formatter);
             LocalDateTime orderLeaving = LocalDateTime.parse(orderLeavingTime,formatter);
-            if(orderArrival.isBefore(dateTimeLeaving) || dateTimeArrival.isBefore(orderLeaving)){
+            if((orderArrival.isBefore(dateTimeLeaving) && !orderLeaving.isBefore(dateTimeArrival))
+                    || (dateTimeArrival.isBefore(orderLeaving) && !dateTimeLeaving.isBefore(orderArrival))){
                 counter++;
             }
         }

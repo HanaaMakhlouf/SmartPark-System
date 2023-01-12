@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -48,9 +50,13 @@ public class UserBoundaryController {
         this.id = id ;
     }
 
-    @FXML
-    void cancelOrder(ActionEvent event) {
+    public String getId() {
+        return id;
+    }
 
+    @FXML
+    void cancelOrder(ActionEvent event) throws IOException{
+        Navigate.navigate(event , "../cancelOrder.fxml");
     }
 
     @FXML
@@ -80,12 +86,24 @@ public class UserBoundaryController {
 
     @FXML
     void registerAsAMember(ActionEvent event) throws IOException {
-        Navigate.navigate(event , "../registerAsAMember.fxml");
+
+        FXMLLoader tableViewParent = null;
+        try {
+            tableViewParent = new FXMLLoader(getClass().getResource("../registerAsAMember.fxml"));
+            Scene tableViewScene = new Scene(tableViewParent.load());
+            Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentWindow.setScene(tableViewScene);
+            currentWindow.show();
+            RegisterAsAMember registerAsAMember = tableViewParent.getController();
+            registerAsAMember.setId(this.id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    void sendComplaint(ActionEvent event) {
-
+    void sendComplaint(ActionEvent event) throws IOException {
+        Navigate.navigate(event , "../sendComplaint.fxml");
     }
 
     @FXML
@@ -96,8 +114,22 @@ public class UserBoundaryController {
 }
 
 
+//   MIGHT NEED IN THE FUTURE
 
-
+//        FXMLLoader tableViewParent = null;
+//        try {
+//            tableViewParent = new FXMLLoader(getClass().getResource("../inAdvanceOrder.fxml"));
+//            Scene tableViewScene = new Scene(tableViewParent.load());
+//            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+//            window.setScene(tableViewScene);
+//            window.show();
+//            InAdvanceOrder inAdvanceOrder = tableViewParent.getController();
+//            inAdvanceOrder.setUp();
+////            user.setUser(idTxt.getText());
+//            // System.out.println(idTxt.getText());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 
 
