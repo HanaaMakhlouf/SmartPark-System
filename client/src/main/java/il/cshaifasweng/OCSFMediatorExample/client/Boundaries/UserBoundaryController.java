@@ -1,9 +1,14 @@
 package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
+import il.cshaifasweng.OCSFMediatorExample.client.CustomerServiceEmployeeController;
 import il.cshaifasweng.OCSFMediatorExample.client.PricesTable;
+import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetallOrdersOfClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import il.cshaifasweng.OCSFMediatorExample.client.SendComplaintController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,8 +17,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.zip.InflaterInputStream;
 
 public class UserBoundaryController {
 
@@ -55,8 +63,9 @@ public class UserBoundaryController {
     }
 
     @FXML
-    void cancelOrder(ActionEvent event) throws IOException{
+    void cancelOrder(ActionEvent event) throws IOException {
         Navigate.navigate(event , "../cancelOrder.fxml");
+
     }
 
     @FXML
@@ -81,7 +90,15 @@ public class UserBoundaryController {
 
     @FXML
     void inAdvancedOrder(ActionEvent event)throws IOException {
-        Navigate.navigate(event , "../inAdvanceOrder.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../inAdvanceOrder.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        InAdvanceOrder inadv = tableViewParent.getController();
+        System.out.println("user id is "+id);
+        inadv.setId(id);
+
     }
 
     @FXML
@@ -103,13 +120,34 @@ public class UserBoundaryController {
 
     @FXML
     void sendComplaint(ActionEvent event) throws IOException {
-        Navigate.navigate(event , "../sendComplaint.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../sendComplaint1.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        SendComplaintController complaint = tableViewParent.getController();
+        complaint.setSenderId(this.id);
     }
 
     @FXML
-    void trackOrder(ActionEvent event) {
+    void trackOrder(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../trackorders.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        ArrayList<InAdvanceOrderEntity> list = new ArrayList<>();
+        GetallOrdersOfClient msg = new GetallOrdersOfClient();
+        msg.setId(id);
+        msg.setLst(list);
+        SimpleClient.getClient().sendToServer(msg);
+        currentWindow.show();
+
+        /*InAdvanceOrder inadv = tableViewParent.getController();
+        System.out.println("user id is "+id);
+        inadv.setId(id);*/
 
     }
+
 
 }
 

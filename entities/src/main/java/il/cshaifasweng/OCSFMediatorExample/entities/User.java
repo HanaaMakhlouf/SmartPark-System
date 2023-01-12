@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.*;
 
 
@@ -22,7 +23,18 @@ public class User implements Serializable {
     private String Email;
     @Column(name = "Password")
     private String Password;
-//    @Column(name = "complaints")
+    @Column(name = "Balance")
+    private Double balance=0.0;
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    //    @Column(name = "complaints")
 //    private ArrayList<Complaint> complaintList;
 //    @Column(name = "orders")
 //    private ArrayList<Order> ordersList;
@@ -31,6 +43,7 @@ public class User implements Serializable {
         this.id = id;
         this.Email = email;
         this.Password=Password;
+
     }
 
     public User() {

@@ -17,7 +17,7 @@ public class ParkingLots implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    @Column(name = "Name ")
+    @Column(name = "Name")
     String name;
 
     @Column(name = "num_of_rows")
@@ -27,9 +27,7 @@ public class ParkingLots implements Serializable {
     int parking_spots;
 
 
-
     public ParkingLots() {
-
     }
 
     public String getName() {
@@ -67,7 +65,7 @@ public class ParkingLots implements Serializable {
     public ParkingLots(int num_of_rows, String name) {
         this.num_of_rows = num_of_rows;
         this.name = name;
-        this.parking_spots = 9*num_of_rows;
+        this.parking_spots = 9 * num_of_rows;
     }
 
     public void setNum_of_rows(int num_of_rows) {

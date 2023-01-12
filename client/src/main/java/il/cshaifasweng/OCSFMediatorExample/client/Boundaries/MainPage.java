@@ -1,11 +1,11 @@
 
 package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
-import il.cshaifasweng.OCSFMediatorExample.client.PricesTable;
-import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
+import il.cshaifasweng.OCSFMediatorExample.client.*;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.ParkingLotEmployee;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -61,19 +61,59 @@ public class MainPage {
 
     @Subscribe
     public void logInProcess(logInEvent event) throws IOException {
-        if (event.getResult()){
+        if (event.getResult() != 0){
             Platform.runLater(new Runnable() {
                 public void run() {
                     FXMLLoader tableViewParent = null;
                     try {
-                        tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
-                        Scene tableViewScene = new Scene(tableViewParent.load());
+                        if(event.getResult() == 6) {  tableViewParent = new FXMLLoader(getClass().getResource("../admin.fxml"));
+                            Scene tableViewScene = new Scene(tableViewParent.load());
+                            currentWindow.setScene(tableViewScene);
+                            currentWindow.show();
+                            CustomerServiceEmployeeController cs_employee = tableViewParent.getController();
+                            cs_employee.setCS_employee(idTxt.getText()); }
+                        if(event.getResult() == 5) {
+                            tableViewParent = new FXMLLoader(getClass().getResource("../customerServiceEmployeeBoundary.fxml"));
+                            Scene tableViewScene = new Scene(tableViewParent.load());
+                            currentWindow.setScene(tableViewScene);
+                            currentWindow.show();
+                            CustomerServiceEmployeeController cs_employee = tableViewParent.getController();
+                            cs_employee.setCS_employee(idTxt.getText());
+                        }
+                        if(event.getResult() == 4) {
+                            tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
+                            Scene tableViewScene = new Scene(tableViewParent.load());
+                            currentWindow.setScene(tableViewScene);
+                            currentWindow.show();
+                            UserBoundaryController user = tableViewParent.getController();
+                            user.setUser(idTxt.getText());
+                        }
+                        else if(event.getResult() == 3) {
+                            tableViewParent = new FXMLLoader(getClass().getResource("../ParkingLotEmployeeBoundary.fxml"));
+                            Scene tableViewScene = new Scene(tableViewParent.load());
+                            currentWindow.setScene(tableViewScene);
+                            currentWindow.show();
+                            ParkingLotEmployeeController employee = tableViewParent.getController();
+                            employee.setEmployee(idTxt.getText());
+                        }
+                        else if(event.getResult() == 2) {
+                            tableViewParent = new FXMLLoader(getClass().getResource("../managerBoundary.fxml"));
+                            Scene tableViewScene = new Scene(tableViewParent.load());
+                            currentWindow.setScene(tableViewScene);
+                            currentWindow.show();
+                            ManagerController manager = tableViewParent.getController();
+                            manager.setManager(idTxt.getText());
+                        }
+                        else if(event.getResult() == 1) {
+                            tableViewParent = new FXMLLoader(getClass().getResource("../generalManageBoundary.fxml"));
+                            Scene tableViewScene = new Scene(tableViewParent.load());
+                            currentWindow.setScene(tableViewScene);
+                            currentWindow.show();
+                            GeneralManagerController gm = tableViewParent.getController();
+                            gm.setGM(idTxt.getText());
+                        }
 
-                        currentWindow.setScene(tableViewScene);
-                        currentWindow.show();
-                        UserBoundaryController user = tableViewParent.getController();
-                        user.setUser(idTxt.getText());
-                       // System.out.println(idTxt.getText());
+                        System.out.println(idTxt.getText());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
