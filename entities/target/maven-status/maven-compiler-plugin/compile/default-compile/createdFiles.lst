@@ -1,5 +1,10 @@
 il\cshaifasweng\OCSFMediatorExample\entities\LogIn.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\SendComplaintMsg.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetallOrdersOfClient.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\MessageBetweenClients.class
 il\cshaifasweng\OCSFMediatorExample\entities\Order.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\OrderToDeleteMsg.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\AdminMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayStandardMembershipMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\ParkingLots.class
 il\cshaifasweng\OCSFMediatorExample\entities\ParkingLotEmployee.class
@@ -7,11 +12,14 @@ il\cshaifasweng\OCSFMediatorExample\entities\Spot.class
 il\cshaifasweng\OCSFMediatorExample\entities\FullMemberShipEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\Complaint.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\InAdvanceOrderMessage.class
+il\cshaifasweng\OCSFMediatorExample\entities\Subscriber.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\CancelOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\SignUpMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Prices.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\Message.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayInAdvanceOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\GeneralManager.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\SetUpMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\CustomerServiceEmployee.class
 il\cshaifasweng\OCSFMediatorExample\entities\Member.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayFullMembershipMessage.class
@@ -20,7 +28,9 @@ il\cshaifasweng\OCSFMediatorExample\entities\EnterWithOutOrderEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\StandardMembershipMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\FullMembershipMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Manager.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetParkingLotByEmployeeId.class
 il\cshaifasweng\OCSFMediatorExample\entities\User.class
 il\cshaifasweng\OCSFMediatorExample\entities\Car.class
 il\cshaifasweng\OCSFMediatorExample\entities\InAdvanceOrderEntity.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\SendFailedMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\StandardMemberShipEntity.class

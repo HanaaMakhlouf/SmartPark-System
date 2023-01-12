@@ -16,7 +16,7 @@ import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
-import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
+//import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
@@ -24,7 +24,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
-import il.cshaifasweng.OCSFMediatorExample.server.validation.PayInAdvanceOrderValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.PayValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.*;
 import org.hibernate.*;
@@ -78,8 +78,6 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         configuration.addAnnotatedClass(CustomerServiceEmployee.class);
         configuration.addAnnotatedClass(Subscriber.class);
         configuration.addAnnotatedClass(Complaint.class);
-        configuration.addAnnotatedClass(FullMemberShipEntity.class);
-        configuration.addAnnotatedClass(StandardMemberShipEntity.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -625,7 +623,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
                 String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
                 String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayInAdvanceOrderValidator validator= new PayInAdvanceOrderValidator(cardNum ,cvvCard,yearCard,monthCard);
+                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
                 message.setResult(validator.validatePayment());
                 if(message.isResult()) {
                     InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getOrderId(), leavingMin, leavingDate
