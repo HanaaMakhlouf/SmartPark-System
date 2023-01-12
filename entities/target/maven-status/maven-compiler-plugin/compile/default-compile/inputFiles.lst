@@ -1,8 +1,11 @@
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\StandardMembershipMessage.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\LogIn.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\SignUpMessage.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Manager.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\FullMemberShipEntity.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\MessageBetweenClients.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Car.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\StandardMemberShipEntity.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\Message.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\InAdvanceOrderMessage.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Order.java
@@ -24,3 +27,4 @@ C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\csha
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Spot.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayInAdvanceOrderMessage.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Complaint.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\FullMembershipMessage.java
