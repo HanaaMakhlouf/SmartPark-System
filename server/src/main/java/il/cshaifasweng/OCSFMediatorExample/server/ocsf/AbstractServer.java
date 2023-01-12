@@ -77,6 +77,11 @@ public abstract class AbstractServer implements Runnable
    */
   private ServerSocket serverSocket = null;
 
+  public ServerSocket getServerSocket() {
+    if(serverSocket==null) System.out.println("null socket");
+    return serverSocket;
+  }
+
   /**
    * The connection listener thread.
    */

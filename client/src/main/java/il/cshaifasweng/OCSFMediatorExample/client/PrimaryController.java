@@ -54,7 +54,7 @@ public class PrimaryController {
 
 	@Subscribe
 	public void logInProcess(logInEvent event) throws IOException {
-		if (event.getResult()){
+		if (event.getResult() != 0){
 			Platform.runLater(new Runnable() {
 				public void run() {
 //					Stage stage = new Stage(StageStyle.UNDECORATED);
@@ -132,16 +132,7 @@ public class PrimaryController {
 	}
 
 
-	@Subscribe
-	public void getStarterData(NewSubscriberEvent event) {
-		try {
-			Message message = new Message(msgId, "send Submitters IDs");
-			SimpleClient.getClient().sendToServer(message);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 
 	@Subscribe
 	public void errorEvent(ErrorEvent event){

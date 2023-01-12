@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
@@ -55,7 +56,7 @@ public class InAdvanceOrder {
     private Button payBt;
     @FXML
     private Label status;
-    private int id;
+    private String id;
 
     public DatePicker getArrivalDate() {
         return arrivalDate;
@@ -81,9 +82,17 @@ public class InAdvanceOrder {
         return leavingMinutes;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @FXML
     void initialize() {
-      EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
        // MenuButton
 //        int x = 0;
 //        for(int i = 0 ; i<24 ; i++) {
@@ -231,7 +240,13 @@ public class InAdvanceOrder {
 
     @FXML
     void back(ActionEvent event) throws IOException {
-        Navigate.navigate(event , "../userBoundary.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        UserBoundaryController inadv = tableViewParent.getController();
+        inadv.setUser(id);
 
     }
 
