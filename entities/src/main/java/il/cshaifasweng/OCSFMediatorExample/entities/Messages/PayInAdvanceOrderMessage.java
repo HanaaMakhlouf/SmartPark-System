@@ -9,7 +9,7 @@ public class PayInAdvanceOrderMessage implements Serializable {
     private String year;
     private String month;
 
-
+private String userid;
     private String carNumber;
     private String leavingDate ;
     private String leavingHours ;
@@ -21,12 +21,20 @@ public class PayInAdvanceOrderMessage implements Serializable {
     private String orderId;
     boolean result ;
 
+    public String getUserid() {
+        return userid;
+    }
 
-    public PayInAdvanceOrderMessage(String nameOnCard, String cardNumber, String carNumber, String leavingDate
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public PayInAdvanceOrderMessage(String nameOnCard, String userid, String cardNumber, String carNumber, String leavingDate
             , String leavingHours, String leavingMinutes, String arrivingDate, String arrivingHours
             , String arrivingMinutes, String parkingLot, String orderId , String cvv , String year,
                                     String month) {
         this.nameOnCard = nameOnCard;
+        this.userid=userid;
         this.cardNumber = cardNumber;
         this.carNumber = carNumber;
         this.leavingDate = leavingDate;

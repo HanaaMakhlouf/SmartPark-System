@@ -5,6 +5,7 @@ import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -132,7 +133,22 @@ public class SimpleServer extends AbstractServer {
 		return null;
 	}
 
-	public boolean sendtoSpecificClient(int clientId,Message message) {
+/*	// Accept a new client connection
+	public void acceptClient(Socket clientSocket, String clientUsername) {
+		try {
+			// Create a new ConnectionToClient object for the client
+			ConnectionToClient client = new ConnectionToClient(clientSocket, this);
+			// Set the client's username as an attribute of the connection
+			client.setInfo("username", clientUsername);
+			// Add the client to the server
+			this.addClient(client);
+		} catch (IOException e) {
+			System.out.println("Error accepting client: " + e);
+		}
+	}
+}*/
+
+	public boolean sendtoSpecificClient(int clientId,Message message) throws IOException {
 		try {
 			for (SubscribedClient SubscribedClient : SubscribersList) {
 				if(SubscribedClient.getClientID()==clientId)
