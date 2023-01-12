@@ -15,6 +15,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,6 +40,9 @@ public class ParkingLotEmployeeController {
     @FXML // fx:id="setupBtn"
     private Button setupBtn; // Value injected by FXMLLoader
 
+    @FXML
+    private Label status;
+
 
     @FXML // fx:id="goBackBtn"
     private Button goBackBtn; // Value injected by FXMLLoader
@@ -50,7 +54,7 @@ public class ParkingLotEmployeeController {
 
 
     @FXML
-    void registerUnavailableSpot(ActionEvent event) {
+    void registerUnavailableSpot(ActionEvent event)  {
 
     }
 
@@ -78,8 +82,12 @@ public class ParkingLotEmployeeController {
                  SetUpMessage msg = new SetUpMessage(event.getPark_num());
                     try {
                         SimpleClient.getClient().sendToServer(msg);
+                        status.setText("Setup for parkingLot "+ event.getPark_num()+" is done.");
+                        status.setTextFill(Paint.valueOf("#228c22"));
+                        setupBtn.setDisable(true);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        //c
                     }
                 }
             });

@@ -8,6 +8,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetallOrdersOfClien
 import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import il.cshaifasweng.OCSFMediatorExample.client.SendComplaintController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -62,8 +63,9 @@ public class UserBoundaryController {
     }
 
     @FXML
-    void cancelOrder(ActionEvent event) throws IOException{
+    void cancelOrder(ActionEvent event) throws IOException {
         Navigate.navigate(event , "../cancelOrder.fxml");
+
     }
 
     @FXML
@@ -118,7 +120,13 @@ public class UserBoundaryController {
 
     @FXML
     void sendComplaint(ActionEvent event) throws IOException {
-        Navigate.navigate(event , "../sendComplaint.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../sendComplaint1.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        SendComplaintController complaint = tableViewParent.getController();
+        complaint.setSenderId(this.id);
     }
 
     @FXML

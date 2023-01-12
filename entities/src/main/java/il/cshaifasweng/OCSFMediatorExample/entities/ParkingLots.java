@@ -27,9 +27,7 @@ public class ParkingLots implements Serializable {
     int parking_spots;
 
 
-
     public ParkingLots() {
-
     }
 
     public String getName() {
