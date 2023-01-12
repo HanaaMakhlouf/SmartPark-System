@@ -20,6 +20,7 @@ il\cshaifasweng\OCSFMediatorExample\entities\Messages\Message.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayInAdvanceOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\GeneralManager.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\SetUpMessage.class
+il\cshaifasweng\OCSFMediatorExample\entities\ParkingLotEntitiy.class
 il\cshaifasweng\OCSFMediatorExample\entities\CustomerServiceEmployee.class
 il\cshaifasweng\OCSFMediatorExample\entities\Member.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayFullMembershipMessage.class
