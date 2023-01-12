@@ -86,6 +86,14 @@ public class SimpleClient extends AbstractClient {
 
 
 
+		else if(msg instanceof StandardMembershipMessage){
+			StandardMembershipMessage message = (StandardMembershipMessage) msg;
+			EventBus.getDefault().post(new StandardMembershipEvent(message));
+		}
+		else if(msg instanceof FullMembershipMessage){
+			FullMembershipMessage message = (FullMembershipMessage) msg;
+			EventBus.getDefault().post(new FullMembershipEvent(message));
+		}
 		else {
 			Message message = (Message) msg;
 			if (message.getMessage().equals("update submitters IDs")) {

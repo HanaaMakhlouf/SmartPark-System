@@ -57,6 +57,10 @@ public class UserBoundaryController {
         this.id = id ;
     }
 
+    public String getId() {
+        return id;
+    }
+
     @FXML
     void cancelOrder(ActionEvent event) throws IOException{
         Navigate.navigate(event , "../cancelOrder.fxml");
@@ -97,7 +101,19 @@ public class UserBoundaryController {
 
     @FXML
     void registerAsAMember(ActionEvent event) throws IOException {
-        Navigate.navigate(event , "../registerAsAMember.fxml");
+
+        FXMLLoader tableViewParent = null;
+        try {
+            tableViewParent = new FXMLLoader(getClass().getResource("../registerAsAMember.fxml"));
+            Scene tableViewScene = new Scene(tableViewParent.load());
+            Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentWindow.setScene(tableViewScene);
+            currentWindow.show();
+            RegisterAsAMember registerAsAMember = tableViewParent.getController();
+            registerAsAMember.setId(this.id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
