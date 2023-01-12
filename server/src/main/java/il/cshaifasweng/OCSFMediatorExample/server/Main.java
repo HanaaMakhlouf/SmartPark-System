@@ -248,6 +248,7 @@ private static List<Prices> data2 = new ArrayList<>();
                     session.beginTransaction();
                     session.save(newInAdvance);
                     session.flush();
+                    newInAdvance.setOrderID("10"+String.valueOf(newInAdvance.getId()));
                     session.getTransaction().commit();
                 }
                 /* needed
