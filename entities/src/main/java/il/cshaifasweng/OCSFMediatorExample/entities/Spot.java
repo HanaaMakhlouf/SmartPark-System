@@ -10,27 +10,53 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 
+import javax.persistence.*;
 
+import java.time.LocalDateTime;
+@Entity
+@Table(name = "Spots")
 public class Spot {
-    int width;
-    int column;
-    int row;
-    boolean available;
-    boolean saved;
+    @Id
+    @Column(name = "spotid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int spotID;
+    @Column(name = "width1")
+    private int width;
+    @Column(name = "column_num")
+    private int column;
+    @Column(name = "row_num")
+    private int row;
+    @Column(name = "available_1")
+    private boolean available;
+    @Column(name = "is_saved")
+    private boolean saved;
 
-    public Spot(int width, int column, int row) {
-        this.width = width;
-        this.column = column;
-        this.row = row;
+
+    @ManyToOne
+    @JoinColumn(name = "id_parking")
+    private ParkingLotEntitiy parkinglot;
+
+    public ParkingLotEntitiy getParkinglot() {
+        return parkinglot;
     }
 
-    public Spot(int i, int j, int k, boolean b, boolean b1) {
+    public void setParkinglot(ParkingLotEntitiy parkinglot) {
+        this.parkinglot = parkinglot;
+    }
+
+    public Spot(int i, int j, int k, boolean b, boolean b1,ParkingLotEntitiy p1) {
+        this.parkinglot =p1;
         this.width = i;
         this.column = j;
         this.row = k;
         this.available=b;
         this.saved=b1;
+    }
+
+
+    public Spot() {
     }
 
     public int getWidth() {

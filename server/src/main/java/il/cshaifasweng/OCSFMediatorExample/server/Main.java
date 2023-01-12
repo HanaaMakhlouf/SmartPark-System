@@ -78,6 +78,8 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         configuration.addAnnotatedClass(CustomerServiceEmployee.class);
         configuration.addAnnotatedClass(Subscriber.class);
         configuration.addAnnotatedClass(Complaint.class);
+        configuration.addAnnotatedClass(ParkingLotEntitiy.class);
+        configuration.addAnnotatedClass(Spot.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -128,6 +130,53 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         }
 //        session.getTransaction().commit();
     }
+
+    private static void InitParkings()
+    {
+        ParkingLotEntitiy p1 = new ParkingLotEntitiy(1,"Haifa port");
+        List<Spot> lst = new ArrayList<>();
+        for (int i = 0 ; i < 3 ; i++)
+            for (int j = 0 ; j < 3;j++)
+                for (int k = 0 ; k < 4;k++) {
+                    Spot s = new Spot(i, j, k, true, false,p1);
+                    session.save(s);
+                    lst.add(s);
+                }
+        p1.setSpots(lst);
+        session.save(p1);
+        session.flush();
+
+
+
+
+
+
+
+
+
+
+
+       /* ParkingLotEntitiy p1 = new ParkingLotEntitiy(1,"Haifa port");
+        session.save(p1);
+        session.flush();
+        List<Spot> lst = new ArrayList<>();
+         for (int i = 0 ; i < 3 ; i++)
+            for (int j = 0 ; j < 3;j++)
+                for (int k = 0 ; k < 4;k++) {
+                    Spot s = new Spot(i, j, k, true, false,p1);
+                    lst.add(s);
+
+                }
+        System.out.println(lst.get(0).getRow());
+        session.save(lst);
+        session.flush();
+        p1.setSpots(lst);
+        session.save(p1);
+        session.flush();*/
+
+
+    }
+
 
     private static void initUser(){
         User u1 = new User(208110130,"saed.diab.98@gmail.com","102030");
@@ -203,6 +252,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         initParkingLots();
         initPrices();
         initUser();
+        InitParkings();
         initInAdvanceOrders();
         FullMemberShipEntity tmp = new FullMemberShipEntity(208110120,"1234568","29/01/2023");
         session.save(tmp);
@@ -306,7 +356,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
     }
 
 
-    void setUpPark(int parkNum)
+   /* void setUpPark(int parkNum)
     {
         int spotsToSetUp = 0;
         if(parkNum == 1) {
@@ -331,7 +381,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     spots.add(s);
                 }
     }
-
+*/
 
 
     public boolean sendtoSpecificClient(int clientId, MessageBetweenClients message) throws IOException {
@@ -412,7 +462,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 User us = lstUsers.get(0);
                 System.out.println("refund is ");
                 System.out.println(refund);
-                us.setBalance(refund);
+                us.setBalance(us.getBalance()+refund);
 
                 session.update(us);
                 session.getTransaction().commit();
@@ -604,9 +654,9 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 message.setPark_num(park_num);
                 client.sendToClient(message);
             }
-            else if(msg instanceof SetUpMessage){
+           /* else if(msg instanceof SetUpMessage){
                 setUpPark(((SetUpMessage) msg).getPark_num());
-            }
+            }*/
             else if(msg instanceof SendComplaintMsg){
                 SendComplaintMsg message = (SendComplaintMsg) msg;
                 Complaint complaint = new Complaint(message.getSender_id(),message.getCurrDate()
