@@ -38,13 +38,12 @@ public class User implements Serializable {
 //    private ArrayList<Complaint> complaintList;
 //    @Column(name = "orders")
 //    private ArrayList<Order> ordersList;
-        /*@OneToMany(mappedBy="id")
-        private Set<InAdvanceOrderEntity> items1;
-*/
+
     public User(int id, String email,String Password) {
         this.id = id;
         this.Email = email;
         this.Password=Password;
+
     }
 
     public User() {

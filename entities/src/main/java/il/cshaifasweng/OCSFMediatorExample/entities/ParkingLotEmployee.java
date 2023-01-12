@@ -1,4 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
+
+
+import java.io.IOException;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -39,7 +43,8 @@ public class ParkingLotEmployee   implements Serializable {
         this.parkingLot = parkingLot;
     }
 
-    public ParkingLotEmployee() {
+    public ParkingLotEmployee(){
+
     }
 
     public String getPassword() {

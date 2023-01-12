@@ -14,16 +14,18 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
-import il.cshaifasweng.OCSFMediatorExample.client.StandardMembershipEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
-import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
+//import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.PayValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.*;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -42,6 +44,10 @@ private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 private static ArrayList<ConnectionToClient> clientsConn = new ArrayList<>();
 
 private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadGroup");
+
+public static ArrayList<Spot> spots_1 = new ArrayList<>();
+public static ArrayList<Spot> spots_2 = new ArrayList<>();
+public static ArrayList<Spot> spots_3 = new ArrayList<>();
 
 
     public Main(int port) {
@@ -71,6 +77,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         configuration.addAnnotatedClass(GeneralManager.class);
         configuration.addAnnotatedClass(CustomerServiceEmployee.class);
         configuration.addAnnotatedClass(Subscriber.class);
+        configuration.addAnnotatedClass(Complaint.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -80,9 +87,9 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
     }
 
     private static void initParkingLots(){
-        ParkingLots p1 = new ParkingLots(2 ,"Haifa Port" );
-        ParkingLots p2 = new ParkingLots(5, "Carmel");
-        ParkingLots p3 = new ParkingLots(7, "Central Station");
+        ParkingLots p1 = new ParkingLots(4 ,"Haifa Port" );
+        ParkingLots p2 = new ParkingLots(6, "Carmel");
+        ParkingLots p3 = new ParkingLots(8, "Central Station");
 
         session.save(p1);
         session.save(p2);
@@ -135,11 +142,6 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
     private static void initParkingLotEmployee() throws IOException {
         ParkingLotEmployee u1 = new ParkingLotEmployee(111222333,"employee1@gmail.com",
                 "111222333",1);
-       /* ConnectionToClient c = new ConnectionToClient(threadGroup,new Socket("localhost",3030),server);
-        SubscribedClient connection = new SubscribedClient(c);
-        connection.setClientID(111222333);
-        Subscriber s = new Subscriber(connection.getClientID());
-        SubscribersList.add(connection);*/
         ParkingLotEmployee u2 = new ParkingLotEmployee(444555666,"employee2@gmail.com",
                 "444555666",2);
         ParkingLotEmployee u3 = new ParkingLotEmployee(777888999,"employee3@gmail.com",
@@ -165,15 +167,8 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         // session.getTransaction().commit();
     }
 
-    private static void initGeneralManager() throws IOException {
-        GeneralManager u1 = new GeneralManager(999999999,"bigBoss@gmail.com", "999");
-       /* ConnectionToClient cc = new ConnectionToClient(threadGroup,new Socket("localhost",3030),server);
-        SubscribedClient connection2 = new SubscribedClient(cc);
-        connection2.setClientID(999999999);
-        Subscriber ss = new Subscriber(connection2.getClientID());
-        SubscribersList.add(connection2);
-        cc.start();*/
-       /* session.save(ss);*/
+    private static void initGeneralManager(){
+        GeneralManager u1 = new GeneralManager(999999999,"bigBoss@gmail.com", "999999999");
         session.save(u1);
         session.flush();
         // session.getTransaction().commit();
@@ -299,6 +294,44 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         return  ((dur.toHours()+(double)(dur.toMinutesPart()/60))*perHour);
     }
 
+    public static double calcFeeMembership(String membershipType){
+        Prices pricesData = getOfClass(Prices.class);
+        if(membershipType.equals("Full")){
+            return pricesData.getFull_mem_price();
+        }
+        else if (membershipType.equals("Standard Single"))
+            return pricesData.getSingle_car_reg_mem_price();
+        else
+            return pricesData.getMultiple_cars_reg_mem_price();
+    }
+
+
+    void setUpPark(int parkNum)
+    {
+        int spotsToSetUp = 0;
+        if(parkNum == 1) {
+            spotsToSetUp = 36;
+            fillUp(spotsToSetUp, spots_1);
+        }
+        else if (parkNum == 2) {
+            spotsToSetUp = 54;
+            fillUp(spotsToSetUp, spots_2);
+        }
+        else if (parkNum == 3) {
+                spotsToSetUp = 72;
+            fillUp(spotsToSetUp, spots_3);
+        }
+    }
+
+    private void fillUp(int spotsToSetUp, ArrayList<Spot> spots) {
+        for (int i = 0 ; i < 3 ; i++)
+            for (int j = 0 ; j < 3;j++)
+                for (int k = 0 ; k < spotsToSetUp;k++) {
+                    Spot s = new Spot(i, j, k, true, false);
+                    spots.add(s);
+                }
+    }
+
 
 
     public boolean sendtoSpecificClient(int clientId, MessageBetweenClients message) throws IOException {
@@ -331,11 +364,6 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 SubscribedClient connection = new SubscribedClient(client);
                 connection.setClientID(Integer.parseInt(message.getUserId()));
                 SubscribersList.add(connection);
-                SimpleClient.setId_of_client(message.getUserId());
-
-
-
-
                 client.sendToClient(message);
 
 
@@ -413,15 +441,8 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 if(message.getResult()){
                     session.beginTransaction();
                     User newUser = new User(Integer.parseInt(message.getUserId()), message.getUserEmail(), message.getUserPass());
-                  /*  client.setId(Integer.parseInt(message.getUserId()));
-                    SubscribedClient connection = new SubscribedClient(client);
-                    connection.setClientID(Integer.parseInt(message.getUserId()));
-                    Subscriber s = new Subscriber(connection.getClientID());
-                    SubscribersList.add(connection);*/
                     session.save(newUser);
                     session.flush();
-                  /*  session.save(s);
-                    session.flush();*/
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
@@ -453,7 +474,6 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 AdminMessage message = (AdminMessage) msg;
                 ArrayList<Subscriber> lst = new ArrayList<>();
                 for(SubscribedClient p : SubscribersList) {
-                    System.out.println("faaaat");
                     Subscriber subscriber = new Subscriber(p.getClientID());
                     lst.add(subscriber);
 
@@ -497,7 +517,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
                 String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
                 String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayInAdvanceOrderValidator validator= new PayInAdvanceOrderValidator(cardNum ,cvvCard,yearCard,monthCard);
+                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
                 message.setResult(validator.validatePayment());
                 if(message.isResult()) {
                     InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getUserid(), leavingMin, leavingDate
@@ -505,6 +525,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                     session.beginTransaction();
                     session.save(newInAdvance);
                     session.flush();
+                    newInAdvance.setOrderID("10"+String.valueOf(newInAdvance.getId()));
                     session.getTransaction().commit();
                 }
                 /* needed
@@ -520,6 +541,18 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 if (message.isResult()){
                     FullMemberShipEntity fullMemberShipEntity = new FullMemberShipEntity(Integer.parseInt(message.getId())
                             ,message.getCarNumber(),message.getStartDate());
+                    message.setFullMemberShipEntity(fullMemberShipEntity);
+                    message.setFee(calcFeeMembership("Full"));
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof PayFullMembershipMessage){
+                PayFullMembershipMessage message = (PayFullMembershipMessage) msg;
+                FullMemberShipEntity fullMemberShipEntity = message.getFullMemberShipEntity();
+                PayValidator validator= new PayValidator(message.getCardNumber()
+                        ,message.getCvv(), message.getYear(),message.getMonth());
+                message.setResult(validator.validatePayment());
+                if (message.isResult()){
                     session.beginTransaction();
                     session.save(fullMemberShipEntity);
                     session.flush();
@@ -538,6 +571,18 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 if (message.isResult()){
                     StandardMemberShipEntity standardMemberShipEntity = new StandardMemberShipEntity(Integer.parseInt(message.getId())
                             ,message.getCarNumber(),message.getStartDate(),message.getParkingLot());
+                    message.setStandardMemberShipEntity(standardMemberShipEntity);
+                    message.setFee(calcFeeMembership("Standard Single"));
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof PayStandardMembershipMessage){
+                PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
+                StandardMemberShipEntity standardMemberShipEntity = message.getStandardMemberShipEntity();
+                PayValidator validator= new PayValidator(message.getCardNumber()
+                        ,message.getCvv(), message.getYear(),message.getMonth());
+                message.setResult(validator.validatePayment());
+                if (message.isResult()){
                     session.beginTransaction();
                     session.save(standardMemberShipEntity);
                     session.flush();
@@ -547,6 +592,54 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 }
                 client.sendToClient(message);
             }
+            else if(msg instanceof GetParkingLotByEmployeeId){
+                GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
+                List<ParkingLotEmployee> employeeList = getAll(ParkingLotEmployee.class);
+                int park_num = 0;
+                for (ParkingLotEmployee em:employeeList){
+                    if(em.getId() == message.getId()) {
+                        park_num = em.getParkingLot();
+                    }
+                }
+                message.setPark_num(park_num);
+                client.sendToClient(message);
+            }
+            else if(msg instanceof SetUpMessage){
+                setUpPark(((SetUpMessage) msg).getPark_num());
+            }
+            else if(msg instanceof SendComplaintMsg){
+                SendComplaintMsg message = (SendComplaintMsg) msg;
+                Complaint complaint = new Complaint(message.getSender_id(),message.getCurrDate()
+                        ,message.getComplaint(),message.getPark_id());
+                System.out.println(message.getComplaint());
+                session.beginTransaction();
+                session.save(complaint);
+                session.flush();
+                session.getTransaction().commit();
+            }
+            else if(msg instanceof PayInAdvanceOrderMessage) {
+                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
+                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
+                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
+                message.setResult(validator.validatePayment());
+                if(message.isResult()) {
+                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getOrderId(), leavingMin, leavingDate
+                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
+                    session.beginTransaction();
+                    session.save(newInAdvance);
+                    session.flush();
+                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
+                    session.getTransaction().commit();
+                }
+                /* needed
+                make InAdvanceOrderEntity and add to DB
+                validate payment
+                 */
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -560,9 +653,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 if (request.isBlank()) {
                     message.setMessage("Error! we got an empty message");
                     client.sendToClient(message);
-                }
-
-                else if (request.equals("print parking table")) {
+                } else if (request.equals("print parking table")) {
 
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
@@ -661,7 +752,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
 
     public static void main(String[] args) throws Exception {
 
-        server = new Main(3005);
+        server = new Main(3030);
         server.listen();
         System.out.println("Server says : hi ");
         try {

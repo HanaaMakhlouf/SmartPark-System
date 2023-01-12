@@ -9,7 +9,7 @@ public class SimpleChatServer
 	private static SimpleServer server;
     public static void main( String[] args ) throws IOException
     {
-        server = new Main(3005);
+        server = new Main(3000);
         System.out.println("server is listening");
         server.listen();
     }

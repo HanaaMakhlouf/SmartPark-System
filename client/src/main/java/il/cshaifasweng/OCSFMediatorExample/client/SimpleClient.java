@@ -1,8 +1,10 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
 import jdk.jfr.Event;
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,10 +34,7 @@ public class SimpleClient extends AbstractClient {
 		if(msg instanceof logInMessage){
 			logInMessage message = (logInMessage) msg;
 			EventBus.getDefault().post(new logInEvent(message.getResult()));
-		}
-
-
-		else if(msg instanceof SignUpMessage){
+		}else if(msg instanceof SignUpMessage){
 			SignUpMessage message = (SignUpMessage) msg;
 			EventBus.getDefault().post(new SignUpEvent(message.getResult()));
 		}
@@ -90,9 +89,27 @@ public class SimpleClient extends AbstractClient {
 			StandardMembershipMessage message = (StandardMembershipMessage) msg;
 			EventBus.getDefault().post(new StandardMembershipEvent(message));
 		}
+		else if(msg instanceof PayFullMembershipMessage){
+			PayFullMembershipMessage message = (PayFullMembershipMessage) msg;
+			EventBus.getDefault().post(new PayFullMembershipEvent(message));
+		}
 		else if(msg instanceof FullMembershipMessage){
 			FullMembershipMessage message = (FullMembershipMessage) msg;
 			EventBus.getDefault().post(new FullMembershipEvent(message));
+		}
+		else if(msg instanceof PayStandardMembershipMessage){
+			PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
+			EventBus.getDefault().post(new PayStandardMembershipEvent(message));
+		}
+
+		else if(msg instanceof GetParkingLotByEmployeeId){
+			GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
+			EventBus.getDefault().post(new SendParkNumEvent(message.getPark_num()));
+		}
+		else if(msg instanceof AdminMessage) {
+			AdminMessage message = (AdminMessage) msg;
+			ArrayList<Subscriber> lst = message.getLst();
+			EventBus.getDefault().post(new showSubsForAdminEvent(lst));
 		}
 		else {
 			Message message = (Message) msg;
@@ -124,7 +141,7 @@ public class SimpleClient extends AbstractClient {
 	
 	public static SimpleClient getClient() {
 		if (client == null) {
-			client = new SimpleClient("localhost", 3005);
+			client = new SimpleClient("localhost", 3030);
 		}
 		return client;
 	}
