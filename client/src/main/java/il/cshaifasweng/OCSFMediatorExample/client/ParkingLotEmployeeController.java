@@ -9,9 +9,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.Navigate;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetParkingLotByEmployeeId;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SetUpMessage;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Paint;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class ParkingLotEmployeeController {
 
@@ -59,9 +65,26 @@ public class ParkingLotEmployeeController {
     }
 
     @FXML
-    void setup(ActionEvent event) {
-
+    void setup(ActionEvent event) throws IOException {
+        GetParkingLotByEmployeeId msg = new GetParkingLotByEmployeeId(Integer.parseInt(this.id));
+        SimpleClient.getClient().sendToServer(msg);
     }
+
+    @Subscribe
+    public void setUpProcess(SendParkNumEvent event) throws IOException {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                 SetUpMessage msg = new SetUpMessage(event.getPark_num());
+                    try {
+                        SimpleClient.getClient().sendToServer(msg);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
@@ -69,6 +92,7 @@ public class ParkingLotEmployeeController {
         assert saveSpotBtn != null : "fx:id=\"saveSpotBtn\" was not injected: check your FXML file 'parkingLotEmployeeBoundary.fxml'.";
         assert sendToAltBtn != null : "fx:id=\"sendToAltBtn\" was not injected: check your FXML file 'parkingLotEmployeeBoundary.fxml'.";
         assert setupBtn != null : "fx:id=\"setupBtn\" was not injected: check your FXML file 'parkingLotEmployeeBoundary.fxml'.";
+        EventBus.getDefault().register(this);
 
     }
     private String id;

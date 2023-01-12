@@ -3,6 +3,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.Subscriber;
 import jdk.jfr.Event;
 import org.greenrobot.eventbus.EventBus;
 
@@ -94,6 +95,16 @@ public class SimpleClient extends AbstractClient {
 			FullMembershipMessage message = (FullMembershipMessage) msg;
 			EventBus.getDefault().post(new FullMembershipEvent(message));
 		}
+
+		else if(msg instanceof GetParkingLotByEmployeeId){
+			GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
+			EventBus.getDefault().post(new SendParkNumEvent(message.getPark_num()));
+		}
+		else if(msg instanceof AdminMessage) {
+			AdminMessage message = (AdminMessage) msg;
+			ArrayList<Subscriber> lst = message.getLst();
+			EventBus.getDefault().post(new showSubsForAdminEvent(lst));
+		}
 		else {
 			Message message = (Message) msg;
 			if (message.getMessage().equals("update submitters IDs")) {
@@ -124,7 +135,7 @@ public class SimpleClient extends AbstractClient {
 	
 	public static SimpleClient getClient() {
 		if (client == null) {
-			client = new SimpleClient("localhost", 3005);
+			client = new SimpleClient("localhost", 3030);
 		}
 		return client;
 	}

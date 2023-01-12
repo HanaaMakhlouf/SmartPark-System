@@ -25,6 +25,14 @@ public class Spot {
         this.row = row;
     }
 
+    public Spot(int i, int j, int k, boolean b, boolean b1) {
+        this.width = i;
+        this.column = j;
+        this.row = k;
+        this.available=b;
+        this.saved=b1;
+    }
+
     public int getWidth() {
         return width;
     }
