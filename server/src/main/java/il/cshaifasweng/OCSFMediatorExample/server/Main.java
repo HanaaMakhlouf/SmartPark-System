@@ -11,8 +11,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
-import il.cshaifasweng.OCSFMediatorExample.client.StandardMembershipEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
@@ -175,6 +173,17 @@ private static List<Prices> data2 = new ArrayList<>();
         return  ((dur.toHours()+(double)(dur.toMinutesPart()/60))*perHour);
     }
 
+    public static double calcFeeMembership(String membershipType){
+        Prices pricesData = getOfClass(Prices.class);
+        if(membershipType.equals("Full")){
+            return pricesData.getFull_mem_price();
+        }
+        else if (membershipType.equals("Standard Single"))
+            return pricesData.getSingle_car_reg_mem_price();
+        else
+            return pricesData.getMultiple_cars_reg_mem_price();
+    }
+
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         try {
@@ -231,7 +240,7 @@ private static List<Prices> data2 = new ArrayList<>();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
                 String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
                 String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayInAdvanceOrderValidator validator= new PayInAdvanceOrderValidator(cardNum ,cvvCard,yearCard,monthCard);
+                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
                 message.setResult(validator.validatePayment());
                 if(message.isResult()) {
                     InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum, leavingMin, leavingDate
@@ -254,12 +263,25 @@ private static List<Prices> data2 = new ArrayList<>();
                 if (message.isResult()){
                     FullMemberShipEntity fullMemberShipEntity = new FullMemberShipEntity(Integer.parseInt(message.getId())
                             ,message.getCarNumber(),message.getStartDate());
+                    message.setFullMemberShipEntity(fullMemberShipEntity);
+                    message.setFee(calcFeeMembership("Full"));
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof PayFullMembershipMessage){
+                PayFullMembershipMessage message = (PayFullMembershipMessage) msg;
+                FullMemberShipEntity fullMemberShipEntity = message.getFullMemberShipEntity();
+                PayValidator validator= new PayValidator(message.getCardNumber()
+                        ,message.getCvv(), message.getYear(),message.getMonth());
+                message.setResult(validator.validatePayment());
+                if (message.isResult()){
                     session.beginTransaction();
                     session.save(fullMemberShipEntity);
                     session.flush();
                     fullMemberShipEntity.setMembershipID("10"+fullMemberShipEntity.getId());
                     message.setMembershipId(fullMemberShipEntity.getMembershipID());
                     session.getTransaction().commit();
+
                 }
                 client.sendToClient(message);
             }
@@ -268,10 +290,21 @@ private static List<Prices> data2 = new ArrayList<>();
                 StandardMembershipValidator validator = new StandardMembershipValidator(message.getCarNumber()
                         , message.getStartDate(),message.getParkingLot());
                 message.setResult(validator.validateMembership());
-                System.out.println(message.isResult());
                 if (message.isResult()){
                     StandardMemberShipEntity standardMemberShipEntity = new StandardMemberShipEntity(Integer.parseInt(message.getId())
                             ,message.getCarNumber(),message.getStartDate(),message.getParkingLot());
+                    message.setStandardMemberShipEntity(standardMemberShipEntity);
+                    message.setFee(calcFeeMembership("Standard Single"));
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof PayStandardMembershipMessage){
+                PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
+                StandardMemberShipEntity standardMemberShipEntity = message.getStandardMemberShipEntity();
+                PayValidator validator= new PayValidator(message.getCardNumber()
+                        ,message.getCvv(), message.getYear(),message.getMonth());
+                message.setResult(validator.validatePayment());
+                if (message.isResult()){
                     session.beginTransaction();
                     session.save(standardMemberShipEntity);
                     session.flush();

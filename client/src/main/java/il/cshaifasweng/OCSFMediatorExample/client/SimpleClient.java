@@ -34,9 +34,17 @@ public class SimpleClient extends AbstractClient {
 			StandardMembershipMessage message = (StandardMembershipMessage) msg;
 			EventBus.getDefault().post(new StandardMembershipEvent(message));
 		}
+		else if(msg instanceof PayFullMembershipMessage){
+			PayFullMembershipMessage message = (PayFullMembershipMessage) msg;
+			EventBus.getDefault().post(new PayFullMembershipEvent(message));
+		}
 		else if(msg instanceof FullMembershipMessage){
 			FullMembershipMessage message = (FullMembershipMessage) msg;
 			EventBus.getDefault().post(new FullMembershipEvent(message));
+		}
+		else if(msg instanceof PayStandardMembershipMessage){
+			PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
+			EventBus.getDefault().post(new PayStandardMembershipEvent(message));
 		}
 		else {
 			Message message = (Message) msg;

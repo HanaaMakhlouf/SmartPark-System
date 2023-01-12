@@ -4,15 +4,22 @@ package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 import il.cshaifasweng.OCSFMediatorExample.client.FullMembershipEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.client.StandardMembershipEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.FullMemberShipEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.FullMembershipMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.StandardMembershipMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.StandardMemberShipEntity;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -39,6 +46,7 @@ public class StandardMembership {
     @FXML
     private Label standardMembershipId;
     String id;
+    private Stage currentWindow;
 
     public void setId(String id) {
         this.id = id;
@@ -54,6 +62,7 @@ public class StandardMembership {
         StandardMembershipMessage standardMembershipMessage = new StandardMembershipMessage(carNumber.getText()
                 ,arrival,id,parkingLot.getText());
         SimpleClient.getClient().sendToServer(standardMembershipMessage);
+        currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
 
     @FXML
@@ -69,7 +78,23 @@ public class StandardMembership {
     @Subscribe
     public void standardMember(StandardMembershipEvent event){
         if (event.getMessage().isResult()){
-            System.out.println(event.getMessage().getMembershipId());
+            Platform.runLater(new Runnable() {
+                public void run() {
+                    StandardMemberShipEntity standardMemberShipEntity = event.getMessage().getStandardMemberShipEntity();
+                    FXMLLoader tableViewParent = null;
+                    try {
+                        tableViewParent = new FXMLLoader(getClass().getResource("../payStandardMembership.fxml"));
+                        Scene tableViewScene = new Scene(tableViewParent.load());
+                        currentWindow.setScene(tableViewScene);
+                        currentWindow.show();
+                        PayStandardMembership payStandardMembership = tableViewParent.getController();
+                        payStandardMembership.setStandardMemberShipEntity(standardMemberShipEntity);
+                        payStandardMembership.setFee(event.getMessage().getFee());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
         else {
             System.out.println("failed");
