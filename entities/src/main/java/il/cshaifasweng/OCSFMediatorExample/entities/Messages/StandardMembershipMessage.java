@@ -1,5 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities.Messages;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.StandardMemberShipEntity;
+
 import java.io.Serializable;
 
 public class StandardMembershipMessage implements Serializable {
@@ -9,12 +11,30 @@ public class StandardMembershipMessage implements Serializable {
     String parkingLot;
     boolean result;
     String membershipId;
+    StandardMemberShipEntity standardMemberShipEntity;
+    double fee;
 
-    public StandardMembershipMessage(String carNumber, String startDate, String id,String parkingLot) {
+    public double getFee() {
+        return fee;
+    }
+
+    public void setFee(double fee) {
+        this.fee = fee;
+    }
+
+    public StandardMembershipMessage(String carNumber, String startDate, String id, String parkingLot) {
         this.carNumber = carNumber;
         this.startDate = startDate;
         this.id = id;
         this.parkingLot = parkingLot;
+    }
+
+    public StandardMemberShipEntity getStandardMemberShipEntity() {
+        return standardMemberShipEntity;
+    }
+
+    public void setStandardMemberShipEntity(StandardMemberShipEntity standardMemberShipEntity) {
+        this.standardMemberShipEntity = standardMemberShipEntity;
     }
 
     public String getMembershipId() {

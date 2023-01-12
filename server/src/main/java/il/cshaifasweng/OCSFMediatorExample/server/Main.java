@@ -16,7 +16,7 @@ import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
-import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
+//import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 //import il.cshaifasweng.OCSFMediatorExample.
@@ -24,7 +24,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
-import il.cshaifasweng.OCSFMediatorExample.server.validation.PayInAdvanceOrderValidator;
+import il.cshaifasweng.OCSFMediatorExample.server.validation.PayValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.*;
 import org.hibernate.*;
@@ -78,8 +78,6 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         configuration.addAnnotatedClass(CustomerServiceEmployee.class);
         configuration.addAnnotatedClass(Subscriber.class);
         configuration.addAnnotatedClass(Complaint.class);
-        configuration.addAnnotatedClass(FullMemberShipEntity.class);
-        configuration.addAnnotatedClass(StandardMemberShipEntity.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -296,6 +294,17 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         return  ((dur.toHours()+(double)(dur.toMinutesPart()/60))*perHour);
     }
 
+    public static double calcFeeMembership(String membershipType){
+        Prices pricesData = getOfClass(Prices.class);
+        if(membershipType.equals("Full")){
+            return pricesData.getFull_mem_price();
+        }
+        else if (membershipType.equals("Standard Single"))
+            return pricesData.getSingle_car_reg_mem_price();
+        else
+            return pricesData.getMultiple_cars_reg_mem_price();
+    }
+
 
     void setUpPark(int parkNum)
     {
@@ -432,15 +441,8 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 if(message.getResult()){
                     session.beginTransaction();
                     User newUser = new User(Integer.parseInt(message.getUserId()), message.getUserEmail(), message.getUserPass());
-                  /*  client.setId(Integer.parseInt(message.getUserId()));
-                    SubscribedClient connection = new SubscribedClient(client);
-                    connection.setClientID(Integer.parseInt(message.getUserId()));
-                    Subscriber s = new Subscriber(connection.getClientID());
-                    SubscribersList.add(connection);*/
                     session.save(newUser);
                     session.flush();
-                  /*  session.save(s);
-                    session.flush();*/
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
@@ -515,7 +517,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
                 String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
                 String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayInAdvanceOrderValidator validator= new PayInAdvanceOrderValidator(cardNum ,cvvCard,yearCard,monthCard);
+                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
                 message.setResult(validator.validatePayment());
                 if(message.isResult()) {
                     InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getUserid(), leavingMin, leavingDate
@@ -523,6 +525,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.beginTransaction();
                     session.save(newInAdvance);
                     session.flush();
+                    newInAdvance.setOrderID("10"+String.valueOf(newInAdvance.getId()));
                     session.getTransaction().commit();
                 }
                 /* needed
@@ -538,6 +541,18 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 if (message.isResult()){
                     FullMemberShipEntity fullMemberShipEntity = new FullMemberShipEntity(Integer.parseInt(message.getId())
                             ,message.getCarNumber(),message.getStartDate());
+                    message.setFullMemberShipEntity(fullMemberShipEntity);
+                    message.setFee(calcFeeMembership("Full"));
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof PayFullMembershipMessage){
+                PayFullMembershipMessage message = (PayFullMembershipMessage) msg;
+                FullMemberShipEntity fullMemberShipEntity = message.getFullMemberShipEntity();
+                PayValidator validator= new PayValidator(message.getCardNumber()
+                        ,message.getCvv(), message.getYear(),message.getMonth());
+                message.setResult(validator.validatePayment());
+                if (message.isResult()){
                     session.beginTransaction();
                     session.save(fullMemberShipEntity);
                     session.flush();
@@ -556,6 +571,18 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 if (message.isResult()){
                     StandardMemberShipEntity standardMemberShipEntity = new StandardMemberShipEntity(Integer.parseInt(message.getId())
                             ,message.getCarNumber(),message.getStartDate(),message.getParkingLot());
+                    message.setStandardMemberShipEntity(standardMemberShipEntity);
+                    message.setFee(calcFeeMembership("Standard Single"));
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof PayStandardMembershipMessage){
+                PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
+                StandardMemberShipEntity standardMemberShipEntity = message.getStandardMemberShipEntity();
+                PayValidator validator= new PayValidator(message.getCardNumber()
+                        ,message.getCvv(), message.getYear(),message.getMonth());
+                message.setResult(validator.validatePayment());
+                if (message.isResult()){
                     session.beginTransaction();
                     session.save(standardMemberShipEntity);
                     session.flush();
@@ -563,11 +590,6 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     message.setMembershipId(standardMemberShipEntity.getMembershipID());
                     session.getTransaction().commit();
                 }
-//                System.out.println("about to send msg to client");
-//                System.out.println(message.getResult());
-             //   message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
-             //   message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
-//                message.setInAdvanceOrder(newInAdvance);
                 client.sendToClient(message);
             }
             else if(msg instanceof GetParkingLotByEmployeeId){
@@ -601,7 +623,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
                 String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
                 String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayInAdvanceOrderValidator validator= new PayInAdvanceOrderValidator(cardNum ,cvvCard,yearCard,monthCard);
+                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
                 message.setResult(validator.validatePayment());
                 if(message.isResult()) {
                     InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getOrderId(), leavingMin, leavingDate
