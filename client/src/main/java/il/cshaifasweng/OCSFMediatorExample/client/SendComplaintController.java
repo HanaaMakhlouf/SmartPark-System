@@ -7,12 +7,19 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Date;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.ComplaintResponseController;
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.Navigate;
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.TrackComplaintsController;
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.UserBoundaryController;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetComplaintsMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -79,7 +86,7 @@ public class SendComplaintController implements Serializable {
         if (parkingLotName.equals("Haifa port")) park_id = 1;
         else  if (parkingLotName.equals("Carmel")) park_id = 2;
         else if(parkingLotName.equals("Central Station")) park_id = 3;
-        Date currentDate = new Date();
+        LocalDateTime currentDate =LocalDateTime.now();
         SendComplaintMsg message = new SendComplaintMsg(complaint,park_id,getSenderId(),currentDate);
         try {
             SimpleClient.getClient().sendToServer(message);
@@ -90,6 +97,20 @@ public class SendComplaintController implements Serializable {
         sendComplaintBtn.setDisable(true);
     }
 
+    @FXML
+    void trackComplaintsBtn(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("trackComplaints.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        TrackComplaintsController inadv = tableViewParent.getController();
+        inadv.setId(Integer.valueOf(getSenderId()));
+        ArrayList<Complaint> list = new ArrayList<>();
+        GetComplaintsMessage msg = new GetComplaintsMessage(list,getSenderId());
+        msg.setGetForWhom(2);
+        SimpleClient.getClient().sendToServer(msg);
+        currentWindow.show();
+    }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {

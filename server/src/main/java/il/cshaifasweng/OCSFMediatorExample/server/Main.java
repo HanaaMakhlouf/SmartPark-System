@@ -1,8 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,7 +13,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
-import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 //import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
@@ -483,6 +480,13 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 client.sendToClient(new_f);
 
             }
+            else if(msg instanceof GetComplaintsMessage){
+                GetComplaintsMessage message = (GetComplaintsMessage) msg;
+                List<Complaint> list = getAll(Complaint.class);
+                GetComplaintsMessage complaints = new GetComplaintsMessage(list);
+                complaints.setGetForWhom(message.getGetForWhom());
+                client.sendToClient(complaints);
+            }
             else if(msg instanceof SignUpMessage){
                 SignUpMessage message = (SignUpMessage) msg;
                 List<User> userList = getAll(User.class);
@@ -661,11 +665,31 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 SendComplaintMsg message = (SendComplaintMsg) msg;
                 Complaint complaint = new Complaint(message.getSender_id(),message.getCurrDate()
                         ,message.getComplaint(),message.getPark_id());
-                System.out.println(message.getComplaint());
                 session.beginTransaction();
                 session.save(complaint);
                 session.flush();
                 session.getTransaction().commit();
+            }
+            else if(msg instanceof SetComplaintRespondMessage){
+                System.out.println("Message is here");
+                SetComplaintRespondMessage message = (SetComplaintRespondMessage) msg;
+//                System.out.println(message.getComplaint_id());
+//                System.out.println(message.getRefundAmount());
+//                System.out.println(message.getRes());
+                List<Complaint> list = getAllWhereIdEquals(Complaint.class,String.valueOf(message.getComplaint_id()),"complaintId");
+                session.beginTransaction();
+                Complaint comp = list.get(0);
+                comp.setResponse(message.getRes());
+                session.update(comp);
+                session.flush();
+                String userId = comp.getId();
+                List<User> lstUsers = getAllWhereIdEquals(User.class,userId,"id");
+                User user = lstUsers.get(0);
+                user.setBalance(user.getBalance()+message.getRefundAmount());
+                session.update(user);
+                session.getTransaction().commit();
+
+
             }
             else if(msg instanceof PayInAdvanceOrderMessage) {
                 PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
