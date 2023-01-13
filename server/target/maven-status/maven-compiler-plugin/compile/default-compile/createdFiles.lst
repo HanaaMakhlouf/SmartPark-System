@@ -1,4 +1,5 @@
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ConnectionToClient.class
+il\cshaifasweng\OCSFMediatorExample\server\ocsf\MemberLogInControler.class
 il\cshaifasweng\OCSFMediatorExample\server\validation\InAdvanceOrderValidator.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableOriginatorServer.class
 il\cshaifasweng\OCSFMediatorExample\server\Main.class

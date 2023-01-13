@@ -23,6 +23,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.LogInController;
+import il.cshaifasweng.OCSFMediatorExample.server.ocsf.MemberLogInControler;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.PayValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
@@ -209,6 +210,24 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         session.flush();
 
     }
+    private static void initStandardMembership(){
+        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(987654321,"987654321"
+                ,"29/01/2023","Haifa Port");
+        session.save(tmp2);
+        session.flush();
+        tmp2.setMembershipID("1"+tmp2.getId());
+
+        session.flush();
+        // session.getTransaction().commit();
+    }
+    private static void initFulldMembership(){
+        FullMemberShipEntity tmp = new FullMemberShipEntity(123456789,"123456789","29/01/2023");
+        session.save(tmp);
+        session.flush();
+        tmp.setMembershipID("0"+tmp.getId());
+        session.flush();
+        // session.getTransaction().commit();
+    }
     private static void initializeData() throws Exception {
         session.beginTransaction();
         initParkingLots();
@@ -216,15 +235,17 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         initUser();
         InitParkings();
         initInAdvanceOrders();
-        FullMemberShipEntity tmp = new FullMemberShipEntity(208110120,"1234568","29/01/2023");
-        session.save(tmp);
-        session.flush();
-        tmp.setMembershipID("10"+tmp.getId());
-        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(208110120,"1234568"
-                ,"29/01/2023","Haifa Port");
-        session.save(tmp2);
-        session.flush();
-        tmp2.setMembershipID("20"+tmp2.getId());
+//        FullMemberShipEntity tmp = new FullMemberShipEntity(208110120,"1234568","29/01/2023");
+//        session.save(tmp);
+//        session.flush();
+//        tmp.setMembershipID("10"+tmp.getId());
+//        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(208110120,"1234568"
+//                ,"29/01/2023","Haifa Port");
+//        session.save(tmp2);
+//        session.flush();
+//        tmp2.setMembershipID("20"+tmp2.getId());
+        initStandardMembership();
+        initFulldMembership();
         initInAdvanceOrders();
         initParkingLotEmployee();
         initManagers();
@@ -318,6 +339,22 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll));
                 SubscribedClient connection = new SubscribedClient(client);
                 connection.setClientID(Integer.parseInt(message.getUserId()));
+                SubscribersList.add(connection);
+                client.sendToClient(message);
+            }else if (msg instanceof MemberLogInMessage) {
+                MemberLogInMessage message = (MemberLogInMessage) msg;
+                List<FullMemberShipEntity> fullmembershipList = getAll(FullMemberShipEntity.class);
+                List<StandardMemberShipEntity> standardMemberShipList = getAll(StandardMemberShipEntity.class);
+
+                MemberLogInControler memberLogInCntrl = new MemberLogInControler(message.getMemberNumber(), message.getCarNumber());
+                message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList));
+                SubscribedClient connection = new SubscribedClient(client);
+                String st = message.getMemberNumber() ;
+//                long tmp2 = Long.getLong(st) ;
+//                System.out.println(tmp2 +"tmp2");
+                connection.setClientID(Integer.parseInt(st));
+
+
                 SubscribersList.add(connection);
                 client.sendToClient(message);
             }
@@ -473,7 +510,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.beginTransaction();
                     session.save(fullMemberShipEntity);
                     session.flush();
-                    fullMemberShipEntity.setMembershipID("10"+fullMemberShipEntity.getId());
+                    fullMemberShipEntity.setMembershipID("1"+fullMemberShipEntity.getId());
                     message.setMembershipId(fullMemberShipEntity.getMembershipID());
                     session.getTransaction().commit();
                 }
@@ -503,7 +540,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.beginTransaction();
                     session.save(standardMemberShipEntity);
                     session.flush();
-                    standardMemberShipEntity.setMembershipID("20"+standardMemberShipEntity.getId());
+                    standardMemberShipEntity.setMembershipID("0"+standardMemberShipEntity.getId());
                     message.setMembershipId(standardMemberShipEntity.getMembershipID());
                     session.getTransaction().commit();
                 }

@@ -139,6 +139,7 @@ public class MainPage {
 
     @FXML
     void signinmember(ActionEvent event) throws IOException {
+        Navigate.navigate(event , "../IAmAMember.fxml");
     }
 
     @FXML

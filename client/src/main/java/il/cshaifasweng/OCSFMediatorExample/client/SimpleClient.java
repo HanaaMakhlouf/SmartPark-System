@@ -34,7 +34,11 @@ public class SimpleClient extends AbstractClient {
 		if(msg instanceof logInMessage){
 			logInMessage message = (logInMessage) msg;
 			EventBus.getDefault().post(new logInEvent(message.getResult()));
-		}else if(msg instanceof SignUpMessage){
+		}else if(msg instanceof MemberLogInMessage) {
+			MemberLogInMessage message = (MemberLogInMessage) msg;
+			EventBus.getDefault().post(new LogInMemberEvent(message));
+		}
+		else if(msg instanceof SignUpMessage){
 			SignUpMessage message = (SignUpMessage) msg;
 			EventBus.getDefault().post(new SignUpEvent(message.getResult()));
 		}

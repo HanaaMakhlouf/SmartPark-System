@@ -1,6 +1,7 @@
 il\cshaifasweng\OCSFMediatorExample\client\StandardMembershipEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ShowSendResultevent.class
 il\cshaifasweng\OCSFMediatorExample\client\showptableEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\Boundaries\MemberPage.class
 il\cshaifasweng\OCSFMediatorExample\client\Changeprices.class
 il\cshaifasweng\OCSFMediatorExample\client\ShowMessageFromOthersEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\FullMembershipEvent.class
@@ -14,6 +15,7 @@ il\cshaifasweng\OCSFMediatorExample\client\showRefundEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\NewSubscriberEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PayFullMembershipEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MainProto.class
+il\cshaifasweng\OCSFMediatorExample\client\Boundaries\IAmAMember.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\UserBoundaryController.class
 il\cshaifasweng\OCSFMediatorExample\client\GeneralManagerController.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterWithOutOrder.class
@@ -24,6 +26,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder$2.class
 il\cshaifasweng\OCSFMediatorExample\client\ParkingTable.class
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryController.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\StandardMembership$1.class
+il\cshaifasweng\OCSFMediatorExample\client\LogInMemberEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\PayFullMembership.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\SendComplaint.class
@@ -61,6 +64,7 @@ il\cshaifasweng\OCSFMediatorExample\client\SimpleChatClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\TrackOrders$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\PayStandardMembership$1.class
+il\cshaifasweng\OCSFMediatorExample\client\Boundaries\IAmAMember$1.class
 il\cshaifasweng\OCSFMediatorExample\client\ShowTrackOrdersEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Admin.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\StandardMembership.class
