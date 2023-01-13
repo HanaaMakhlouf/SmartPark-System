@@ -24,7 +24,7 @@ public class Complaint implements Serializable{
     @Column(name = "sender_id")
     private String id;
     @Column(name = "Date")
-    private Date date;
+    private LocalDateTime date;
     @Column(name = "Description")
     private String description;
     @Column(name = "park_id")
@@ -32,6 +32,9 @@ public class Complaint implements Serializable{
     @Column(name = "Response")
     private String response = "";
 
+    public int getComplaintId() {
+        return complaintId;
+    }
 
     public int getPark_id() {
         return park_id;
@@ -41,7 +44,7 @@ public class Complaint implements Serializable{
         this.park_id = park_id;
     }
 
-    public Complaint(String id, Date date, String description,int parkId) {
+    public Complaint(String id, LocalDateTime date, String description,int parkId) {
         this.id = id;
         this.date = date;
         this.description = description;
@@ -57,7 +60,7 @@ public class Complaint implements Serializable{
     }
     public void setId(String id) { this.id = id; }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -69,7 +72,7 @@ public class Complaint implements Serializable{
         return response;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

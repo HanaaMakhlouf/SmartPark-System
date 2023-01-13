@@ -1,26 +1,27 @@
 package il.cshaifasweng.OCSFMediatorExample.entities.Messages;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class SendComplaintMsg implements Serializable {
     private String complaint;
     private int park_id;
     private String sender_id;
-    private Date currDate;
+    private LocalDateTime currDate;
 
-    public SendComplaintMsg(String complaint, int park_id, String id, Date currentDate) {
+    public SendComplaintMsg(String complaint, int park_id, String id, LocalDateTime currentDate) {
         this.complaint = complaint;
         this.park_id = park_id;
         this.sender_id = id;
         this.currDate = currentDate;
     }
 
-    public Date getCurrDate() {
+    public LocalDateTime getCurrDate() {
         return currDate;
     }
 
-    public void setCurrDate(Date currDate) {
+    public void setCurrDate(LocalDateTime currDate) {
         this.currDate = currDate;
     }
 

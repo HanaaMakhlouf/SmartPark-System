@@ -48,19 +48,24 @@ public class SimpleClient extends AbstractClient {
 		}
 		else if(msg instanceof GetallOrdersOfClient) {
 			GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
-
 			System.out.println("we in clietn side");
 			System.out.println(message.getLst().get(0).getUserID());
 			EventBus.getDefault().post(new ShowTrackOrdersEvent(message));
 
-
 		}
+		else if(msg instanceof GetComplaintsMessage){
+			GetComplaintsMessage message = (GetComplaintsMessage) msg;
+			//System.out.println(message.getGetForWhom());
+			if(message.getGetForWhom() == 1)
+			EventBus.getDefault().post(new ShowComplaintsEvent(message));
+			else
+			EventBus.getDefault().post(new TrackComplaintEvent(message));
+		}
+
 		else if(msg instanceof OrderToDeleteMsg)
 		{
 			OrderToDeleteMsg message = (OrderToDeleteMsg) msg;
 			EventBus.getDefault().post(new showRefundEvent(message.getBalance()));
-
-
 		}
 
 
@@ -79,8 +84,6 @@ public class SimpleClient extends AbstractClient {
 		else if(msg instanceof SendFailedMessage)
 		{
 			EventBus.getDefault().post(new ShowSendResultevent(0));
-
-
 		}
 
 

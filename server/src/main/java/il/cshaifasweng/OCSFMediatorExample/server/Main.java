@@ -1,8 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,7 +13,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
-import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 //import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
@@ -82,7 +79,9 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         configuration.addAnnotatedClass(Spot.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties()).build();
+                .applySettings(configuration.getProperties())
+                .build();
+
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
@@ -90,6 +89,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         ParkingLots p1 = new ParkingLots(4 ,"Haifa Port" );
         ParkingLots p2 = new ParkingLots(6, "Carmel");
         ParkingLots p3 = new ParkingLots(8, "Central Station");
+
         session.save(p1);
         session.save(p2);
         session.save(p3);
@@ -100,18 +100,22 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         Prices pr1 = new Prices(20, 30, 40, 50, 60);
         session.save(pr1);
         session.flush();
+
     }
 
     private static void initInAdvanceOrders() {
         for(int i=0; i<20; i++) {
             InAdvanceOrderEntity inAdvanceOrder1 = new InAdvanceOrderEntity("1234567","123454321", "00", "20/01/2023"
                     , "16", "00", "20/01/2023", "12", "Haifa Port");
+
             session.save(inAdvanceOrder1);
             session.flush();
             inAdvanceOrder1.setOrderID("10" + String.valueOf(inAdvanceOrder1.getId()));
             session.flush();
         }
-        for(int i=0;i<5;i++) {
+
+        for(int i=0;i<5;i++)
+        {
             InAdvanceOrderEntity inAdvanceOrder2 = new InAdvanceOrderEntity("304955","123456789", "00", "20/02/2023"
                     , "16", "05", "20/02/2023", "16", "Carmel");
 
@@ -124,7 +128,8 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
 //        session.getTransaction().commit();
     }
 
-    private static void InitParkings() {
+    private static void InitParkings()
+    {
         ParkingLotEntitiy p1 = new ParkingLotEntitiy(1,"Haifa port");
         List<Spot> lst = new ArrayList<>();
         for (int i = 0 ; i < 3 ; i++)
@@ -137,6 +142,36 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         p1.setSpots(lst);
         session.save(p1);
         session.flush();
+
+
+
+
+
+
+
+
+
+
+
+       /* ParkingLotEntitiy p1 = new ParkingLotEntitiy(1,"Haifa port");
+        session.save(p1);
+        session.flush();
+        List<Spot> lst = new ArrayList<>();
+         for (int i = 0 ; i < 3 ; i++)
+            for (int j = 0 ; j < 3;j++)
+                for (int k = 0 ; k < 4;k++) {
+                    Spot s = new Spot(i, j, k, true, false,p1);
+                    lst.add(s);
+
+                }
+        System.out.println(lst.get(0).getRow());
+        session.save(lst);
+        session.flush();
+        p1.setSpots(lst);
+        session.save(p1);
+        session.flush();*/
+
+
     }
 
 
@@ -233,12 +268,36 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         session.getTransaction().commit();
     }
 
-    private static ConnectionToClient getConnection(int id) {
-        for(ConnectionToClient c : clientsConn) {
-            if (c.getIdofClientC() == id) return c;
-        }
+    private static ConnectionToClient getConnection(int id)
+    {
+        for(ConnectionToClient c : clientsConn)
+            if(c.getIdofClientC()==id) return c;
+
         return null;
     }
+    /*private static List<ParkingLots> getAllParkinglots() throws Exception {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<ParkingLots> query = builder.createQuery(ParkingLots.class);
+        query.from(ParkingLots.class);
+        List<ParkingLots> data = session.createQuery(query).getResultList();
+        return data;
+    }
+    private static List<Prices> getPrices() throws Exception {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Prices> query = builder.createQuery(Prices.class);
+        query.from(Prices.class);
+        List<Prices> data = session.createQuery(query).getResultList();
+        return data;
+    }*/
+
+//    private static List<User> getUsers() throws Exception {
+//        CriteriaBuilder builder = session.getCriteriaBuilder();
+//        session.beginTransaction();
+//        CriteriaQuery<User> query = builder.createQuery(User.class);
+//        query.from(Prices.class);
+//        List<User> users = session.createQuery(query).getResultList();
+//        return users;
+//    }
 
     public static <T> List<T> getAllWhereIdEquals(Class<T> object,String id,String field) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -293,15 +352,47 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
             return pricesData.getMultiple_cars_reg_mem_price();
     }
 
+
+   /* void setUpPark(int parkNum)
+    {
+        int spotsToSetUp = 0;
+        if(parkNum == 1) {
+            spotsToSetUp = 36;
+            fillUp(spotsToSetUp, spots_1);
+        }
+        else if (parkNum == 2) {
+            spotsToSetUp = 54;
+            fillUp(spotsToSetUp, spots_2);
+        }
+        else if (parkNum == 3) {
+                spotsToSetUp = 72;
+            fillUp(spotsToSetUp, spots_3);
+        }
+    }
+
+    private void fillUp(int spotsToSetUp, ArrayList<Spot> spots) {
+        for (int i = 0 ; i < 3 ; i++)
+            for (int j = 0 ; j < 3;j++)
+                for (int k = 0 ; k < spotsToSetUp;k++) {
+                    Spot s = new Spot(i, j, k, true, false);
+                    spots.add(s);
+                }
+    }
+*/
+
+
     public boolean sendtoSpecificClient(int clientId, MessageBetweenClients message) throws IOException {
         for(SubscribedClient s : SubscribersList)
         {
-            if(s.getClientID()==clientId) {
+            if(s.getClientID()==clientId)
+            {
                 s.getClient().sendToClient(message);
                 return true;
             }
+
         }
          return false;
+
     }
 
     @Override
@@ -316,20 +407,30 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 List<CustomerServiceEmployee> cs_employeeListgetAll= getAll(CustomerServiceEmployee.class);
                 LogInController logInCntrl = new LogInController(message.getUserId(),message.getUserPass());
                 message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll));
+
                 SubscribedClient connection = new SubscribedClient(client);
                 connection.setClientID(Integer.parseInt(message.getUserId()));
                 SubscribersList.add(connection);
                 client.sendToClient(message);
+
+
+
+
             }
             else if(msg instanceof  OrderToDeleteMsg) {
                 OrderToDeleteMsg message = (OrderToDeleteMsg) msg;
+
                 List<InAdvanceOrderEntity> List = getAllWhereIdEquals(InAdvanceOrderEntity.class,message.getId(),"orderID");
                 session.beginTransaction();
-                for(InAdvanceOrderEntity E : List) {
+
+                for(InAdvanceOrderEntity E : List)
+                {
                 session.delete(E);
+
                 }
                 session.flush();
                 session.getTransaction().commit();
+
                 session.beginTransaction();
                 InAdvanceOrderEntity ent = List.get(0);
                 String id_of_client = ent.getUserID();
@@ -347,7 +448,9 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                         if (hours_diff * 60 + min_diff > 180) refund = 0.9 * inadvPrice;
                         else if (diff <= 180 && diff >= 60) refund = 0.5 * inadvPrice;
                         else refund = 0.0;
+
                     }
+
                     else if (arrdate_diff > 0) refund = 0.9 * inadvPrice;
                 }
                 else refund = 0.9*inadvPrice;
@@ -357,13 +460,17 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 System.out.println("refund is ");
                 System.out.println(refund);
                 us.setBalance(us.getBalance()+refund);
+
                 session.update(us);
                 session.getTransaction().commit();
+
                 OrderToDeleteMsg new_msg = new OrderToDeleteMsg(message.getId());
                 new_msg.setBalance(refund);
                 client.sendToClient(new_msg);
+
             }
             else if(msg instanceof  GetallOrdersOfClient) {
+
                 GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
                 List<InAdvanceOrderEntity> List = getAllWhereIdEquals(InAdvanceOrderEntity.class, message.getId(), "UserID");
                 System.out.println("attepmpt to print from list ");
@@ -371,6 +478,14 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 System.out.println("up?");
                 GetallOrdersOfClient new_f = new GetallOrdersOfClient(List,List.get(0).getUserID());
                 client.sendToClient(new_f);
+
+            }
+            else if(msg instanceof GetComplaintsMessage){
+                GetComplaintsMessage message = (GetComplaintsMessage) msg;
+                List<Complaint> list = getAll(Complaint.class);
+                GetComplaintsMessage complaints = new GetComplaintsMessage(list);
+                complaints.setGetForWhom(message.getGetForWhom());
+                client.sendToClient(complaints);
             }
             else if(msg instanceof SignUpMessage){
                 SignUpMessage message = (SignUpMessage) msg;
@@ -403,6 +518,10 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     /*clientToSendTo.sendToClient(message);*/
                     sendtoSpecificClient(id,message);
                 }
+
+
+
+
             }
             else if(msg instanceof AdminMessage)
             {
@@ -415,6 +534,9 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 }
                 message.setLst(lst);
                 client.sendToClient(message);
+
+
+
             }
             else if(msg instanceof InAdvanceOrderMessage){
                 InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
@@ -427,9 +549,20 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 InAdvanceOrderValidator validator= new InAdvanceOrderValidator(carNum,parkingLot,arrivingHours
                         ,arrivingDate,arrivingMin,leavingHours,leavingDate,leavingMin, parkingLots, inAdvanceOrders);
                 message.setResult(validator.validateOrder());
+//                if(message.isResult()){
+//                    session.beginTransaction();
+//                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,leavingMin,leavingDate
+//                            ,leavingHours,arrivingMin,arrivingDate, arrivingHours, parkingLot);
+//                    session.save(newInAdvance);
+//                    session.flush();
+//                    session.getTransaction().commit();
+//                    message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
+//                }
+//                System.out.println("about to send msg to client");
+//                System.out.println(message.getResult());
                 message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
-                message.setUserId(message.getUserId());
-//                message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
+                message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
+//                message.setInAdvanceOrder(newInAdvance);
                 client.sendToClient(message);
             }
             else if(msg instanceof PayInAdvanceOrderMessage) {
@@ -449,6 +582,10 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     newInAdvance.setOrderID("10"+String.valueOf(newInAdvance.getId()));
                     session.getTransaction().commit();
                 }
+                /* needed
+                make InAdvanceOrderEntity and add to DB
+                validate payment
+                 */
             }
             else if(msg instanceof FullMembershipMessage){
                 FullMembershipMessage message = (FullMembershipMessage) msg;
@@ -521,16 +658,62 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 message.setPark_num(park_num);
                 client.sendToClient(message);
             }
+           /* else if(msg instanceof SetUpMessage){
+                setUpPark(((SetUpMessage) msg).getPark_num());
+            }*/
             else if(msg instanceof SendComplaintMsg){
                 SendComplaintMsg message = (SendComplaintMsg) msg;
                 Complaint complaint = new Complaint(message.getSender_id(),message.getCurrDate()
                         ,message.getComplaint(),message.getPark_id());
-                System.out.println(message.getComplaint());
                 session.beginTransaction();
                 session.save(complaint);
                 session.flush();
                 session.getTransaction().commit();
             }
+            else if(msg instanceof SetComplaintRespondMessage){
+                System.out.println("Message is here");
+                SetComplaintRespondMessage message = (SetComplaintRespondMessage) msg;
+//                System.out.println(message.getComplaint_id());
+//                System.out.println(message.getRefundAmount());
+//                System.out.println(message.getRes());
+                List<Complaint> list = getAllWhereIdEquals(Complaint.class,String.valueOf(message.getComplaint_id()),"complaintId");
+                session.beginTransaction();
+                Complaint comp = list.get(0);
+                comp.setResponse(message.getRes());
+                session.update(comp);
+                session.flush();
+                String userId = comp.getId();
+                List<User> lstUsers = getAllWhereIdEquals(User.class,userId,"id");
+                User user = lstUsers.get(0);
+                user.setBalance(user.getBalance()+message.getRefundAmount());
+                session.update(user);
+                session.getTransaction().commit();
+
+
+            }
+            else if(msg instanceof PayInAdvanceOrderMessage) {
+                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
+                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
+                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
+                message.setResult(validator.validatePayment());
+                if(message.isResult()) {
+                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getOrderId(), leavingMin, leavingDate
+                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
+                    session.beginTransaction();
+                    session.save(newInAdvance);
+                    session.flush();
+                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
+                    session.getTransaction().commit();
+                }
+                /* needed
+                make InAdvanceOrderEntity and add to DB
+                validate payment
+                 */
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
