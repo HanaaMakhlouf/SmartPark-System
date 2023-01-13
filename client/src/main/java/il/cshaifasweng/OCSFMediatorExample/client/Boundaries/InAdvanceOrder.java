@@ -6,6 +6,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.PayInAdvanceOrder;
 import il.cshaifasweng.OCSFMediatorExample.client.ParkingTable;
 import il.cshaifasweng.OCSFMediatorExample.client.SignUpEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.FullMemberShipEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.InAdvanceOrderMessage;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -57,6 +58,7 @@ public class InAdvanceOrder {
     @FXML
     private Label status;
     private String id;
+    private Stage currentWindow;
 
     public DatePicker getArrivalDate() {
         return arrivalDate;
@@ -93,41 +95,6 @@ public class InAdvanceOrder {
     @FXML
     void initialize() {
         EventBus.getDefault().register(this);
-       // MenuButton
-//        int x = 0;
-//        for(int i = 0 ; i<24 ; i++) {
-//            MenuItem menuItem1 = new MenuItem(String.valueOf(i));
-//            MenuItem menuItem2 = new MenuItem(String.valueOf(i));
-//            arrivalHours.getItems().addAll(new MenuItem(String.valueOf(i)));
-//            int finalI = i;
-//            int finalI1 = i;
-//            menuItem1.setOnAction(e -> {
-//                arrivalHours.setText(String.valueOf(x));
-//            });
-//            leavingHours.getItems().addAll(new MenuItem(String.valueOf(i)));
-//            menuItem2.setOnAction(e -> {
-//                leavingHours.setText(String.valueOf(finalI));
-//            });
-//            x++;
-//        }
-//        MenuItem menuItem1 = new MenuItem(String.valueOf(1));
-//        MenuItem menuItem2 = new MenuItem(String.valueOf(5));
-//        menuItem1.setOnAction(e -> {
-//                arrivalHours.setText(String.valueOf(12));
-//            });
-//        menuItem2.setOnAction(e -> {
-//            arrivalMinutes.setText(String.valueOf(5));
-//        });
-//        arrivalHours.getItems().addAll(menuItem1);
-//        arrivalMinutes.getItems().addAll(menuItem2);
-//        for(int i = 0 ; i<60 ; i+=5) {
-////            MenuItem menuItem1 = new MenuItem(String.valueOf(i));
-////            MenuItem menuItem2 = new MenuItem(String.valueOf(i));
-//            arrivalMinutes.getItems().addAll(new MenuItem(String.valueOf(i)));
-////            menuItem1.setOnAction(this::setArrivalMin);
-//            leavingMinutes.getItems().addAll(new MenuItem(String.valueOf(i)));
-////            menuItem2.setOnAction(this::setLeavingMin);
-//        }
         setMenuItemsHour();
         setMenuItemsMin();
     }
@@ -147,33 +114,28 @@ public class InAdvanceOrder {
            arrivalDate1 = arrivalDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
            leavingDate1 = leavingDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
-
+//        System.out.println("id is : " + this.id);
         InAdvanceOrderMessage inAdvanceOrderMessage = new InAdvanceOrderMessage(carNumb,leavingMinute,leavingDate1
-        ,leavingHour,arrivalMinute,arrivalDate1,arrivalHour,pLot);
+        ,leavingHour,arrivalMinute,arrivalDate1,arrivalHour,pLot,this.id);
         SimpleClient.getClient().sendToServer(inAdvanceOrderMessage);
+        currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
 
     @Subscribe
     public void PayProcess(InAdvanceOrderEvent event) throws IOException {
-        //System.out.println(event.getMessage().getResult());
-//        System.out.println("im in PayProcess");
-//        System.out.println(event.getResult());
         if (event.getMessage().getResult()){
             Platform.runLater(new Runnable() {
                 public void run() {
                     status.setText("");
-//                    try {
-//                        Navigate.navigate(event,"../payInAdvanceOrder.fxml");
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("../payInAdvanceOrder.fxml"));
-                    Stage stage = new Stage();
+                    FXMLLoader tableViewParent = null;
                     try {
-                        stage.setScene(new Scene(loader.load()));
-                        PayInAdvanceOrder payInAdvanceOrder = loader.getController();
+                        tableViewParent = new FXMLLoader(getClass().getResource("../payInAdvanceOrder.fxml"));
+                        Scene tableViewScene = new Scene(tableViewParent.load());
+                        currentWindow.setScene(tableViewScene);
+                        currentWindow.show();
+                        PayInAdvanceOrder payInAdvanceOrder = tableViewParent.getController();
                         payInAdvanceOrder.setFee(event.getMessage().getFee());
-                        payInAdvanceOrder.setOrderNum("10"+event.getMessage().getOrderId());
+                        payInAdvanceOrder.setOrderNum("10"+event.getMessage().getUserId());
 
                         payInAdvanceOrder.setCarNumber(event.getMessage().getCarNumber());
                         payInAdvanceOrder.setArrivingDate(event.getMessage().getArrivingDate());
@@ -183,23 +145,11 @@ public class InAdvanceOrder {
                         payInAdvanceOrder.setLeavingHours(event.getMessage().getLeavingHours());
                         payInAdvanceOrder.setLeavingMinutes(event.getMessage().getLeavingMinutes());
                         payInAdvanceOrder.setParkingLot(event.getMessage().getParkingLot());
-                        stage.show();
+//                        System.out.println("user id is : "+event.getMessage().getUserId());
+                        payInAdvanceOrder.setId(event.getMessage().getUserId());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-//                    FXMLLoader tableViewParent = null;
-//                    try {
-//                        tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
-//                        Scene tableViewScene = new Scene(tableViewParent.load());
-//
-//                        currentWindow.setScene(tableViewScene);
-//                        currentWindow.show();
-//                        UserBoundaryController user = tableViewParent.getController();
-//                        user.setUser(idTxt.getText());
-//                        // System.out.println(idTxt.getText());
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
                 }
             });
         }
@@ -214,29 +164,6 @@ public class InAdvanceOrder {
              });
         }
     }
-
-
-//    @Subscribe
-//    public void CalculateFeeAndPay(InAdvanceOrderEvent event) throws IOException{
-//        if (event.getResult()){
-//            Platform.runLater(new Runnable() {
-//                @Override
-//                public void run() {
-//
-////                    status.setText("Order");
-////                    status.setTextFill(Paint.valueOf("#228c22"));
-//
-//                }
-//            });
-//        }
-//        else {
-//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-//            Platform.runLater(() -> {
-//                status.setText("Order creation was unsuccessful!");
-//                status.setTextFill(Paint.valueOf("#228c22"));
-//            });
-//        }
-//    }
 
     @FXML
     void back(ActionEvent event) throws IOException {

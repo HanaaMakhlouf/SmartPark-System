@@ -14,21 +14,14 @@ public class InAdvanceOrderMessage implements Serializable {
     private String arrivingHours ;
     private String parkingLot;
     private String orderId;
+    private String userId;
 
     private double fee;
     boolean result;
-//    InAdvanceOrderEntity inAdvanceOrder;
 
-//    public void setInAdvanceOrder(InAdvanceOrderEntity inAdvanceOrder) {
-//        this.inAdvanceOrder = inAdvanceOrder;
-//    }
-//
-//    public InAdvanceOrderEntity getInAdvanceOrder() {
-//        return inAdvanceOrder;
-//    }
 
     public InAdvanceOrderMessage(String carNumber, String leavingMinutes, String leavingDate
-            , String leavingHours, String arrivingMinutes, String arrivingDate, String arrivingHours, String pLot) {
+            , String leavingHours, String arrivingMinutes, String arrivingDate, String arrivingHours, String pLot,String userId) {
         this.carNumber = carNumber;
         this.leavingMinutes = leavingMinutes;
         this.leavingDate = leavingDate;
@@ -37,8 +30,17 @@ public class InAdvanceOrderMessage implements Serializable {
         this.arrivingDate = arrivingDate;
         this.arrivingHours = arrivingHours;
         this.parkingLot = pLot;
+        this.userId = userId;
         fee = 0;
         result = false;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void setFee(double fee) {
