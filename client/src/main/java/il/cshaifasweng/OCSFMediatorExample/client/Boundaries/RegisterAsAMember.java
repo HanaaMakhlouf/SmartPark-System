@@ -47,18 +47,6 @@ public class RegisterAsAMember {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fullMembership.fxml"));
-//        Stage stage = new Stage();
-//        try {
-//            stage.setScene(new Scene(loader.load()));
-//            FullMembership fullMembership = loader.getController();
-//            fullMembership.setId(this.id);
-//            stage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Navigate.navigate(event, "../fullMembership.fxml");
     }
 
     @FXML
@@ -76,24 +64,17 @@ public class RegisterAsAMember {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("../standardMembership.fxml"));
-//        Stage stage = new Stage();
-//        try {
-//            stage.setScene(new Scene(loader.load()));
-//            StandardMembership standardMembership = loader.getController();
-//            standardMembership.setId(this.id);
-//            stage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Navigate.navigate(event, "../standardMembership.fxml");
-
     }
 
     @FXML
     void back(ActionEvent event) throws IOException {
-        Navigate.navigate(event, "../userBoundary.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        UserBoundaryController inadv = tableViewParent.getController();
+        inadv.setUser(id);
     }
 
 }

@@ -12,9 +12,11 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -135,8 +137,15 @@ public class PayStandardMembership {
 
     @FXML
     void back(ActionEvent event)throws IOException {
-        Navigate.navigate(event , "../userBoundary.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        UserBoundaryController inadv = tableViewParent.getController();
+        inadv.setUser(String.valueOf(standardMemberShipEntity.getId()));
     }
+
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
