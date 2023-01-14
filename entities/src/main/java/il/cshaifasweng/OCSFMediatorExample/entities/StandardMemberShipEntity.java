@@ -64,6 +64,7 @@ public class StandardMemberShipEntity implements Serializable {
     }
 
     public String getCarNumber() {
+
         return carNumber;
     }
 
@@ -86,4 +87,5 @@ public class StandardMemberShipEntity implements Serializable {
     public void setEndingDate(String endingDate) {
         this.endingDate = endingDate;
     }
+
 }
