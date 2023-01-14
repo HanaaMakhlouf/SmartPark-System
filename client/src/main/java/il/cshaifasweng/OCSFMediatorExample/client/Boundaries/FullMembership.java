@@ -84,7 +84,14 @@ public class FullMembership {
     }
     @FXML
     void back(ActionEvent event) throws IOException {
-        Navigate.navigate(event, "../registerAsAMember.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("userBoundary.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        UserBoundaryController user = tableViewParent.getController();
+        user.setUser(this.id);
+//        Navigate.navigate(event, "../registerAsAMember.fxml");
     }
     @FXML
     void initialize() {

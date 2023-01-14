@@ -34,10 +34,7 @@ public class SimpleClient extends AbstractClient {
 		if(msg instanceof logInMessage){
 			logInMessage message = (logInMessage) msg;
 			EventBus.getDefault().post(new logInEvent(message.getResult()));
-		}
-
-
-		else if(msg instanceof SignUpMessage){
+		}else if(msg instanceof SignUpMessage){
 			SignUpMessage message = (SignUpMessage) msg;
 			EventBus.getDefault().post(new SignUpEvent(message.getResult()));
 		}
@@ -51,19 +48,24 @@ public class SimpleClient extends AbstractClient {
 		}
 		else if(msg instanceof GetallOrdersOfClient) {
 			GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
-
 			System.out.println("we in clietn side");
 			System.out.println(message.getLst().get(0).getUserID());
 			EventBus.getDefault().post(new ShowTrackOrdersEvent(message));
 
-
 		}
+		else if(msg instanceof GetComplaintsMessage){
+			GetComplaintsMessage message = (GetComplaintsMessage) msg;
+			//System.out.println(message.getGetForWhom());
+			if(message.getGetForWhom() == 1)
+			EventBus.getDefault().post(new ShowComplaintsEvent(message));
+			else
+			EventBus.getDefault().post(new TrackComplaintEvent(message));
+		}
+
 		else if(msg instanceof OrderToDeleteMsg)
 		{
 			OrderToDeleteMsg message = (OrderToDeleteMsg) msg;
 			EventBus.getDefault().post(new showRefundEvent(message.getBalance()));
-
-
 		}
 
 
@@ -82,8 +84,6 @@ public class SimpleClient extends AbstractClient {
 		else if(msg instanceof SendFailedMessage)
 		{
 			EventBus.getDefault().post(new ShowSendResultevent(0));
-
-
 		}
 
 
@@ -92,23 +92,23 @@ public class SimpleClient extends AbstractClient {
 			StandardMembershipMessage message = (StandardMembershipMessage) msg;
 			EventBus.getDefault().post(new StandardMembershipEvent(message));
 		}
+		else if(msg instanceof PayFullMembershipMessage){
+			PayFullMembershipMessage message = (PayFullMembershipMessage) msg;
+			EventBus.getDefault().post(new PayFullMembershipEvent(message));
+		}
 		else if(msg instanceof FullMembershipMessage){
 			FullMembershipMessage message = (FullMembershipMessage) msg;
 			EventBus.getDefault().post(new FullMembershipEvent(message));
+		}
+		else if(msg instanceof PayStandardMembershipMessage){
+			PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
+			EventBus.getDefault().post(new PayStandardMembershipEvent(message));
 		}
 
 		else if(msg instanceof GetParkingLotByEmployeeId){
 			GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
 			EventBus.getDefault().post(new SendParkNumEvent(message.getPark_num()));
 		}
-//		else if(msg instanceof InAdvanceOrderMessage){
-//			InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
-//			EventBus.getDefault().post(new InAdvanceOrderEvent(message));
-//		}
-//		else if(msg instanceof PayInAdvanceOrderMessage){
-//			PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
-//			EventBus.getDefault().post(new PayInAdvanceOrderEvent(message));
-//		}
 		else if(msg instanceof AdminMessage) {
 			AdminMessage message = (AdminMessage) msg;
 			ArrayList<Subscriber> lst = message.getLst();

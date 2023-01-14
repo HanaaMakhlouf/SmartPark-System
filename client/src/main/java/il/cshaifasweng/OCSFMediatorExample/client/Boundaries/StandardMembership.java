@@ -67,7 +67,13 @@ public class StandardMembership {
 
     @FXML
     void back(ActionEvent event) throws IOException {
-        Navigate.navigate(event, "../registerAsAMember.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../registerAsAMember.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        RegisterAsAMember registerAsAMember = tableViewParent.getController();
+        registerAsAMember.setId(id);
     }
     @FXML
     void initialize() {

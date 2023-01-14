@@ -5,7 +5,11 @@ import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.PayInAdvanceOrderMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -51,7 +55,7 @@ public class PayInAdvanceOrder {
     private String orderId;
     double fee;
     String orderNum;
-    int id;
+    String  id;
 
 
     @FXML
@@ -64,7 +68,7 @@ public class PayInAdvanceOrder {
 
 
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -82,7 +86,7 @@ public class PayInAdvanceOrder {
         orderNumber.setText(orderNum);
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -101,7 +105,7 @@ public class PayInAdvanceOrder {
         String cvvNum = cvv.getText();
         String cardYear = yearPayment.getText();
         String cardMonth = monthPayment.getText();
-        PayInAdvanceOrderMessage message = new PayInAdvanceOrderMessage(cardName,Integer.toString(id),cardNum,carNumber,leavingDate,leavingHours
+        PayInAdvanceOrderMessage message = new PayInAdvanceOrderMessage(cardName,id,cardNum,carNumber,leavingDate,leavingHours
                 ,leavingMinutes,arrivingDate,arrivingHours,arrivingMinutes,parkingLot,orderId , cvvNum, cardYear ,cardMonth);
         SimpleClient.getClient().sendToServer(message);
     }
@@ -113,7 +117,13 @@ public class PayInAdvanceOrder {
 
     @FXML
     void back(ActionEvent event)throws IOException {
-        Navigate.navigate(event , "../userBoundary.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        UserBoundaryController inadv = tableViewParent.getController();
+        inadv.setUser(id);
     }
     public void setOrderId(String orderId) {
         this.orderId = orderId;

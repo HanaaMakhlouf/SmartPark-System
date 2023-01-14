@@ -9,7 +9,9 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>server</module>
+		<module>client</module>
 		<module>entities</module>
+
 
 	</modules>
 	<properties>

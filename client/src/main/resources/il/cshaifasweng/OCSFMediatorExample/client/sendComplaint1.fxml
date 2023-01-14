@@ -23,5 +23,6 @@
       <Text layoutX="15.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose parking lot" />
       <TextArea fx:id="complaintContent" layoutX="121.0" layoutY="100.0" prefHeight="242.0" prefWidth="470.0" />
       <Label fx:id="label" layoutX="281.0" layoutY="376.0" prefHeight="17.0" prefWidth="183.0" />
+      <Button layoutX="453.0" layoutY="69.0" mnemonicParsing="false" onAction="#trackComplaintsBtn" text="Track your complaints" />
    </children>
 </AnchorPane>
