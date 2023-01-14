@@ -69,13 +69,26 @@ public class UserBoundaryController {
     }
 
     @FXML
-    void enterWithOrder(ActionEvent event) {
-
+    void enterWithOrder(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../enterWithOrder.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        EnterWithOrder inadv = tableViewParent.getController();
+//        System.out.println("user id is "+id);
+        inadv.setUserId(id);
     }
 
     @FXML
     void enterWithOutOrder(ActionEvent event)throws IOException {
-        Navigate.navigate(event , "../enterWithOutOrder.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../enterWithOutOrder.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        EnterWithOutOrder inadv = tableViewParent.getController();
+        inadv.setId(id);
     }
 
     @FXML

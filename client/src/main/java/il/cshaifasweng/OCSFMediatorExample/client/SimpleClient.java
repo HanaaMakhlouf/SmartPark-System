@@ -48,43 +48,24 @@ public class SimpleClient extends AbstractClient {
 		}
 		else if(msg instanceof GetallOrdersOfClient) {
 			GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
-
 			System.out.println("we in clietn side");
 			System.out.println(message.getLst().get(0).getUserID());
 			EventBus.getDefault().post(new ShowTrackOrdersEvent(message));
-
-
 		}
 		else if(msg instanceof OrderToDeleteMsg)
 		{
 			OrderToDeleteMsg message = (OrderToDeleteMsg) msg;
 			EventBus.getDefault().post(new showRefundEvent(message.getBalance()));
-
-
-		}
-
-
-		else if(msg instanceof AdminMessage) {
-			AdminMessage message = (AdminMessage) msg;
-			ArrayList<Subscriber> lst = message.getLst();
-			EventBus.getDefault().post(new showSubsForAdminEvent(lst));
 		}
 		else if(msg instanceof MessageBetweenClients) {
 
 			MessageBetweenClients message = (MessageBetweenClients) msg;
 			EventBus.getDefault().post(new ShowMessageFromOthersEvent(message));
-
-
 		}
 		else if(msg instanceof SendFailedMessage)
 		{
 			EventBus.getDefault().post(new ShowSendResultevent(0));
-
-
 		}
-
-
-
 		else if(msg instanceof StandardMembershipMessage){
 			StandardMembershipMessage message = (StandardMembershipMessage) msg;
 			EventBus.getDefault().post(new StandardMembershipEvent(message));
@@ -101,7 +82,6 @@ public class SimpleClient extends AbstractClient {
 			PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
 			EventBus.getDefault().post(new PayStandardMembershipEvent(message));
 		}
-
 		else if(msg instanceof GetParkingLotByEmployeeId){
 			GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
 			EventBus.getDefault().post(new SendParkNumEvent(message.getPark_num()));
@@ -110,6 +90,14 @@ public class SimpleClient extends AbstractClient {
 			AdminMessage message = (AdminMessage) msg;
 			ArrayList<Subscriber> lst = message.getLst();
 			EventBus.getDefault().post(new showSubsForAdminEvent(lst));
+		}
+		else if(msg instanceof EnterWithOrderMessage) {
+			EnterWithOrderMessage message = (EnterWithOrderMessage) msg;
+			EventBus.getDefault().post(new EnterWithOrderEvent(message));
+		}
+		else if(msg instanceof EnterWithOutOrderMessage) {
+			EnterWithOutOrderMessage message = (EnterWithOutOrderMessage) msg;
+			EventBus.getDefault().post(new EnterWithOutOrderEvent(message));
 		}
 		else {
 			Message message = (Message) msg;

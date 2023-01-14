@@ -80,6 +80,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         configuration.addAnnotatedClass(Complaint.class);
         configuration.addAnnotatedClass(ParkingLotEntitiy.class);
         configuration.addAnnotatedClass(Spot.class);
+        configuration.addAnnotatedClass(InPlaceOrderEntity.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties()).build();
@@ -219,12 +220,12 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         FullMemberShipEntity tmp = new FullMemberShipEntity(208110120,"1234568","29/01/2023");
         session.save(tmp);
         session.flush();
-        tmp.setMembershipID("10"+tmp.getId());
+        tmp.setMembershipID("1"+tmp.getId());
         StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(208110120,"1234568"
                 ,"29/01/2023","Haifa Port");
         session.save(tmp2);
         session.flush();
-        tmp2.setMembershipID("20"+tmp2.getId());
+        tmp2.setMembershipID("0"+tmp2.getId());
         initInAdvanceOrders();
         initParkingLotEmployee();
         initManagers();
@@ -291,6 +292,41 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
             return pricesData.getSingle_car_reg_mem_price();
         else
             return pricesData.getMultiple_cars_reg_mem_price();
+    }
+
+    public static int getParkIdByName(String name){
+        CriteriaBuilder builder = Main.session.getCriteriaBuilder();
+        CriteriaQuery<ParkingLotEntitiy> query = builder.createQuery(ParkingLotEntitiy.class);
+        Root<ParkingLotEntitiy> root = query.from(ParkingLotEntitiy.class);
+        query.select(root);
+        query.where(builder.equal(root.get("name"),name));
+        return Main.session.createQuery(query).getSingleResult().getId();
+    }
+
+    public static void addCarToPark(int parkId,String carNum){
+        session.beginTransaction();
+        List<Spot> spots = getAll(Spot.class);
+        for (Spot spot:spots){
+            if(spot.getParkinglot().getId()==parkId && spot.isAvailable() && !(spot.isSaved())){
+                spot.setAvailable(false);
+                spot.setCarNum(carNum);
+                session.getTransaction().commit();
+                return;
+            }
+        }
+        session.getTransaction().commit();
+    }
+
+    public static int countFreeSpots(int parkId){
+        int count = 0;
+        List<Spot> spots = getAll(Spot.class);
+        System.out.println("num of total spots is:"+spots.size());
+        for (Spot spot:spots){
+            if(spot.getParkinglot().getId()==parkId && spot.isAvailable() && !(spot.isSaved())){
+                count++;
+            }
+        }
+        return count;
     }
 
     public boolean sendtoSpecificClient(int clientId, MessageBetweenClients message) throws IOException {
@@ -385,8 +421,8 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
-            }else if(msg instanceof MessageBetweenClients)
-            {
+            }
+            else if(msg instanceof MessageBetweenClients) {
                 MessageBetweenClients message = (MessageBetweenClients) msg;
                 int id = message.getRecepientID();
                /* ConnectionToClient clientToSendTo = getConnection(id);*/
@@ -404,8 +440,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     sendtoSpecificClient(id,message);
                 }
             }
-            else if(msg instanceof AdminMessage)
-            {
+            else if(msg instanceof AdminMessage) {
                 AdminMessage message = (AdminMessage) msg;
                 ArrayList<Subscriber> lst = new ArrayList<>();
                 for(SubscribedClient p : SubscribersList) {
@@ -449,6 +484,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     newInAdvance.setOrderID("10"+String.valueOf(newInAdvance.getId()));
                     session.getTransaction().commit();
                 }
+                client.sendToClient(message);
             }
             else if(msg instanceof FullMembershipMessage){
                 FullMembershipMessage message = (FullMembershipMessage) msg;
@@ -473,7 +509,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.beginTransaction();
                     session.save(fullMemberShipEntity);
                     session.flush();
-                    fullMemberShipEntity.setMembershipID("10"+fullMemberShipEntity.getId());
+                    fullMemberShipEntity.setMembershipID("1"+fullMemberShipEntity.getId());
                     message.setMembershipId(fullMemberShipEntity.getMembershipID());
                     session.getTransaction().commit();
                 }
@@ -503,7 +539,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.beginTransaction();
                     session.save(standardMemberShipEntity);
                     session.flush();
-                    standardMemberShipEntity.setMembershipID("20"+standardMemberShipEntity.getId());
+                    standardMemberShipEntity.setMembershipID("0"+standardMemberShipEntity.getId());
                     message.setMembershipId(standardMemberShipEntity.getMembershipID());
                     session.getTransaction().commit();
                 }
@@ -531,10 +567,50 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 session.flush();
                 session.getTransaction().commit();
             }
+            else if(msg instanceof EnterWithOrderMessage) {
+                EnterWithOrderMessage message = (EnterWithOrderMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours();
+                String arrivingMin = message.getArrivingMinutes();
+                int parkId = getParkIdByName(parkingLot);
+                List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
+                EnterWithOrderValidator validator = new EnterWithOrderValidator(carNum,parkingLot,arrivingHours
+                        ,arrivingDate,arrivingMin,inAdvanceOrders);
+                message.setResult(validator.validateOrder());
+                if(message.getResult()){
+                    InAdvanceOrderEntity order = validator.getOrder();
+                    order.setCarEntered(true);
+                    addCarToPark(parkId,carNum);
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof EnterWithOutOrderMessage) {
+                EnterWithOutOrderMessage message = (EnterWithOutOrderMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours();
+                String arrivingMin = message.getArrivingMinutes();
+                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours();
+                String leavingMin = message.getLeavingMinutes(),email=message.getEmail();
+                int parkId = getParkIdByName(parkingLot);
+                List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
+                EnterWithOutOrderValidator validator = new EnterWithOutOrderValidator(carNum,parkingLot,arrivingHours
+                        ,arrivingDate,arrivingMin,inAdvanceOrders,leavingMin,leavingDate,leavingHours);
+                message.setResult(validator.validateOrder(countFreeSpots(getParkIdByName(parkingLot))));
+                if(message.getResult()){
+                    addCarToPark(parkId,carNum);
+                    InPlaceOrderEntity newInPlace = new InPlaceOrderEntity(carNum,message.getUserId(), leavingMin, leavingDate
+                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot,email);
+                    session.beginTransaction();
+                    session.save(newInPlace);
+                    session.flush();
+                    newInPlace.setOrderID("20"+String.valueOf(newInPlace.getId()));
+                    session.getTransaction().commit();
+                }
+                client.sendToClient(message);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     if(msg instanceof Message) {
             Message message = (Message) msg;
             String request = message.getMessage();
@@ -544,8 +620,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 if (request.isBlank()) {
                     message.setMessage("Error! we got an empty message");
                     client.sendToClient(message);
-                } else if (request.equals("print parking table")) {
-
+                } else if (request.equals("print parking table")){
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
                     try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {

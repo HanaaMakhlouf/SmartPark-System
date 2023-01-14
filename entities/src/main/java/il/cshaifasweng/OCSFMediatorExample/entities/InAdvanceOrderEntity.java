@@ -30,6 +30,8 @@ public class InAdvanceOrderEntity implements Serializable {
     String arrivalHours;
     @Column(name = "parking_lot_name")
     String parkingLotName ;
+    @Column(name = "Car_Entered")
+    boolean carEntered ;
 
     public InAdvanceOrderEntity(String carNumber,String clientId, String leavingMinutes, String leavingDate, String leavingHours, String arrivalMinutes,
                                 String arrivalDate, String arrivalHours, String parkingLotName) {
@@ -42,6 +44,15 @@ public class InAdvanceOrderEntity implements Serializable {
         this.arrivalDate = arrivalDate;
         this.arrivalHours = arrivalHours;
         this.parkingLotName = parkingLotName;
+        this.carEntered=false;
+    }
+
+    public boolean isCarEntered() {
+        return carEntered;
+    }
+
+    public void setCarEntered(boolean carEntered) {
+        this.carEntered = carEntered;
     }
 
     public String getUserID() {

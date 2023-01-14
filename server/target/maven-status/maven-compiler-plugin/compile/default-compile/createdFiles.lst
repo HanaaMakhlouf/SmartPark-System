@@ -1,11 +1,13 @@
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ConnectionToClient.class
 il\cshaifasweng\OCSFMediatorExample\server\validation\InAdvanceOrderValidator.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableOriginatorServer.class
+il\cshaifasweng\OCSFMediatorExample\server\validation\EnterWithOrderValidator.class
 il\cshaifasweng\OCSFMediatorExample\server\Main.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractConnectionFactory.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableServer.class
 il\cshaifasweng\OCSFMediatorExample\server\SimpleChatServer.class
+il\cshaifasweng\OCSFMediatorExample\server\validation\EnterWithOutOrderValidator.class
 il\cshaifasweng\OCSFMediatorExample\server\validation\FullMembershipValidator.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AdaptableServer.class
 il\cshaifasweng\OCSFMediatorExample\server\validation\StandardMembershipValidator.class
