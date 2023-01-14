@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.Boundaries.MemberPage">
+   <children>
+      <Label layoutX="216.0" layoutY="24.0" prefHeight="46.0" prefWidth="255.0" text="Welcome To CPS">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <Button fx:id="backBtn" layoutX="473.0" layoutY="346.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="87.0" text="Back" />
+      <Button fx:id="enterParkingLotBt" layoutX="217.0" layoutY="89.0" mnemonicParsing="false" onAction="#enterParkingLot" prefHeight="25.0" prefWidth="165.0" text="Enter Parking Lot" />
+      <Button fx:id="renewMembershipBt" layoutX="217.0" layoutY="266.0" mnemonicParsing="false" onAction="#renewMembership" prefHeight="25.0" prefWidth="165.0" text="Renew Membership " />
+      <Button fx:id="trackBt" layoutX="217.0" layoutY="150.0" mnemonicParsing="false" onAction="#trackOrder" prefHeight="25.0" prefWidth="165.0" text=" Track Order" />
+      <Button fx:id="complaintBt" layoutX="217.0" layoutY="207.0" mnemonicParsing="false" onAction="#sendComplaint" prefHeight="25.0" prefWidth="165.0" text="Send Complaint" />
+      <Button fx:id="exitBt" layoutX="217.0" layoutY="320.0" mnemonicParsing="false" onAction="#exitParkingLot" prefHeight="25.0" prefWidth="165.0" text="Exit Parking Lot" />
+   </children>
+</AnchorPane>
