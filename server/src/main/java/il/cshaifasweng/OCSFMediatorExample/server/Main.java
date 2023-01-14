@@ -512,6 +512,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.flush();
                     fullMemberShipEntity.setMembershipID("1"+fullMemberShipEntity.getId());
                     message.setMembershipId(fullMemberShipEntity.getMembershipID());
+                    session.flush();
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
@@ -542,6 +543,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.flush();
                     standardMemberShipEntity.setMembershipID("0"+standardMemberShipEntity.getId());
                     message.setMembershipId(standardMemberShipEntity.getMembershipID());
+                    session.flush();
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
