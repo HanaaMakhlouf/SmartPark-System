@@ -16,6 +16,7 @@ il\cshaifasweng\OCSFMediatorExample\entities\Subscriber.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\CancelOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\SignUpMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Prices.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\EnterWithOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\Message.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayInAdvanceOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\GeneralManager.class
@@ -28,11 +29,13 @@ il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayFullMembershipMessage.c
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\logInMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\EnterWithOutOrderEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\StandardMembershipMessage.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\EnterWithOutOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\FullMembershipMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Manager.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetParkingLotByEmployeeId.class
 il\cshaifasweng\OCSFMediatorExample\entities\User.class
 il\cshaifasweng\OCSFMediatorExample\entities\Car.class
+il\cshaifasweng\OCSFMediatorExample\entities\InPlaceOrderEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\InAdvanceOrderEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\SendFailedMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\StandardMemberShipEntity.class

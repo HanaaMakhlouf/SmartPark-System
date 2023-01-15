@@ -3,12 +3,14 @@ package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 import il.cshaifasweng.OCSFMediatorExample.client.PayInAdvanceOrderEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.PayInAdvanceOrderMessage;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -44,6 +46,9 @@ public class PayInAdvanceOrder {
     @FXML
     private MenuButton yearPayment;
 
+    @FXML
+    private Label status;
+
     private String carNumber;
     private String leavingMinutes ;
     private String leavingDate ;
@@ -65,8 +70,6 @@ public class PayInAdvanceOrder {
         setMenuItemsYears();
 
     }
-
-
 
     public String getId() {
         return id;
@@ -100,6 +103,7 @@ public class PayInAdvanceOrder {
 
     @FXML
     void Pay(ActionEvent event) throws IOException {
+        status.setText("");
         String cardName = nameOnCard.getText();
         String cardNum = cardNumber.getText();
         String cvvNum = cvv.getText();
@@ -107,12 +111,29 @@ public class PayInAdvanceOrder {
         String cardMonth = monthPayment.getText();
         PayInAdvanceOrderMessage message = new PayInAdvanceOrderMessage(cardName,id,cardNum,carNumber,leavingDate,leavingHours
                 ,leavingMinutes,arrivingDate,arrivingHours,arrivingMinutes,parkingLot,orderId , cvvNum, cardYear ,cardMonth);
+        nameOnCard.clear();
+        cardNumber.clear();
+        cvv.clear();
+        yearPayment.setText("YY");
+        monthPayment.setText("MM");
         SimpleClient.getClient().sendToServer(message);
     }
 
     @Subscribe
     public void do_something(PayInAdvanceOrderEvent event){
-        System.out.println("im in do_something");
+        if(event.getMessage().isResult()){
+            Platform.runLater(new Runnable() {
+                public void run() {
+                    status.setText("Order Has Been Placed!");
+                    status.setTextFill(Paint.valueOf("#228c22"));
+                }
+            });
+        }
+        else {
+            status.setText("Error, Order Couldn't Be Placed!");
+            status.setTextFill(Paint.valueOf("#FF0000"));
+        }
+//        System.out.println("im in do_something");
     }
 
     @FXML

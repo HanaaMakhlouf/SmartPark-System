@@ -21,7 +21,7 @@ public class Spot {
     @Id
     @Column(name = "spotid")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int spotID;
+    private int spotid;
     @Column(name = "width1")
     private int width;
     @Column(name = "column_num")
@@ -32,6 +32,8 @@ public class Spot {
     private boolean available;
     @Column(name = "is_saved")
     private boolean saved;
+    @Column(name = "Parked_Car_Number")
+    private String carNum ;
 
 
     @ManyToOne
@@ -53,12 +55,28 @@ public class Spot {
         this.row = k;
         this.available=b;
         this.saved=b1;
+        this.carNum = "";
     }
 
 
     public Spot() {
     }
 
+    public String getCarNum() {
+        return carNum;
+    }
+
+    public void setCarNum(String carNum) {
+        this.carNum = carNum;
+    }
+
+    public int getSpotid() {
+        return spotid;
+    }
+
+    public void setSpotid(int spotid) {
+        this.spotid = spotid;
+    }
     public int getWidth() {
         return width;
     }
