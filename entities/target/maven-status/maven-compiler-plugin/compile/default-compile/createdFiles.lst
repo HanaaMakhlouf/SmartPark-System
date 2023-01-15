@@ -32,10 +32,12 @@ il\cshaifasweng\OCSFMediatorExample\entities\Messages\StandardMembershipMessage.
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\EnterWithOutOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\FullMembershipMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Manager.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetComplaintsMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetParkingLotByEmployeeId.class
 il\cshaifasweng\OCSFMediatorExample\entities\User.class
 il\cshaifasweng\OCSFMediatorExample\entities\Car.class
 il\cshaifasweng\OCSFMediatorExample\entities\InPlaceOrderEntity.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\SetComplaintRespondMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\InAdvanceOrderEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\SendFailedMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\StandardMemberShipEntity.class
