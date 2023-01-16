@@ -93,8 +93,12 @@ public class EnterWithOrder {
             });
         }
         else {
-            status.setText("Error, Car Couldn't Be Parked!");
-            status.setTextFill(Paint.valueOf("#FF0000"));
+            Platform.runLater(new Runnable() {
+                public void run() {
+                    status.setText("Error, Car Couldn't Be Parked!");
+                    status.setTextFill(Paint.valueOf("#FF0000"));
+                }
+            });
         }
     }
 

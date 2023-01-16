@@ -31,7 +31,7 @@ public class FullMemberShipEntity implements Serializable {
         this.startingDate = startingDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dateTimeArrival = LocalDate.parse(startingDate,formatter).plusDays(28);
-        this.endingDate = dateTimeArrival.toString();
+        this.endingDate = dateTimeArrival.format(formatter);
     }
 
     public FullMemberShipEntity() {

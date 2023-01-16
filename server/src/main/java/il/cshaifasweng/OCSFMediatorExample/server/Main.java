@@ -631,7 +631,6 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 message.setResult(validator.validateOrder());
                 message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
                 message.setUserId(message.getUserId());
-//                message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
                 client.sendToClient(message);
             }
             else if(msg instanceof PayInAdvanceOrderMessage) {
@@ -754,32 +753,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 user.setBalance(user.getBalance()+message.getRefundAmount());
                 session.update(user);
                 session.getTransaction().commit();
-
-
             }
-            else if(msg instanceof PayInAdvanceOrderMessage) {
-                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
-                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
-                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
-                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
-                message.setResult(validator.validatePayment());
-                if(message.isResult()) {
-                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getOrderId(), leavingMin, leavingDate
-                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
-                    session.beginTransaction();
-                    session.save(newInAdvance);
-                    session.flush();
-                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
-                    session.getTransaction().commit();
-                }
-                /* needed
-                make InAdvanceOrderEntity and add to DB
-                validate payment
-                 */
-            }
-
             else if(msg instanceof EnterWithOrderMessage) {
                 EnterWithOrderMessage message = (EnterWithOrderMessage) msg;
                 String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
@@ -795,7 +769,6 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     order.setCarEntered(true);
                     parkInBestSpot(carNum,order.getLeavingDate(), order.getLeavingHours(), order.getLeavingMinutes()
                             , parkingLot);
-//                    addCarToPark(parkId,carNum);
                 }
                 client.sendToClient(message);
             }
@@ -806,14 +779,12 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 String arrivingMin = message.getArrivingMinutes();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours();
                 String leavingMin = message.getLeavingMinutes(),email=message.getEmail();
-//                int parkId = getParkIdByName(parkingLot);
                 List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
                 EnterWithOutOrderValidator validator = new EnterWithOutOrderValidator(carNum,parkingLot,arrivingHours
                         ,arrivingDate,arrivingMin,inAdvanceOrders,leavingMin,leavingDate,leavingHours);
                 message.setResult(validator.validateOrder(countFreeSpots(getParkIdByName(parkingLot))));
                 if(message.getResult()){
                     parkInBestSpot(carNum,leavingDate,leavingHours,leavingMin,parkingLot);
-//                    addCarToPark(parkId,carNum);
                     InPlaceOrderEntity newInPlace = new InPlaceOrderEntity(carNum,message.getUserId(), leavingMin, leavingDate
                             , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot,email);
                     session.beginTransaction();
