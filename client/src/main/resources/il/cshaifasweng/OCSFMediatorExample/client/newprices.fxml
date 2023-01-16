@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="521.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.Newprices">
+   <children>
+      <Group layoutX="64.0" layoutY="173.0">
+         <children>
+            <TextField fx:id="fulltxt" layoutX="427.0" layoutY="161.0" prefHeight="26.0" prefWidth="61.0" />
+            <TextField fx:id="regmtxt" layoutX="321.0" layoutY="161.0" prefHeight="26.0" prefWidth="62.0" />
+            <TextField fx:id="regstxt" layoutX="210.0" layoutY="161.0" prefHeight="26.0" prefWidth="62.0" />
+            <TextField fx:id="inplacetxt" layoutX="103.0" layoutY="161.0" prefHeight="26.0" prefWidth="62.0" />
+            <TextField fx:id="inadvtxt" layoutY="161.0" prefHeight="26.0" prefWidth="62.0" />
+            <Label layoutX="3.0" layoutY="135.0" text="in advance" />
+            <Label layoutX="113.0" layoutY="135.0" text="in place" />
+            <Label layoutX="199.0" layoutY="135.0" text="Regular - single" />
+            <Label layoutX="304.0" layoutY="135.0" text="Regular - multiple" />
+            <Label layoutX="413.0" layoutY="135.0" text="Full Membership" />
+            <Button fx:id="sendbtn" layoutX="197.0" layoutY="244.0" mnemonicParsing="false" onAction="#addRequest" text="Send request" />
+            <Label fx:id="labelmsg" layoutX="88.0" layoutY="269.0" prefHeight="17.0" prefWidth="122.0" />
+         </children>
+      </Group>
+      <TableView fx:id="mytable" layoutX="58.0" layoutY="83.0" prefHeight="74.0" prefWidth="517.0">
+        <columns>
+          <TableColumn fx:id="inadv" prefWidth="75.0" text="in advance " />
+          <TableColumn fx:id="inplace" prefWidth="75.0" text="in place" />
+            <TableColumn fx:id="regsingle" prefWidth="106.4000244140625" text="Regular - single" />
+            <TableColumn fx:id="regmult" prefWidth="124.7999267578125" text="Regular - multiple " />
+            <TableColumn fx:id="fullmem" prefWidth="130.39998779296877" text="Full membership" />
+        </columns>
+      </TableView>
+      <Label layoutX="242.0" layoutY="41.0" text="Current Prices">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="50.0" layoutY="191.0" prefHeight="110.0" prefWidth="529.0" text="Please insert the new prices and press send to send a request to the general manager : " textOverrun="WORD_ELLIPSIS" wrapText="true">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Button fx:id="backbtn" layoutX="24.0" layoutY="459.0" mnemonicParsing="false" onAction="#backto" text="back" />
+   </children>
+</AnchorPane>

@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.Navigate;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetParkingLotByEmployeeId;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.LogoutMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SetUpMessage;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -49,6 +50,8 @@ public class ParkingLotEmployeeController {
 
     @FXML
     void goBack(ActionEvent event) throws IOException {
+        LogoutMessage l = new LogoutMessage(Integer.parseInt(id));
+        SimpleClient.getClient().sendToServer(l);
         Navigate.navigate(event , "../mainPage.fxml");
     }
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -13,8 +14,12 @@ import il.cshaifasweng.OCSFMediatorExample.client.ShowComplaintsEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetComplaintsMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SetComplaintRespondMessage;
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,8 +47,8 @@ public class ComplaintResponseController   {
     @FXML
     private Button backBtn;
 
-    @FXML
-    private ComboBox<Integer> comboBox;
+//    @FXML
+//    private ComboBox<Integer> comboBox;
 
     @FXML
     private TableColumn<Complaint, Integer> num;
@@ -100,13 +105,27 @@ public class ComplaintResponseController   {
                     if(p.getResponse().isEmpty())
                     {
                         mytable.getItems().add(p);
-                        comboBox.getItems().add(p.getComplaintId());
+                      //  comboBox.getItems().add(p.getComplaintId());
                     }
                 }
-
             }
         });
     }
+
+    Timeline timeline = new Timeline((new KeyFrame(Duration.seconds(6), event ->{
+        new Thread(()->{
+            try {
+                ArrayList<Complaint> list = new ArrayList<>();
+                GetComplaintsMessage msg = new GetComplaintsMessage(list,id);
+                msg.setGetForWhom(1);
+
+                SimpleClient.getClient().sendToServer(msg);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+    })));
 
 
     @FXML
@@ -118,6 +137,7 @@ public class ComplaintResponseController   {
         currentWindow.show();
         CustomerServiceEmployeeController cs_em = tableViewParent.getController();
         cs_em.setCS_employee(getId());
+        timeline.stop();
     }
 
 
@@ -125,12 +145,12 @@ public class ComplaintResponseController   {
     @FXML
     void sendResponse(ActionEvent event) throws IOException {
         Integer refund = Integer.valueOf(refundAmount.getText());
-        Integer compId = comboBox.getSelectionModel().getSelectedItem();
+     //   Integer compId = comboBox.getSelectionModel().getSelectedItem();
+        Integer compId = mytable.getSelectionModel().getSelectedItem().getComplaintId();
         String respond = responseTxt.getText();
         if(compId != null && refund != null && respond != null) {
             SetComplaintRespondMessage msg = new SetComplaintRespondMessage(compId,respond,refund);
             SimpleClient.getClient().sendToServer(msg);
-
             status.setText("Respond sent successfully");
             status.setMinWidth(0);
             status.setPrefWidth(Control.USE_COMPUTED_SIZE);
@@ -141,12 +161,13 @@ public class ComplaintResponseController   {
             ft.setToValue(0.0);
             ft.setCycleCount(1);
             ft.play();
-            comboBox.getItems().remove(comboBox.getSelectionModel().getSelectedItem());
+         //   comboBox.getItems().remove(comboBox.getSelectionModel().getSelectedItem());
+            mytable.getItems().remove(mytable.getSelectionModel().getSelectedItem());
             responseTxt.clear();
             refundAmount.clear();
         }
         else {
-            status.setText("please choose the complaint number");
+            status.setText("please choose the complaint");
             status.setMinWidth(0);
             status.setPrefWidth(Control.USE_COMPUTED_SIZE);
             status.setMaxWidth(Double.MAX_VALUE);
@@ -157,14 +178,16 @@ public class ComplaintResponseController   {
             ft.setCycleCount(1);
             ft.play();
         }
-
     }
 
     @FXML
     void initialize() {
         EventBus.getDefault().register(this);
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+
         assert backBtn != null : "fx:id=\"backBtn\" was not injected: check your FXML file 'complaintResponse.fxml'.";
-        assert comboBox != null : "fx:id=\"comboBox\" was not injected: check your FXML file 'complaintResponse.fxml'.";
+     //   assert comboBox != null : "fx:id=\"comboBox\" was not injected: check your FXML file 'complaintResponse.fxml'.";
         assert complaint != null : "fx:id=\"complaint\" was not injected: check your FXML file 'complaintResponse.fxml'.";
         assert num != null : "fx:id=\"num\" was not injected: check your FXML file 'complaintResponse.fxml'.";
         assert refundAmount != null : "fx:id=\"refundAmount\" was not injected: check your FXML file 'complaintResponse.fxml'.";

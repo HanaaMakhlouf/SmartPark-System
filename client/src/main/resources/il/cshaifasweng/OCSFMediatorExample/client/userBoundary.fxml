@@ -20,6 +20,6 @@
       <Button fx:id="trackBt" layoutX="343.0" layoutY="142.0" mnemonicParsing="false" onAction="#trackOrder" prefHeight="25.0" prefWidth="165.0" text=" Track Order" />
       <Button fx:id="complaintBt" layoutX="343.0" layoutY="200.0" mnemonicParsing="false" onAction="#sendComplaint" prefHeight="25.0" prefWidth="165.0" text="Send Complaint" />
       <Button fx:id="exitBt" layoutX="343.0" layoutY="254.0" mnemonicParsing="false" onAction="#exitParkingLot" prefHeight="25.0" prefWidth="165.0" text="Exit Parking Lot" />
-      <Button fx:id="cancelBt" layoutX="343.0" layoutY="79.0" mnemonicParsing="false" onAction="#cancelOrder" prefHeight="25.0" prefWidth="165.0" text="Cancel Order " />
+      <Button fx:id="cancelBt" layoutX="343.0" layoutY="79.0" mnemonicParsing="false" onAction="#cancelOrder" prefHeight="25.0" prefWidth="165.0" text="My Balance" />
    </children>
 </AnchorPane>

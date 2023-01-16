@@ -32,11 +32,20 @@ public class Spot {
     private boolean available;
     @Column(name = "is_saved")
     private boolean saved;
+    @Column(name = "disabled")
+    private boolean disabled = false;
     @Column(name = "Parked_Car_Number")
     private String carNum ;
     @Column(name = "Car_Leaving_Time")
     private String  leaving ;
 
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
     public String getLeaving() {
         return leaving;
     }
@@ -57,13 +66,13 @@ public class Spot {
         this.parkinglot = parkinglot;
     }
 
-    public Spot(int depth, int width, int height, boolean b, boolean b1,ParkingLotEntitiy p1) {
+    public Spot(int depth, int width, int height, boolean available, boolean saved,ParkingLotEntitiy p1) {
         this.parkinglot =p1;
         this.width_num = width;
         this.height_num = height;
         this.depth_num = depth;
-        this.available=b;
-        this.saved=b1;
+        this.available=available;
+        this.saved=saved;
         this.carNum = "";
         this.leaving="";
     }
@@ -128,4 +137,6 @@ public class Spot {
         this.saved = saved;
     }
 
+//    private static final int columns = 3;
+//    private static final int rows = 3;
 }
