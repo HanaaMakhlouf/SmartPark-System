@@ -34,6 +34,7 @@ C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\csha
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\OrderToDeleteMsg.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\SendFailedMessage.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\CustomerServiceEmployee.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetBalance.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\ShowRequestForGM.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\ApproveNewPrices.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetallOrdersOfClient.java

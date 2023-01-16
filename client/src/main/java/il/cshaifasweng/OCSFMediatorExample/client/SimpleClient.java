@@ -59,6 +59,12 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new ShowTrackOrdersEvent(message));
 
 		}
+		else if(msg instanceof GetBalance)
+		{
+			GetBalance message = (GetBalance) msg;
+			EventBus.getDefault().post(new SetBalanceEvent(message.getUserbalance()));
+
+		}
 		else if(msg instanceof GetComplaintsMessage){
 			GetComplaintsMessage message = (GetComplaintsMessage) msg;
 			//System.out.println(message.getGetForWhom());

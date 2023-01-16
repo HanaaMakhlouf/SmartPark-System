@@ -1,5 +1,6 @@
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\ShowRequestForManager.class
 il\cshaifasweng\OCSFMediatorExample\entities\LogIn.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetBalance.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\LogoutMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\SendComplaintMsg.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetallOrdersOfClient.class

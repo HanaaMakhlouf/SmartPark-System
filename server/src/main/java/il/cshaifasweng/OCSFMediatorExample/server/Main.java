@@ -527,6 +527,18 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 client.sendToClient(new_msg);
 
             }
+            else if(msg instanceof GetBalance)
+            {
+                GetBalance message = (GetBalance) msg;
+
+                List<User> lst = getAllWhereIdEquals(User.class,message.getId(),"id");
+                Double balance = lst.get(0).getBalance();
+                GetBalance newMsg = new GetBalance();
+                newMsg.setId(message.getId());
+                newMsg.setUserbalance(balance);
+                client.sendToClient(newMsg);
+
+            }
             else if(msg instanceof  GetallOrdersOfClient) {
 
                 GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
