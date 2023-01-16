@@ -22,19 +22,28 @@ public class Spot {
     @Column(name = "spotid")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int spotid;
-    @Column(name = "width1")
-    private int width;
-    @Column(name = "column_num")
-    private int column;
-    @Column(name = "row_num")
-    private int row;
+    @Column(name = "width_num")
+    private int width_num;
+    @Column(name = "height_num")
+    private int height_num;
+    @Column(name = "depth_num")
+    private int depth_num;
     @Column(name = "available_1")
     private boolean available;
     @Column(name = "is_saved")
     private boolean saved;
     @Column(name = "Parked_Car_Number")
     private String carNum ;
+    @Column(name = "Car_Leaving_Time")
+    private String  leaving ;
 
+    public String getLeaving() {
+        return leaving;
+    }
+
+    public void setLeaving(String leaving) {
+        this.leaving = leaving;
+    }
 
     @ManyToOne
     @JoinColumn(name = "id_parking")
@@ -48,18 +57,43 @@ public class Spot {
         this.parkinglot = parkinglot;
     }
 
-    public Spot(int i, int j, int k, boolean b, boolean b1,ParkingLotEntitiy p1) {
+    public Spot(int depth, int width, int height, boolean b, boolean b1,ParkingLotEntitiy p1) {
         this.parkinglot =p1;
-        this.width = i;
-        this.column = j;
-        this.row = k;
+        this.width_num = width;
+        this.height_num = height;
+        this.depth_num = depth;
         this.available=b;
         this.saved=b1;
         this.carNum = "";
+        this.leaving="";
     }
 
 
     public Spot() {
+    }
+
+    public int getWidth_num() {
+        return width_num;
+    }
+
+    public void setWidth_num(int width_num) {
+        this.width_num = width_num;
+    }
+
+    public int getHeight_num() {
+        return height_num;
+    }
+
+    public void setHeight_num(int height_num) {
+        this.height_num = height_num;
+    }
+
+    public int getDepth_num() {
+        return depth_num;
+    }
+
+    public void setDepth_num(int depth_num) {
+        this.depth_num = depth_num;
     }
 
     public String getCarNum() {
@@ -77,17 +111,6 @@ public class Spot {
     public void setSpotid(int spotid) {
         this.spotid = spotid;
     }
-    public int getWidth() {
-        return width;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public int getRow() {
-        return row;
-    }
 
     public boolean isAvailable() {
         return available;
@@ -95,18 +118,6 @@ public class Spot {
 
     public boolean isSaved() {
         return saved;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
     }
 
     public void setAvailable(boolean available) {
@@ -117,6 +128,4 @@ public class Spot {
         this.saved = saved;
     }
 
-//    private static final int columns = 3;
-//    private static final int rows = 3;
 }
