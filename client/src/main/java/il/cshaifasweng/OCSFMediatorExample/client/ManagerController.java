@@ -6,17 +6,31 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.Navigate;
+import il.cshaifasweng.OCSFMediatorExample.entities.ChangePricesRequest;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.LogoutMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.ShowRequestForGM;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.ShowRequestForManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
 public class ManagerController {
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
+
+    @FXML
+    private Button approvedreq;
 
     @FXML // URL location of the FXML file that was given to the FXMLLoader
     private URL location;
@@ -35,13 +49,25 @@ public class ManagerController {
 
     @FXML
     void goBack(ActionEvent event) throws IOException {
+        LogoutMessage l = new LogoutMessage(Integer.parseInt(id));
+        SimpleClient.getClient().sendToServer(l);
         Navigate.navigate(event , "../mainPage.fxml");
     }
 
 
     @FXML
-    void changePrices(ActionEvent event) {
+    void changePrices(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("newprices.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
 
+        Message message = new Message(0, "print prices table");
+        SimpleClient.getClient().sendToServer(message);
+        Newprices inadv = tableViewParent.getController();
+        System.out.println("user id is "+id);
+        inadv.setMangerid(id);
+        currentWindow.show();
     }
 
     @FXML
@@ -52,6 +78,25 @@ public class ManagerController {
     @FXML
     void statusImageReport(ActionEvent event) {
 
+    }
+    @FXML
+    void openApprovedreq(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("ApprovedRequests.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+
+        Message message = new Message(1, "print prices table");
+        SimpleClient.getClient().sendToServer(message);
+        ArrayList<ChangePricesRequest> list = new ArrayList<>();
+        ShowRequestForManager msg = new ShowRequestForManager();
+        msg.setList(list);
+        msg.setManagerid(id);
+        SimpleClient.getClient().sendToServer(msg);
+        ApprovedRequestsBoundary inadv = tableViewParent.getController();
+        System.out.println("user id is "+id);
+        inadv.setManagerID(id);
+        currentWindow.show();
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

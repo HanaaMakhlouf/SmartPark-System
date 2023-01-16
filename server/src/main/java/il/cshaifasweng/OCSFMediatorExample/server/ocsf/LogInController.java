@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.ocsf;
 import java.util.List;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.server.SubscribedClient;
 
 
 public class LogInController {
@@ -18,7 +19,12 @@ public class LogInController {
 
     public int validateUserCredentials(List<User> userList, List<Manager> managerList,
                                        List<ParkingLotEmployee> employeeList, List<GeneralManager> gmList,
-                                       List<CustomerServiceEmployee> cs_employeeList) {
+                                       List<CustomerServiceEmployee> cs_employeeList,List<Subscriber> subList) {
+        for(Subscriber s : subList)
+            if(s.getId() == Integer.parseInt(userId))
+                return 0;
+
+
         if ((Integer.parseInt(userId) == 0000  || Integer.parseInt(userId) == 0001) && userPass.equals("Admin"))
         return 6;
 

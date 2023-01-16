@@ -5,6 +5,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.PricesTable;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetallOrdersOfClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.LogoutMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -85,6 +86,8 @@ public class UserBoundaryController {
 
     @FXML
     void goBack(ActionEvent event) throws IOException {
+        LogoutMessage l = new LogoutMessage(Integer.parseInt(id));
+        SimpleClient.getClient().sendToServer(l);
         Navigate.navigate(event , "../mainPage.fxml");
     }
 

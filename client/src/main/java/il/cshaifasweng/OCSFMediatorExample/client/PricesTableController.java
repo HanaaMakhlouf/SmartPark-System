@@ -31,7 +31,7 @@ public class PricesTableController {
     private TableView<Prices> tableview2;
 
 
-    @Subscribe
+   /* @Subscribe
     public void setpTableviewFromServer(showptableEvent event)
     {
         System.out.println("set ptable attempt");
@@ -56,6 +56,6 @@ public class PricesTableController {
 
 
     }
-
+*/
 
 }
