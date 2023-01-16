@@ -131,12 +131,15 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         ParkingLotEntitiy p1 = new ParkingLotEntitiy(1,"Haifa port");
         List<Spot> lst = new ArrayList<>();
         for (int i = 0 ; i < 3 ; i++)
-            for (int j = 0 ; j < 3;j++)
-                for (int k = 0 ; k < 4;k++) {
+            for (int j = 0 ; j < 4;j++)
+                for (int k = 0 ; k < 3;k++) {
                     Spot s = new Spot(i, j, k, true, false,p1);
                     session.save(s);
                     lst.add(s);
                 }
+        p1.setDepth(3);
+        p1.setWidth(4);
+        p1.setHeight(3);
         p1.setSpots(lst);
         session.save(p1);
         session.flush();
@@ -270,8 +273,27 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field), id));
         TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
         return allQuery.getResultList();
-
     }
+
+    public static <T> T getWhereIdEquals(Class<T> object,String id,String field) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
+        Root<T> rootEntry = criteriaQuery.from(object);
+        criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field), id));
+        TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
+        return allQuery.getSingleResult();
+    }
+
+//    public static List<Spot> getSpotsSorted(String parkId) {
+//        CriteriaBuilder builder = session.getCriteriaBuilder();
+//        CriteriaQuery<Spot> criteriaQuery = builder.createQuery(Spot.class);
+//        Root<Spot> rootEntry = criteriaQuery.from(Spot.class);
+//        criteriaQuery.select(rootEntry);
+//        criteriaQuery.orderBy(builder.asc(rootEntry.get("id_parking")),builder.asc(rootEntry.get("depth_num")),builder.asc(rootEntry.get("width_num"))
+//                ,builder.asc(rootEntry.get("height_num")));
+//        TypedQuery<Spot> allQuery = session.createQuery(criteriaQuery);
+//        return allQuery.getResultList();
+//    }
 
     public static <T> List<T> getAll(Class<T> object) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -354,6 +376,70 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         return Main.session.createQuery(query).getSingleResult().getId();
     }
 
+    public static Spot getSpotAtCords(int depth,int width,int height,int parkId){
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Spot> criteriaQuery = builder.createQuery(Spot.class);
+        Root<Spot> rootEntry = criteriaQuery.from(Spot.class);
+        criteriaQuery.select(rootEntry);
+        criteriaQuery.where(builder.equal(rootEntry.get("depth_num"),depth),builder.equal(rootEntry.get("width_num"),width)
+        ,builder.equal(rootEntry.get("height_num"),height)/*,builder.equal(rootEntry.get("id_parking"),parkId)*/);
+        List<Spot> spots = Main.session.createQuery(criteriaQuery).getResultList();
+        for (Spot spot:spots){
+            if(spot.getParkinglot().getId() == parkId){
+                return spot;
+            }
+        }
+        return null;
+    }
+
+    public void parkInBestSpot(String carNum,String leavingDate,String leavingHour,String leavingMin,String park){
+        ParkingLotEntitiy parkingLot= getWhereIdEquals(ParkingLotEntitiy.class,park,"name");
+        session.beginTransaction();
+        String leavingTimeAndDate = leavingDate + " " + leavingHour + ":" + leavingMin;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime leavingTime = LocalDateTime.parse(leavingTimeAndDate,formatter);
+        for (int i=0;i<parkingLot.getDepth();i++){
+            for (int j = 0; j < parkingLot.getWidth(); j++) {
+                for (int k = 0; k <parkingLot.getHeight(); k++) {
+                    Spot spot = getSpotAtCords(i,j,k,parkingLot.getId());
+                    if(spot.isAvailable() && !spot.isSaved()){
+                        if(i == 0){
+                            spot.setLeaving(leavingTimeAndDate);
+                            spot.setCarNum(carNum);
+                            spot.setAvailable(false);
+                            session.getTransaction().commit();
+                            return;
+                        }
+                        else{
+                            Spot spotAhead = getSpotAtCords(i-1,j,k,parkingLot.getId());
+                            System.out.println(spotAhead.getSpotid());
+                            String spotLeaving = spotAhead.getLeaving();
+                            LocalDateTime spotLeavingTime = LocalDateTime.parse(spotLeaving, formatter);
+                            if(leavingTime.isBefore(spotLeavingTime) || spotLeavingTime.equals(leavingTime)){
+                                System.out.println("inside the IF");
+                                spot.setLeaving(leavingTimeAndDate);
+                                spot.setCarNum(carNum);
+                                spot.setAvailable(false);
+                                session.getTransaction().commit();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //park first spot we find thats empty if all spots are leaving before us
+        List<Spot> spots = getAll(Spot.class);
+        for (Spot spot:spots){
+            if(spot.getParkinglot().getId()==parkingLot.getId() && spot.isAvailable() && !(spot.isSaved())){
+                spot.setLeaving(leavingTimeAndDate);
+                spot.setAvailable(false);
+                spot.setCarNum(carNum);
+            }
+        }
+        session.getTransaction().commit();
+    }
+
     public static void addCarToPark(int parkId,String carNum){
         session.beginTransaction();
         List<Spot> spots = getAll(Spot.class);
@@ -379,6 +465,8 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         }
         return count;
     }
+
+
 
     public boolean sendtoSpecificClient(int clientId, MessageBetweenClients message) throws IOException {
         for(SubscribedClient s : SubscribersList)
@@ -705,7 +793,9 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 if(message.getResult()){
                     InAdvanceOrderEntity order = validator.getOrder();
                     order.setCarEntered(true);
-                    addCarToPark(parkId,carNum);
+                    parkInBestSpot(carNum,order.getLeavingDate(), order.getLeavingHours(), order.getLeavingMinutes()
+                            , parkingLot);
+//                    addCarToPark(parkId,carNum);
                 }
                 client.sendToClient(message);
             }
@@ -716,13 +806,14 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 String arrivingMin = message.getArrivingMinutes();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours();
                 String leavingMin = message.getLeavingMinutes(),email=message.getEmail();
-                int parkId = getParkIdByName(parkingLot);
+//                int parkId = getParkIdByName(parkingLot);
                 List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
                 EnterWithOutOrderValidator validator = new EnterWithOutOrderValidator(carNum,parkingLot,arrivingHours
                         ,arrivingDate,arrivingMin,inAdvanceOrders,leavingMin,leavingDate,leavingHours);
                 message.setResult(validator.validateOrder(countFreeSpots(getParkIdByName(parkingLot))));
                 if(message.getResult()){
-                    addCarToPark(parkId,carNum);
+                    parkInBestSpot(carNum,leavingDate,leavingHours,leavingMin,parkingLot);
+//                    addCarToPark(parkId,carNum);
                     InPlaceOrderEntity newInPlace = new InPlaceOrderEntity(carNum,message.getUserId(), leavingMin, leavingDate
                             , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot,email);
                     session.beginTransaction();
