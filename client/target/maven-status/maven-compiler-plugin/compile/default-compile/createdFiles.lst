@@ -26,6 +26,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterWithOrder$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\UserBoundaryController.class
 il\cshaifasweng\OCSFMediatorExample\client\GeneralManagerController.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterWithOutOrder.class
+il\cshaifasweng\OCSFMediatorExample\client\GetSpotsEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Admin$2.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\PayInPlaceOrder$2.class

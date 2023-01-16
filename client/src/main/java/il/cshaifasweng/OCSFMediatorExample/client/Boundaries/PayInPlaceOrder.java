@@ -110,7 +110,6 @@ public class PayInPlaceOrder {
 
     @Subscribe
     public void do_something(PayInPlaceOrderEvent event){
-        System.out.println("skhalksdsnkldKLAMDKASLKDASKLDN");
         if(event.getMessage().isResult()){
             Platform.runLater(new Runnable() {
                 public void run() {

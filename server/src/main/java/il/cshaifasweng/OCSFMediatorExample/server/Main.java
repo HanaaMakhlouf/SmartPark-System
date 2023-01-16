@@ -510,8 +510,8 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 carSpot = spot;
             }
         for (Spot parkSpot : spots) {
-            if (parkSpot.getParkinglot().getId() == parkId && parkSpot.getColumn() == carSpot.getColumn() &&
-                    parkSpot.getRow() == carSpot.getRow() && parkSpot.getWidth() < carSpot.getWidth() && !parkSpot.isAvailable() &&
+            if (parkSpot.getParkinglot().getId() == parkId && parkSpot.getHeight_num() == carSpot.getHeight_num() &&
+                    parkSpot.getDepth_num() == carSpot.getDepth_num() && parkSpot.getWidth_num() < carSpot.getWidth_num() && !parkSpot.isAvailable() &&
                     !parkSpot.getCarNum().isEmpty()) {
                 carsToBeMoved.add(parkSpot.getCarNum());
                 // update spots database
@@ -564,86 +564,77 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         try {
 
-            if(msg instanceof logInMessage){
+            if (msg instanceof logInMessage) {
                 logInMessage message = (logInMessage) msg;
                 List<User> userList = getAll(User.class);
                 List<Manager> managerList = getAll(Manager.class);
                 List<ParkingLotEmployee> employeeList = getAll(ParkingLotEmployee.class);
                 List<GeneralManager> gmList = getAll(GeneralManager.class);
-                List<CustomerServiceEmployee> cs_employeeListgetAll= getAll(CustomerServiceEmployee.class);
+                List<CustomerServiceEmployee> cs_employeeListgetAll = getAll(CustomerServiceEmployee.class);
                 List<Subscriber> subs = getAll(Subscriber.class);
-                LogInController logInCntrl = new LogInController(message.getUserId(),message.getUserPass());
-                message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll,subs));
+                LogInController logInCntrl = new LogInController(message.getUserId(), message.getUserPass());
+                message.setResult(logInCntrl.validateUserCredentials(userList, managerList, employeeList, gmList, cs_employeeListgetAll, subs));
                 SubscribedClient connection = new SubscribedClient(client);
                 connection.setClientID(Integer.parseInt(message.getUserId()));
                 SubscribersList.add(connection);
 
-                message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll,subs));
+                message.setResult(logInCntrl.validateUserCredentials(userList, managerList, employeeList, gmList, cs_employeeListgetAll, subs));
 
                 Subscriber s = new Subscriber(Integer.parseInt(message.getUserId()));
-                if(message.getResult() !=0) {
-                 session.beginTransaction();
-                 session.save(s);
-                session.flush();
-                session.getTransaction().commit();  }
+                if (message.getResult() != 0) {
+                    session.beginTransaction();
+                    session.save(s);
+                    session.flush();
+                    session.getTransaction().commit();
+                }
                 client.sendToClient(message);
-            }
-            else if(msg instanceof LogoutMessage)
-            {
+            } else if (msg instanceof LogoutMessage) {
                 LogoutMessage message = (LogoutMessage) msg;
                 session.beginTransaction();
-                List<Subscriber> s = getAllWhereIdEquals(Subscriber.class,message.getId(),"id");
+                List<Subscriber> s = getAllWhereIdEquals(Subscriber.class, message.getId(), "id");
                 session.delete(s.get(0));
                 session.flush();
                 session.getTransaction().commit();
 
-            }
-
-            else if (msg instanceof MemberLogInMessage) {
+            } else if (msg instanceof MemberLogInMessage) {
                 MemberLogInMessage message = (MemberLogInMessage) msg;
                 List<FullMemberShipEntity> fullmembershipList = getAll(FullMemberShipEntity.class);
                 List<StandardMemberShipEntity> standardMemberShipList = getAll(StandardMemberShipEntity.class);
                 List<Subscriber> sublst = getAll(Subscriber.class);
                 MemberLogInControler memberLogInCntrl = new MemberLogInControler(message.getMemberNumber(), message.getCarNumber());
-                message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList,sublst));
+                message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList, sublst));
                 SubscribedClient connection = new SubscribedClient(client);
-                String st = message.getMemberNumber() ;
+                String st = message.getMemberNumber();
 //                long tmp2 = Long.getLong(st) ;
 //                System.out.println(tmp2 +"tmp2");
                 connection.setClientID(Integer.parseInt(st));
                 Subscriber s = new Subscriber(Integer.parseInt(message.getMemberNumber()));
-                if(message.getResult() !=0) {
+                if (message.getResult() != 0) {
                     session.beginTransaction();
                     session.save(s);
                     session.flush();
-                    session.getTransaction().commit();  }
+                    session.getTransaction().commit();
+                }
                 SubscribersList.add(connection);
                 client.sendToClient(message);
 
 
-
-
-            }
-
-            else if(msg instanceof ChangePricesRequest)
-            {
+            } else if (msg instanceof ChangePricesRequest) {
                 ChangePricesRequest message = (ChangePricesRequest) msg;
                 session.beginTransaction();
-                ChangePricesRequest newRequest = new ChangePricesRequest(message.getMangerID(),message.getInAdv(),message.getInPlace(),message.getRegMemS(),message.getRegMemM(), message.getFullMem());
+                ChangePricesRequest newRequest = new ChangePricesRequest(message.getMangerID(), message.getInAdv(), message.getInPlace(), message.getRegMemS(), message.getRegMemM(), message.getFullMem());
                 session.save(newRequest);
                 session.flush();
                 session.getTransaction().commit();
 
 
-
-            }
-            else if(msg instanceof  OrderToDeleteMsg) {
+            } else if (msg instanceof OrderToDeleteMsg) {
                 OrderToDeleteMsg message = (OrderToDeleteMsg) msg;
 
-                List<InAdvanceOrderEntity> List = getAllWhereIdEquals(InAdvanceOrderEntity.class,message.getId(),"orderID");
+                List<InAdvanceOrderEntity> List = getAllWhereIdEquals(InAdvanceOrderEntity.class, message.getId(), "orderID");
                 session.beginTransaction();
-                for(InAdvanceOrderEntity E : List) {
-                session.delete(E);
+                for (InAdvanceOrderEntity E : List) {
+                    session.delete(E);
                 }
                 session.flush();
                 session.getTransaction().commit();
@@ -652,83 +643,75 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 String id_of_client = ent.getUserID();
                 Double refund = 0.0;
                 LocalDateTime today = LocalDateTime.now();
-                int arrmonthdiff = Integer.parseInt(ent.getUserID().substring(3,5))-today.getMonthValue();
-                int arrdate_diff = Integer.parseInt(ent.getUserID().substring(0,2))-today.getDayOfMonth();
-                int hours_diff = Integer.parseInt(ent.getArrivalHours())-today.getHour();
-                int min_diff = Integer.parseInt(ent.getArrivalMinutes())-today.getMinute();
-                List<Prices> inadvlst = getAllWhereIdEquals(Prices.class,"1","id");
+                int arrmonthdiff = Integer.parseInt(ent.getUserID().substring(3, 5)) - today.getMonthValue();
+                int arrdate_diff = Integer.parseInt(ent.getUserID().substring(0, 2)) - today.getDayOfMonth();
+                int hours_diff = Integer.parseInt(ent.getArrivalHours()) - today.getHour();
+                int min_diff = Integer.parseInt(ent.getArrivalMinutes()) - today.getMinute();
+                List<Prices> inadvlst = getAllWhereIdEquals(Prices.class, "1", "id");
                 int inadvPrice = inadvlst.get(0).getIn_Advance_price();
-                if(arrmonthdiff==0) {
+                if (arrmonthdiff == 0) {
                     if (arrdate_diff == 0) {
                         int diff = hours_diff * 60 + min_diff;
                         if (hours_diff * 60 + min_diff > 180) refund = 0.9 * inadvPrice;
                         else if (diff <= 180 && diff >= 60) refund = 0.5 * inadvPrice;
                         else refund = 0.0;
-                    }
-                    else if (arrdate_diff > 0) refund = 0.9 * inadvPrice;
-                }
-                else refund = 0.9*inadvPrice;
+                    } else if (arrdate_diff > 0) refund = 0.9 * inadvPrice;
+                } else refund = 0.9 * inadvPrice;
                 System.out.println(message.getId());
-                List<User> lstUsers = getAllWhereIdEquals(User.class,id_of_client,"id");
+                List<User> lstUsers = getAllWhereIdEquals(User.class, id_of_client, "id");
                 User us = lstUsers.get(0);
                 System.out.println("refund is ");
                 System.out.println(refund);
-                us.setBalance(us.getBalance()+refund);
+                us.setBalance(us.getBalance() + refund);
                 session.update(us);
                 session.getTransaction().commit();
                 OrderToDeleteMsg new_msg = new OrderToDeleteMsg(message.getId());
                 new_msg.setBalance(refund);
                 client.sendToClient(new_msg);
 
-            }
-            else if(msg instanceof GetBalance)
-            {
+            } else if (msg instanceof GetBalance) {
                 GetBalance message = (GetBalance) msg;
 
-                List<User> lst = getAllWhereIdEquals(User.class,message.getId(),"id");
+                List<User> lst = getAllWhereIdEquals(User.class, message.getId(), "id");
                 Double balance = lst.get(0).getBalance();
                 GetBalance newMsg = new GetBalance();
                 newMsg.setId(message.getId());
                 newMsg.setUserbalance(balance);
                 client.sendToClient(newMsg);
 
-            }
-            else if(msg instanceof  GetallOrdersOfClient) {
+            } else if (msg instanceof GetallOrdersOfClient) {
                 GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
                 List<InAdvanceOrderEntity> List = getAllWhereIdEquals(InAdvanceOrderEntity.class, message.getId(), "UserID");
                 System.out.println("attepmpt to print from list ");
                 System.out.println(List.get(0).getUserID());
                 System.out.println("up?");
-                GetallOrdersOfClient new_f = new GetallOrdersOfClient(List,List.get(0).getUserID());
+                GetallOrdersOfClient new_f = new GetallOrdersOfClient(List, List.get(0).getUserID());
                 client.sendToClient(new_f);
 
-            }
-            else if(msg instanceof GetComplaintsMessage){
+            } else if (msg instanceof GetComplaintsMessage) {
                 GetComplaintsMessage message = (GetComplaintsMessage) msg;
                 List<Complaint> list = getAll(Complaint.class);
                 GetComplaintsMessage complaints = new GetComplaintsMessage(list);
                 complaints.setGetForWhom(message.getGetForWhom());
                 client.sendToClient(complaints);
-            }
-            else if(msg instanceof GetSpotsMessage){
+            } else if (msg instanceof GetSpotsMessage) {
                 //  GetSpotsMessage message = (GetSpotsMessage)msg;
                 List<Spot> lst = getAll(Spot.class);
                 List<AbsSpot> abList = new ArrayList<>();
-                for (int i=0; i < lst.size();i++){
-                    AbsSpot sp = new AbsSpot(lst.get(i).getWidth_num(),lst.get(i).getHeight_num(),lst.get(i).getDepth_num(),
-                            lst.get(i).isAvailable(),lst.get(i).isSaved(),lst.get(i).isDisabled()
-                            ,lst.get(i).getParkinglot().getId());
+                for (int i = 0; i < lst.size(); i++) {
+                    AbsSpot sp = new AbsSpot(lst.get(i).getWidth_num(), lst.get(i).getHeight_num(), lst.get(i).getDepth_num(),
+                            lst.get(i).isAvailable(), lst.get(i).isSaved(), lst.get(i).isDisabled()
+                            , lst.get(i).getParkinglot().getId());
                     abList.add(sp);
                 }
                 GetSpotsMessage ms = new GetSpotsMessage(abList);
                 client.sendToClient(ms);
-            }
-            else if(msg instanceof SignUpMessage){
+            } else if (msg instanceof SignUpMessage) {
                 SignUpMessage message = (SignUpMessage) msg;
                 List<User> userList = getAll(User.class);
-                SignUpValidator validator = new SignUpValidator(message.getUserId(),message.getUserPass(), message.getUserEmail());
+                SignUpValidator validator = new SignUpValidator(message.getUserId(), message.getUserPass(), message.getUserEmail());
                 message.setResult(validator.validateUserCredentials(userList));
-                if(message.getResult()){
+                if (message.getResult()) {
                     session.beginTransaction();
                     User newUser = new User(Integer.parseInt(message.getUserId()), message.getUserEmail(), message.getUserPass());
                     session.save(newUser);
@@ -736,47 +719,41 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
-            }
-            else if(msg instanceof MessageBetweenClients) {
+            } else if (msg instanceof MessageBetweenClients) {
                 MessageBetweenClients message = (MessageBetweenClients) msg;
                 int id = message.getRecepientID();
-               /* ConnectionToClient clientToSendTo = getConnection(id);*/
-              boolean b = sendtoSpecificClient(id,message);
-                if(!b){
+                /* ConnectionToClient clientToSendTo = getConnection(id);*/
+                boolean b = sendtoSpecificClient(id, message);
+                if (!b) {
                     message.setResult(0);
                     SendFailedMessage s = new SendFailedMessage(id);
                     client.sendToClient(s);
-                }
-                else
-                {
+                } else {
                     message.setResult(1);
                     client.sendToClient(("send success"));
                     /*clientToSendTo.sendToClient(message);*/
-                    sendtoSpecificClient(id,message);
+                    sendtoSpecificClient(id, message);
                 }
-            }
-
-            else if(msg instanceof AdminMessage) {
+            } else if (msg instanceof AdminMessage) {
                 AdminMessage message = (AdminMessage) msg;
                 ArrayList<Subscriber> lst = new ArrayList<>();
-                for(SubscribedClient p : SubscribersList) {
+                for (SubscribedClient p : SubscribersList) {
                     Subscriber subscriber = new Subscriber(p.getClientID());
                     lst.add(subscriber);
 
                 }
                 message.setLst(lst);
                 client.sendToClient(message);
-            }
-            else if(msg instanceof InAdvanceOrderMessage){
+            } else if (msg instanceof InAdvanceOrderMessage) {
                 InAdvanceOrderMessage message = (InAdvanceOrderMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
-                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
-                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
+                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate(), leavingHours = message.getLeavingHours(), leavingMin = message.getLeavingMinutes();
+                String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours(), arrivingMin = message.getArrivingMinutes();
 
                 List<ParkingLots> parkingLots = getAll(ParkingLots.class);
                 List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
-                InAdvanceOrderValidator validator= new InAdvanceOrderValidator(carNum,parkingLot,arrivingHours
-                        ,arrivingDate,arrivingMin,leavingHours,leavingDate,leavingMin, parkingLots, inAdvanceOrders);
+                InAdvanceOrderValidator validator = new InAdvanceOrderValidator(carNum, parkingLot, arrivingHours
+                        , arrivingDate, arrivingMin, leavingHours, leavingDate, leavingMin, parkingLots, inAdvanceOrders);
                 message.setResult(validator.validateOrder());
 //                if(message.isResult()){
 //                    session.beginTransaction();
@@ -789,98 +766,91 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
 //                }
 //                System.out.println("about to send msg to client");
 //                System.out.println(message.getResult());
-                message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
-                message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin, false));
+                message.setFee(calcFee(arrivingDate, arrivingHours, arrivingMin, leavingDate, leavingHours, leavingMin, false));
                 message.setUserId(message.getUserId());
 //                message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
                 client.sendToClient(message);
-            }
-            else if(msg instanceof PayInAdvanceOrderMessage) {
+            } else if (msg instanceof PayInAdvanceOrderMessage) {
                 PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
-                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
-                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
-                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
+                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate(), leavingHours = message.getLeavingHours(), leavingMin = message.getLeavingMinutes();
+                String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours(), arrivingMin = message.getArrivingMinutes();
+                String cvvCard = message.getCvv(), yearCard = message.getYear(), monthCard = message.getMonth(), cardNum = message.getCardNumber();
+                PayValidator validator = new PayValidator(cardNum, cvvCard, yearCard, monthCard);
                 message.setResult(validator.validatePayment());
-                if(message.isResult()) {
-                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getUserid(), leavingMin, leavingDate
+                if (message.isResult()) {
+                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum, message.getUserid(), leavingMin, leavingDate
                             , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
                     session.beginTransaction();
                     session.save(newInAdvance);
                     session.flush();
-                    newInAdvance.setOrderID("10"+String.valueOf(newInAdvance.getId()));
+                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
-            }
-            else if(msg instanceof FullMembershipMessage){
+            } else if (msg instanceof FullMembershipMessage) {
                 FullMembershipMessage message = (FullMembershipMessage) msg;
                 FullMembershipValidator validator = new FullMembershipValidator(message.getCarNumber()
                         , message.getStartDate());
                 message.setResult(validator.validateMembership());
-                if (message.isResult()){
+                if (message.isResult()) {
                     FullMemberShipEntity fullMemberShipEntity = new FullMemberShipEntity(Integer.parseInt(message.getId())
-                            ,message.getCarNumber(),message.getStartDate());
+                            , message.getCarNumber(), message.getStartDate());
                     message.setFullMemberShipEntity(fullMemberShipEntity);
                     message.setFee(calcFeeMembership("Full"));
                 }
                 client.sendToClient(message);
-            }
-            else if(msg instanceof PayFullMembershipMessage){
+            } else if (msg instanceof PayFullMembershipMessage) {
                 PayFullMembershipMessage message = (PayFullMembershipMessage) msg;
                 FullMemberShipEntity fullMemberShipEntity = message.getFullMemberShipEntity();
-                PayValidator validator= new PayValidator(message.getCardNumber()
-                        ,message.getCvv(), message.getYear(),message.getMonth());
+                PayValidator validator = new PayValidator(message.getCardNumber()
+                        , message.getCvv(), message.getYear(), message.getMonth());
                 message.setResult(validator.validatePayment());
-                if (message.isResult()){
+                if (message.isResult()) {
                     session.beginTransaction();
                     session.save(fullMemberShipEntity);
                     session.flush();
-                    fullMemberShipEntity.setMembershipID("1"+fullMemberShipEntity.getId());
+                    fullMemberShipEntity.setMembershipID("1" + fullMemberShipEntity.getId());
                     message.setMembershipId(fullMemberShipEntity.getMembershipID());
                     session.flush();
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
-            }
-            else if(msg instanceof StandardMembershipMessage){
+            } else if (msg instanceof StandardMembershipMessage) {
                 StandardMembershipMessage message = (StandardMembershipMessage) msg;
                 StandardMembershipValidator validator = new StandardMembershipValidator(message.getCarNumber()
-                        , message.getStartDate(),message.getParkingLot());
+                        , message.getStartDate(), message.getParkingLot());
                 message.setResult(validator.validateMembership());
                 System.out.println(message.isResult());
-                if (message.isResult()){
+                if (message.isResult()) {
                     StandardMemberShipEntity standardMemberShipEntity = new StandardMemberShipEntity(Integer.parseInt(message.getId())
-                            ,message.getCarNumber(),message.getStartDate(),message.getParkingLot());
+                            , message.getCarNumber(), message.getStartDate(), message.getParkingLot());
                     message.setStandardMemberShipEntity(standardMemberShipEntity);
                     message.setFee(calcFeeMembership("Standard Single"));
                 }
                 client.sendToClient(message);
-            }
-            else if(msg instanceof PayStandardMembershipMessage){
+            } else if (msg instanceof PayStandardMembershipMessage) {
                 PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
                 StandardMemberShipEntity standardMemberShipEntity = message.getStandardMemberShipEntity();
-                PayValidator validator= new PayValidator(message.getCardNumber()
-                        ,message.getCvv(), message.getYear(),message.getMonth());
+                PayValidator validator = new PayValidator(message.getCardNumber()
+                        , message.getCvv(), message.getYear(), message.getMonth());
                 message.setResult(validator.validatePayment());
-                if (message.isResult()){
+                if (message.isResult()) {
                     session.beginTransaction();
                     session.save(standardMemberShipEntity);
                     session.flush();
-                    standardMemberShipEntity.setMembershipID("0"+standardMemberShipEntity.getId());
+                    standardMemberShipEntity.setMembershipID("0" + standardMemberShipEntity.getId());
                     message.setMembershipId(standardMemberShipEntity.getMembershipID());
                     session.flush();
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
-            }
-            else if(msg instanceof GetParkingLotByEmployeeId){
+            } else if (msg instanceof GetParkingLotByEmployeeId) {
                 GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
                 List<ParkingLotEmployee> employeeList = getAll(ParkingLotEmployee.class);
                 int park_num = 0;
-                for (ParkingLotEmployee em:employeeList){
-                    if(em.getId() == message.getId()) {
+                for (ParkingLotEmployee em : employeeList) {
+                    if (em.getId() == message.getId()) {
                         park_num = em.getParkingLot();
                     }
                 }
@@ -890,47 +860,45 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
            /* else if(msg instanceof SetUpMessage){
                 setUpPark(((SetUpMessage) msg).getPark_num());
             }*/
-            else if(msg instanceof SendComplaintMsg){
+            else if (msg instanceof SendComplaintMsg) {
                 SendComplaintMsg message = (SendComplaintMsg) msg;
-                Complaint complaint = new Complaint(message.getSender_id(),message.getCurrDate()
-                        ,message.getComplaint(),message.getPark_id());
+                Complaint complaint = new Complaint(message.getSender_id(), message.getCurrDate()
+                        , message.getComplaint(), message.getPark_id());
                 System.out.println(message.getComplaint());
                 session.beginTransaction();
                 session.save(complaint);
                 session.flush();
                 session.getTransaction().commit();
-            }
-            else if(msg instanceof SetComplaintRespondMessage){
+            } else if (msg instanceof SetComplaintRespondMessage) {
                 System.out.println("Message is here");
                 SetComplaintRespondMessage message = (SetComplaintRespondMessage) msg;
 //                System.out.println(message.getComplaint_id());
 //                System.out.println(message.getRefundAmount());
 //                System.out.println(message.getRes());
-                List<Complaint> list = getAllWhereIdEquals(Complaint.class,String.valueOf(message.getComplaint_id()),"complaintId");
+                List<Complaint> list = getAllWhereIdEquals(Complaint.class, String.valueOf(message.getComplaint_id()), "complaintId");
                 session.beginTransaction();
                 Complaint comp = list.get(0);
                 comp.setResponse(message.getRes());
                 session.update(comp);
                 session.flush();
                 String userId = comp.getId();
-                List<User> lstUsers = getAllWhereIdEquals(User.class,userId,"id");
+                List<User> lstUsers = getAllWhereIdEquals(User.class, userId, "id");
                 User user = lstUsers.get(0);
-                user.setBalance(user.getBalance()+message.getRefundAmount());
+                user.setBalance(user.getBalance() + message.getRefundAmount());
                 session.update(user);
                 session.getTransaction().commit();
 
 
-            }
-            else if(msg instanceof PayInAdvanceOrderMessage) {
+            } else if (msg instanceof PayInAdvanceOrderMessage) {
                 PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
-                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
-                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
-                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
+                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate(), leavingHours = message.getLeavingHours(), leavingMin = message.getLeavingMinutes();
+                String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours(), arrivingMin = message.getArrivingMinutes();
+                String cvvCard = message.getCvv(), yearCard = message.getYear(), monthCard = message.getMonth(), cardNum = message.getCardNumber();
+                PayValidator validator = new PayValidator(cardNum, cvvCard, yearCard, monthCard);
                 message.setResult(validator.validatePayment());
-                if(message.isResult()) {
-                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getOrderId(), leavingMin, leavingDate
+                if (message.isResult()) {
+                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum, message.getOrderId(), leavingMin, leavingDate
                             , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
                     session.beginTransaction();
                     session.save(newInAdvance);
@@ -942,71 +910,67 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 make InAdvanceOrderEntity and add to DB
                 validate payment
                  */
-            }
-
-            else if(msg instanceof EnterWithOrderMessage) {
+            } else if (msg instanceof EnterWithOrderMessage) {
                 EnterWithOrderMessage message = (EnterWithOrderMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
-                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours();
+                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
+                String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours();
                 String arrivingMin = message.getArrivingMinutes();
                 int parkId = getParkIdByName(parkingLot);
                 List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
-                EnterWithOrderValidator validator = new EnterWithOrderValidator(carNum,parkingLot,arrivingHours
-                        ,arrivingDate,arrivingMin,inAdvanceOrders);
+                EnterWithOrderValidator validator = new EnterWithOrderValidator(carNum, parkingLot, arrivingHours
+                        , arrivingDate, arrivingMin, inAdvanceOrders);
                 message.setResult(validator.validateOrder());
-                if(message.getResult()){
+                if (message.getResult()) {
                     InAdvanceOrderEntity order = validator.getOrder();
                     order.setCarEntered(true);
-                    parkInBestSpot(carNum,order.getLeavingDate(), order.getLeavingHours(), order.getLeavingMinutes()
+                    parkInBestSpot(carNum, order.getLeavingDate(), order.getLeavingHours(), order.getLeavingMinutes()
                             , parkingLot);
 //                    addCarToPark(parkId,carNum);
                 }
                 client.sendToClient(message);
-            }
-            else if(msg instanceof EnterWithOutOrderMessage) {
+            } else if (msg instanceof EnterWithOutOrderMessage) {
                 EnterWithOutOrderMessage message = (EnterWithOutOrderMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
-                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours();
+                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
+                String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours();
                 String arrivingMin = message.getArrivingMinutes();
-                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours();
-                String leavingMin = message.getLeavingMinutes(),email=message.getEmail();
+                String leavingDate = message.getLeavingDate(), leavingHours = message.getLeavingHours();
+                String leavingMin = message.getLeavingMinutes(), email = message.getEmail();
 //                int parkId = getParkIdByName(parkingLot);
                 List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
-                EnterWithOutOrderValidator validator = new EnterWithOutOrderValidator(carNum,parkingLot,arrivingHours
-                        ,arrivingDate,arrivingMin,inAdvanceOrders,leavingMin,leavingDate,leavingHours);
+                EnterWithOutOrderValidator validator = new EnterWithOutOrderValidator(carNum, parkingLot, arrivingHours
+                        , arrivingDate, arrivingMin, inAdvanceOrders, leavingMin, leavingDate, leavingHours);
                 message.setResult(validator.validateOrder(countFreeSpots(getParkIdByName(parkingLot))));
-                if(message.getResult()){
-                    parkInBestSpot(carNum,leavingDate,leavingHours,leavingMin,parkingLot);
+                if (message.getResult()) {
+                    parkInBestSpot(carNum, leavingDate, leavingHours, leavingMin, parkingLot);
 //                    addCarToPark(parkId,carNum);
-                    InPlaceOrderEntity newInPlace = new InPlaceOrderEntity(carNum,message.getUserId(), leavingMin, leavingDate
-                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot,email);
+                    InPlaceOrderEntity newInPlace = new InPlaceOrderEntity(carNum, message.getUserId(), leavingMin, leavingDate
+                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot, email);
                     session.beginTransaction();
                     session.save(newInPlace);
                     session.flush();
-                    newInPlace.setOrderID("20"+String.valueOf(newInPlace.getId()));
+                    newInPlace.setOrderID("20" + String.valueOf(newInPlace.getId()));
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
-            }
-            else if(msg instanceof ExitParkingMessage) {
+            } else if (msg instanceof ExitParkingMessage) {
                 ExitParkingMessage message = (ExitParkingMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
                 String leavingDate = message.getLeavingDate();
                 String leavingHours = message.getLeavingHours();
                 String leavingMinutes = message.getLeavingMinutes();
-                String  id = message.getUserId();
+                String id = message.getUserId();
                 int parkId = getParkIdByName(parkingLot);
                 List<InPlaceOrderEntity> inPlaceOrders = getAll(InPlaceOrderEntity.class);
                 List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
                 List<Spot> spots = getAll(Spot.class);
-                ExitParkingLotValidator validator = new ExitParkingLotValidator(carNum,parkingLot,leavingHours
-                        ,leavingDate,leavingMinutes,spots, parkId);
+                ExitParkingLotValidator validator = new ExitParkingLotValidator(carNum, parkingLot, leavingHours
+                        , leavingDate, leavingMinutes, spots, parkId);
 
                 boolean result = validator.validateOrder();
                 System.out.println(result);
                 ExitParkingLotService service = new ExitParkingLotService(carNum, result, message, inPlaceOrders, inAdvanceOrders);
                 ExitParkingMessage message1 = service.getMessage();
-                if(result) {
+                if (result) {
                     double fee = 0;
                     if (message1.isInPlaceOrder()) {
                         // calculate fee
@@ -1041,28 +1005,28 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     }
                 }
                 client.sendToClient(message1);
-            } else if(msg instanceof PayInPlaceOrderMessage) {
+            } else if (msg instanceof PayInPlaceOrderMessage) {
                 PayInPlaceOrderMessage message = (PayInPlaceOrderMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
-                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
+                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
+                String cvvCard = message.getCvv(), yearCard = message.getYear(), monthCard = message.getMonth(), cardNum = message.getCardNumber();
+                PayValidator validator = new PayValidator(cardNum, cvvCard, yearCard, monthCard);
                 message.setResult(validator.validatePayment());
                 List<ParkingLotEntitiy> parkingLots = getAll(ParkingLotEntitiy.class);
                 int currParking = 0;
-                for(ParkingLotEntitiy park : parkingLots) {
+                for (ParkingLotEntitiy park : parkingLots) {
                     if (park.getName().equals(parkingLot)) {
                         currParking = park.getId();
                     }
                 }
                 List<InPlaceOrderEntity> orders = getAll(InPlaceOrderEntity.class);
                 InPlaceOrderEntity myOrder = null;
-                for(InPlaceOrderEntity order : orders){
-                    if(order.getCarNumber().equals(carNum)){
+                for (InPlaceOrderEntity order : orders) {
+                    if (order.getCarNumber().equals(carNum)) {
                         myOrder = order;
                         break;
                     }
                 }
-                if(message.isResult()) {
+                if (message.isResult()) {
                     // delete order
                     session.beginTransaction();
                     session.delete(myOrder);
@@ -1082,6 +1046,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     if(msg instanceof Message) {
             Message message = (Message) msg;
             String request = message.getMessage();
@@ -1140,8 +1105,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
 
 
 
-
-                else if (request.startsWith("attempt to change data")) {
+                    if (request.startsWith("attempt to change data")) {
 
                     int arr[] = message.getChange_prices();
                     CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -1169,7 +1133,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.getTransaction().commit();
                     session.clear();
                 }
-            } catch (Exception e) {
+            } }catch (Exception e) {
                 e.printStackTrace();
             }
         }
