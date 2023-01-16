@@ -36,12 +36,13 @@ public class MainPage {
     private Button memberBtn; // Value injected by FXMLLoader
 
     @FXML // fx:id="passTxt"
-    private TextField passTxt; // Value injected by FXMLLoader
+    private  PasswordField passTxt; // Value injected by FXMLLoader
 
     @FXML // fx:id="signupBtn"
     private Button signupBtn; // Value injected by FXMLLoader
     private int msgId;
     private Stage currentWindow;
+
 
     @FXML
     void login(ActionEvent event) throws IOException {

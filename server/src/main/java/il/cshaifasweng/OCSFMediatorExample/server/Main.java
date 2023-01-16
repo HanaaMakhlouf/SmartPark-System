@@ -81,6 +81,8 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         configuration.addAnnotatedClass(Complaint.class);
         configuration.addAnnotatedClass(ParkingLotEntitiy.class);
         configuration.addAnnotatedClass(Spot.class);
+        configuration.addAnnotatedClass(ChangePricesRequest.class);
+
         configuration.addAnnotatedClass(InPlaceOrderEntity.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
@@ -143,6 +145,17 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         p1.setSpots(lst);
         session.save(p1);
         session.flush();
+
+
+
+
+
+
+
+
+
+
+
     }
 
 
@@ -240,6 +253,11 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         initUser();
         InitParkings();
         initInAdvanceOrders();
+        List <Subscriber> lst = getAll(Subscriber.class);
+        for(Subscriber s : lst) {
+            session.delete(s);
+            session.flush();
+        }
 //        FullMemberShipEntity tmp = new FullMemberShipEntity(208110120,"1234568","29/01/2023");
 //        session.save(tmp);
 //        session.flush();
@@ -266,11 +284,11 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         return null;
     }
 
-    public static <T> List<T> getAllWhereIdEquals(Class<T> object,String id,String field) {
+    public static <T, E> List<T> getAllWhereIdEquals(Class<T> object, E id, String field) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
         Root<T> rootEntry = criteriaQuery.from(object);
-        criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field), id));
+         criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field), id));
         TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
         return allQuery.getResultList();
     }
@@ -489,29 +507,68 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 List<ParkingLotEmployee> employeeList = getAll(ParkingLotEmployee.class);
                 List<GeneralManager> gmList = getAll(GeneralManager.class);
                 List<CustomerServiceEmployee> cs_employeeListgetAll= getAll(CustomerServiceEmployee.class);
+                List<Subscriber> subs = getAll(Subscriber.class);
                 LogInController logInCntrl = new LogInController(message.getUserId(),message.getUserPass());
                 message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll));
                 SubscribedClient connection = new SubscribedClient(client);
                 connection.setClientID(Integer.parseInt(message.getUserId()));
                 SubscribersList.add(connection);
+
+                message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll,subs));
+
+                Subscriber connection = new Subscriber(Integer.parseInt(message.getUserId()));
+                if(message.getResult() !=0) {
+                 session.beginTransaction();
+                 session.save(connection);
+                session.flush();
+                session.getTransaction().commit();  }
                 client.sendToClient(message);
-            }else if (msg instanceof MemberLogInMessage) {
+            }
+            else if(msg instanceof LogoutMessage)
+            {
+                LogoutMessage message = (LogoutMessage) msg;
+                session.beginTransaction();
+                List<Subscriber> s = getAllWhereIdEquals(Subscriber.class,message.getId(),"id");
+                session.delete(s.get(0));
+                session.flush();
+                session.getTransaction().commit();
+
+            }
+
+            else if (msg instanceof MemberLogInMessage) {
                 MemberLogInMessage message = (MemberLogInMessage) msg;
                 List<FullMemberShipEntity> fullmembershipList = getAll(FullMemberShipEntity.class);
                 List<StandardMemberShipEntity> standardMemberShipList = getAll(StandardMemberShipEntity.class);
-
+                List<Subscriber> sublst = getAll(Subscriber.class);
                 MemberLogInControler memberLogInCntrl = new MemberLogInControler(message.getMemberNumber(), message.getCarNumber());
-                message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList));
+                message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList,sublst));
                 SubscribedClient connection = new SubscribedClient(client);
                 String st = message.getMemberNumber() ;
 //                long tmp2 = Long.getLong(st) ;
 //                System.out.println(tmp2 +"tmp2");
                 connection.setClientID(Integer.parseInt(st));
-
-
+                Subscriber s = new Subscriber(Integer.parseInt(message.getMemberNumber()));
+                if(message.getResult() !=0) {
+                    session.beginTransaction();
+                    session.save(s);
+                    session.flush();
+                    session.getTransaction().commit();  }
                 SubscribersList.add(connection);
                 client.sendToClient(message);
 
+
+
+
+            }
+
+            else if(msg instanceof ChangePricesRequest)
+            {
+                ChangePricesRequest message = (ChangePricesRequest) msg;
+                session.beginTransaction();
+                ChangePricesRequest newRequest = new ChangePricesRequest(message.getMangerID(),message.getInAdv(),message.getInPlace(),message.getRegMemS(),message.getRegMemM(), message.getFullMem());
+                session.save(newRequest);
+                session.flush();
+                session.getTransaction().commit();
 
 
 
@@ -557,6 +614,19 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 OrderToDeleteMsg new_msg = new OrderToDeleteMsg(message.getId());
                 new_msg.setBalance(refund);
                 client.sendToClient(new_msg);
+
+            }
+            else if(msg instanceof GetBalance)
+            {
+                GetBalance message = (GetBalance) msg;
+
+                List<User> lst = getAllWhereIdEquals(User.class,message.getId(),"id");
+                Double balance = lst.get(0).getBalance();
+                GetBalance newMsg = new GetBalance();
+                newMsg.setId(message.getId());
+                newMsg.setUserbalance(balance);
+                client.sendToClient(newMsg);
+
             }
             else if(msg instanceof  GetallOrdersOfClient) {
                 GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
@@ -757,6 +827,73 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
 
 
             }
+
+            else if(msg instanceof ShowRequestForGM)
+            {
+                ShowRequestForGM message = (ShowRequestForGM) msg;
+
+                List<ChangePricesRequest> lst = getAllWhereIdEquals(ChangePricesRequest.class,false,"GMapprove");
+                ShowRequestForGM newMsg = new ShowRequestForGM();
+                newMsg.setList(lst);
+                client.sendToClient(newMsg);
+
+
+
+
+            }
+            else if(msg instanceof ShowRequestForManager)
+            {
+                ShowRequestForManager message = (ShowRequestForManager) msg;
+                List<ChangePricesRequest> lst = getAllWhereIdEquals(ChangePricesRequest.class,message.getManagerid(),"ManagerID");
+                ShowRequestForManager newMsg = new ShowRequestForManager();
+                newMsg.setList(lst);
+                newMsg.setManagerid(message.getManagerid());
+                client.sendToClient(newMsg);
+
+            }
+            else if(msg instanceof PricesRequestToApply)
+            {
+                PricesRequestToApply message = (PricesRequestToApply) msg;
+                List<ChangePricesRequest> Requests = getAllWhereIdEquals(ChangePricesRequest.class,message.getApprovedRequest(),"requestID");
+                List<Prices> lst = getAll(Prices.class);
+                session.beginTransaction();
+                Prices p = lst.get(0);
+                p.setIn_Advance_price(Requests.get(0).getInAdv());
+                p.setIn_place_price(Requests.get(0).getInPlace());
+                p.setSingle_car_reg_mem_price(Requests.get(0).getRegMemS());
+                p.setMultiple_cars_reg_mem_price(Requests.get(0).getRegMemM());
+                p.setFull_mem_price(Requests.get(0).getFullMem());
+                session.update(p);
+                session.flush();
+                ChangePricesRequest r = Requests.get(0);
+                r.setGMapprove(false);
+                session.delete(r);
+                session.flush();
+                session.getTransaction().commit();
+
+
+            }
+
+            else if(msg instanceof ApproveNewPrices)
+            {
+                session.beginTransaction();
+                ApproveNewPrices message = (ApproveNewPrices) msg;
+                List<ChangePricesRequest> lst = getAllWhereIdEquals(ChangePricesRequest.class,message.getReqIDtoApprove(),"requestID");
+                ChangePricesRequest comp = lst.get(0);
+               if(message.isApprove()) {
+                   comp.setGMapprove(true);
+                   session.update(comp);
+                   session.flush();
+               }
+               else if(!message.isApprove())
+               {
+                   session.delete(comp);
+                   session.flush();
+
+               }
+                session.getTransaction().commit();
+
+            }
             else if(msg instanceof PayInAdvanceOrderMessage) {
                 PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
                 String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
@@ -872,32 +1009,17 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
 
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
-                        Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
-                        data2.clear();
 
-                        while (rs.next()) {
-                            // Add the data to the ObservableList
-                            data2.add(new Prices(rs.getInt("id"), rs.getInt("in_advance"),
-                                    rs.getInt("in_place"), rs.getInt("regular_membership_single"),
-                                    rs.getInt("regular_membership_multiple"), rs.getInt("Full_membership")));
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-// Set the items of the TableView to the ObservableList
-                    for (Prices p : data2) {
-                        System.out.println("id is " + p.getId() + "in advance " + p.getIn_Advance_price() + "in place" +
-                                p.getIn_place_price() + "mem reg single " + p.getSingle_car_reg_mem_price() + "mem multiple reg" +
-                                p.getMultiple_cars_reg_mem_price() + "full mem " + p.getFull_mem_price());
-
-                    }
-                    System.out.println("we here prices");
-                    message.setPlist(data2);
+                    List<Prices> lst = getAll(Prices.class);
+                    message.setPlist(lst);
                     message.setMessage("prices list is sent");
                     client.sendToClient(message);
-                } else if (request.startsWith("attempt to change data")) {
+                }
+
+
+
+
+                else if (request.startsWith("attempt to change data")) {
 
                     int arr[] = message.getChange_prices();
                     CriteriaBuilder builder = session.getCriteriaBuilder();
