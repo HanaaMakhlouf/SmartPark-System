@@ -1,14 +1,13 @@
 package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
-import il.cshaifasweng.OCSFMediatorExample.client.CustomerServiceEmployeeController;
-import il.cshaifasweng.OCSFMediatorExample.client.PricesTable;
-import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
+import il.cshaifasweng.OCSFMediatorExample.client.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetBalance;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetallOrdersOfClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.LogoutMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import il.cshaifasweng.OCSFMediatorExample.client.SendComplaintController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,7 +66,16 @@ public class UserBoundaryController {
 
     @FXML
     void cancelOrder(ActionEvent event) throws IOException {
-        Navigate.navigate(event , "../cancelOrder.fxml");
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../userbalance.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        GetBalance msg = new GetBalance(id);
+        SimpleClient.getClient().sendToServer(msg);
+        currentWindow.show();
+        Userbalance inadv = tableViewParent.getController();
+        System.out.println("user id is "+id);
+        inadv.setId(id);
 
     }
 
@@ -108,6 +116,8 @@ public class UserBoundaryController {
 
     @FXML
     void goBack(ActionEvent event) throws IOException {
+        LogoutMessage l = new LogoutMessage(Integer.parseInt(id));
+        SimpleClient.getClient().sendToServer(l);
         Navigate.navigate(event , "../mainPage.fxml");
     }
 

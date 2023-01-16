@@ -8,7 +8,10 @@ import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetallOrdersOfClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.OrderToDeleteMsg;
 import il.cshaifasweng.OCSFMediatorExample.entities.Prices;
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +30,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,6 +81,24 @@ public class TrackOrders {
 
     @FXML
     private Label refundlabel;
+
+
+
+    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+        new Thread(() -> {
+            try {
+                String s = combobx.getSelectionModel().getSelectedItem();
+                if(s!=null) {
+                    ArrayList<InAdvanceOrderEntity> list = new ArrayList<>();
+                    GetallOrdersOfClient msg = new GetallOrdersOfClient();
+                    msg.setId(id);
+                    msg.setLst(list);
+                    SimpleClient.getClient().sendToServer(msg); }
+            } catch (IOException e) {
+                System.out.println("exception in updating");
+            }
+        }).start();
+    }));
 
     @Subscribe
     public void showRefund(showRefundEvent event) {
@@ -130,6 +152,7 @@ public class TrackOrders {
                 comboColumn.setCellValueFactory(new PropertyValueFactory<>("OrderID"));
 
                 List<String> orderIds = lst.stream().map(InAdvanceOrderEntity::getOrderID).distinct().collect(Collectors.toList());
+                if(combobx.getItems().isEmpty()) {
                 combobx.getItems().addAll(orderIds);
 
                 comboColumn.setCellFactory(col -> {
@@ -146,7 +169,7 @@ public class TrackOrders {
                         }
                     };
                     return cell;
-                });
+                });}
             }
         });
 
@@ -163,7 +186,7 @@ public class TrackOrders {
                 SimpleClient.getClient().sendToServer(msg);
 
                 String orderId = s;
-                List<InAdvanceOrderEntity> filteredOrder =  mytable.getItems().stream()
+                /*List<InAdvanceOrderEntity> filteredOrder =  mytable.getItems().stream()
                         .filter(o -> o.getOrderID().equals(orderId))
                         .collect(Collectors.toList());
 
@@ -171,7 +194,7 @@ public class TrackOrders {
                     mytable.getItems().removeAll(filteredOrder);
                 } else {
                     System.out.println("No row with Order ID " + orderId + " found in the table.");
-                }
+                }*/
 
                 labelmsg.setText("Order Deleted successfully refresh to see change");
                 labelmsg.setMinWidth(0);
@@ -204,6 +227,8 @@ public class TrackOrders {
 
     @FXML
     void backbtn(ActionEvent event) throws IOException {
+
+       timeline.stop();
         Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
         FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
         Scene tableViewScene = new Scene(tableViewParent.load());
@@ -212,10 +237,13 @@ public class TrackOrders {
         UserBoundaryController inadv = tableViewParent.getController();
         inadv.setUser(id);
 
+
     }
 
     @FXML
     void initialize() {
         EventBus.getDefault().register(this);
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 }

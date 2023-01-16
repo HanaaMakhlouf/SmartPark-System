@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.LogoutMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -69,6 +70,8 @@ public class MemberPage {
 
     @FXML
     void goBack(ActionEvent event) throws IOException {
+        LogoutMessage l = new LogoutMessage(Integer.parseInt(memberNumber));
+        SimpleClient.getClient().sendToServer(l);
         Navigate.navigate(event , "../MainPage.fxml");
     }
 

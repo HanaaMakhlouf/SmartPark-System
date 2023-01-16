@@ -20,7 +20,12 @@ public class MemberLogInControler {
     }
 
     public int validateMemberCredentials(List<StandardMemberShipEntity> standardMemberShipEntityList,
-                                       List<FullMemberShipEntity> fullMemberShipEntityList ) {
+                                       List<FullMemberShipEntity> fullMemberShipEntityList,List < Subscriber> sublst ) {
+
+        for(Subscriber s : sublst)
+            if(s.getId() == Integer.parseInt(memberNumber))
+                return 0;
+
 
         for (StandardMemberShipEntity standardMemberShip : standardMemberShipEntityList) {
 

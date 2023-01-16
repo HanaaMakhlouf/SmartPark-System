@@ -1,16 +1,23 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @Entity
 @Table(name = "Parkings")
-public class ParkingLotEntitiy {
+public class ParkingLotEntitiy implements Serializable {
     @Id
     @Column(name = "id")
     int id;
     @Column(name = "name")
     private String name;
+    @Column(name = "park_depth")
+    private int depth;
+    @Column(name = "park_width")
+    private int width;
+    @Column(name = "park_height")
+    private int height;
 
     @OneToMany(mappedBy = "parkinglot", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Spot> spots=new ArrayList<>();
@@ -21,6 +28,30 @@ public class ParkingLotEntitiy {
     }
 
     public ParkingLotEntitiy() {
+    }
+
+    public int getDepth() {
+        return depth;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public int getId() {

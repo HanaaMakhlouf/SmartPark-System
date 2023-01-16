@@ -3,15 +3,17 @@ package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import il.cshaifasweng.OCSFMediatorExample.client.CustomerServiceEmployeeController;
-import il.cshaifasweng.OCSFMediatorExample.client.SendComplaintController;
-import il.cshaifasweng.OCSFMediatorExample.client.ShowComplaintsEvent;
-import il.cshaifasweng.OCSFMediatorExample.client.TrackComplaintEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetComplaintsMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.User;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,6 +26,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -43,6 +46,21 @@ public class TrackComplaintsController {
 
     @FXML
     private TableView<Complaint> mytable;
+
+    Timeline timeline = new Timeline((new KeyFrame(Duration.seconds(3), event ->{
+        new Thread(()->{
+            try {
+                ArrayList<Complaint> list = new ArrayList<>();
+                GetComplaintsMessage msg = new GetComplaintsMessage(list,String.valueOf(this.id));
+                msg.setGetForWhom(2);
+
+                SimpleClient.getClient().sendToServer(msg);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+    })));
 
     @Subscribe
     public void trackComplaints(TrackComplaintEvent event){
@@ -67,6 +85,7 @@ public class TrackComplaintsController {
         });
     }
 
+
     @FXML
     void goBack(ActionEvent event) throws IOException {
         Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -76,6 +95,7 @@ public class TrackComplaintsController {
         currentWindow.show();
         SendComplaintController user = tableViewParent.getController();
         user.setSenderId(String.valueOf(getId()));
+        timeline.stop();
     }
 
 
@@ -93,6 +113,8 @@ public class TrackComplaintsController {
     @FXML
     void initialize() {
         EventBus.getDefault().register(this);
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
         assert comp != null : "fx:id=\"comp\" was not injected: check your FXML file 'trackComplaints.fxml'.";
         assert res != null : "fx:id=\"res\" was not injected: check your FXML file 'trackComplaints.fxml'.";
 

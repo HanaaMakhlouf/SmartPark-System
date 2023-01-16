@@ -17,6 +17,10 @@ import il.cshaifasweng.OCSFMediatorExample.entities.CustomerServiceEmployee;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetComplaintsMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetallOrdersOfClient;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.LogoutMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +28,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.greenrobot.eventbus.EventBus;
 
 public class CustomerServiceEmployeeController {
     @FXML // ResourceBundle that was given to the FXMLLoader
@@ -36,7 +42,7 @@ public class CustomerServiceEmployeeController {
     private Button goBackBtn; // Value injected by FXMLLoader
 
     @FXML // fx:id="refundBtn"
-    private Button refundBtn; // Value injected by FXMLLoader
+    private Button saveSpotBtn; // Value injected by FXMLLoader
 
     @FXML // fx:id="sendResponseBtn"
     private Button sendResponseBtn; // Value injected by FXMLLoader
@@ -45,21 +51,21 @@ public class CustomerServiceEmployeeController {
     private Button showComplaintsBtn; // Value injected by FXMLLoader
 
 
+
     @FXML
     void goBack(ActionEvent event) throws IOException {
+        LogoutMessage l = new LogoutMessage(Integer.parseInt(id));
+        SimpleClient.getClient().sendToServer(l);
         Navigate.navigate(event , "../mainPage.fxml");
-    }
-
-    @FXML
-    void refund(ActionEvent event) {
-
 
     }
 
     @FXML
-    void sendResponse(ActionEvent event) {
+    void saveSpot(ActionEvent event) {
 
     }
+
+
 
     @FXML
     void showComplaints(ActionEvent event) throws IOException {
@@ -79,7 +85,6 @@ public class CustomerServiceEmployeeController {
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert goBackBtn != null : "fx:id=\"goBackBtn\" was not injected: check your FXML file 'customerServiceEmployeeBoundary.fxml'.";
-        assert refundBtn != null : "fx:id=\"refundBtn\" was not injected: check your FXML file 'customerServiceEmployeeBoundary.fxml'.";
         assert sendResponseBtn != null : "fx:id=\"sendResponseBtn\" was not injected: check your FXML file 'customerServiceEmployeeBoundary.fxml'.";
         assert showComplaintsBtn != null : "fx:id=\"showComplaintsBtn\" was not injected: check your FXML file 'customerServiceEmployeeBoundary.fxml'.";
 

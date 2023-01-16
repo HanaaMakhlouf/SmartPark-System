@@ -1,3 +1,4 @@
+il\cshaifasweng\OCSFMediatorExample\client\Newprices.class
 il\cshaifasweng\OCSFMediatorExample\client\StandardMembershipEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ShowSendResultevent.class
 il\cshaifasweng\OCSFMediatorExample\client\showptableEvent.class
@@ -17,6 +18,7 @@ il\cshaifasweng\OCSFMediatorExample\client\ocsf\logInEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\TrackComplaintEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\showRefundEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\NewSubscriberEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\ShowChangePricesRequestEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PayFullMembershipEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MainProto.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\IAmAMember.class
@@ -28,10 +30,13 @@ il\cshaifasweng\OCSFMediatorExample\client\Admin$2.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\PayInPlaceOrder$2.class
 il\cshaifasweng\OCSFMediatorExample\client\ParkingLotEmployeeController.class
+il\cshaifasweng\OCSFMediatorExample\client\Userbalance$1.class
+il\cshaifasweng\OCSFMediatorExample\client\ApprovedRequestsBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder$2.class
 il\cshaifasweng\OCSFMediatorExample\client\ParkingTable.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\PayInAdvanceOrder$1.class
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryController.class
+il\cshaifasweng\OCSFMediatorExample\client\ApprovedRequestsBoundary$1$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\StandardMembership$1.class
 il\cshaifasweng\OCSFMediatorExample\client\LogInMemberEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership.class
@@ -42,9 +47,11 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\TrackOrders.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership$1.class
 il\cshaifasweng\OCSFMediatorExample\client\MessageEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\SetBalanceEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\MainPage$1.class
 il\cshaifasweng\OCSFMediatorExample\client\ErrorEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryController.class
+il\cshaifasweng\OCSFMediatorExample\client\ShowChangePricesRequestEventTwo.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AbstractClient.class
 il\cshaifasweng\OCSFMediatorExample\client\ShowComplaintsEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SignUpEvent.class
@@ -52,12 +59,16 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\ComplaintResponseControlle
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryController$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Admin$1.class
 il\cshaifasweng\OCSFMediatorExample\client\showTableEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\showptableEventTwo.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\PayFullMembership$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\ExitParking.class
 il\cshaifasweng\OCSFMediatorExample\client\PricesTable.class
+il\cshaifasweng\OCSFMediatorExample\client\Userbalance.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\CancelOrder.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\ExitParking$2.class
 il\cshaifasweng\OCSFMediatorExample\client\InAdvanceOrderEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\GManagerrequests$1.class
+il\cshaifasweng\OCSFMediatorExample\client\GManagerrequests$1$1.class
 il\cshaifasweng\OCSFMediatorExample\client\SendComplaintController.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\Navigate.class
 il\cshaifasweng\OCSFMediatorExample\client\PayInPlaceOrderEvent.class
@@ -69,6 +80,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\TrackComplaintsController.
 il\cshaifasweng\OCSFMediatorExample\client\ParkingLotEmployeeController$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\TrackOrders$2.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\SignUp$1.class
+il\cshaifasweng\OCSFMediatorExample\client\ApprovedRequestsBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\CustomerServiceEmployeeController.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\PayStandardMembership.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\ExitParking$3.class
@@ -76,6 +88,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\SignUp.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterWithOutOrder$1.class
 il\cshaifasweng\OCSFMediatorExample\client\EnterWithOrderEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Admin$3.class
+il\cshaifasweng\OCSFMediatorExample\client\GManagerrequests.class
 il\cshaifasweng\OCSFMediatorExample\client\PayInAdvanceOrderEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleChatClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder.class
