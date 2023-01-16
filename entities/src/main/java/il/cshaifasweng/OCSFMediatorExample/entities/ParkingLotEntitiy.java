@@ -1,11 +1,12 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @Entity
 @Table(name = "Parkings")
-public class ParkingLotEntitiy {
+public class ParkingLotEntitiy implements Serializable {
     @Id
     @Column(name = "id")
     int id;

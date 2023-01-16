@@ -274,7 +274,7 @@ public class ConnectionToClient extends Thread
           server.clientException(this, ex);
           
         } catch (RuntimeException ex) { // thrown by handleMessageFromClient or receiveMessageFromClient
-        
+
           server.clientException(this, ex);
         }
       }
