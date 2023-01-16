@@ -74,10 +74,13 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new TrackComplaintEvent(message));
 		}
 
+
 		else if(msg instanceof OrderToDeleteMsg)
 		{
 			OrderToDeleteMsg message = (OrderToDeleteMsg) msg;
 			EventBus.getDefault().post(new showRefundEvent(message.getBalance()));
+
+
 		}
 
 
@@ -90,16 +93,11 @@ public class SimpleClient extends AbstractClient {
 
 			MessageBetweenClients message = (MessageBetweenClients) msg;
 			EventBus.getDefault().post(new ShowMessageFromOthersEvent(message));
-
-
 		}
 		else if(msg instanceof SendFailedMessage)
 		{
 			EventBus.getDefault().post(new ShowSendResultevent(0));
 		}
-
-
-
 		else if(msg instanceof StandardMembershipMessage){
 			StandardMembershipMessage message = (StandardMembershipMessage) msg;
 			EventBus.getDefault().post(new StandardMembershipEvent(message));
@@ -116,7 +114,6 @@ public class SimpleClient extends AbstractClient {
 			PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
 			EventBus.getDefault().post(new PayStandardMembershipEvent(message));
 		}
-
 		else if(msg instanceof GetParkingLotByEmployeeId){
 			GetParkingLotByEmployeeId message = (GetParkingLotByEmployeeId) msg;
 			EventBus.getDefault().post(new SendParkNumEvent(message.getPark_num()));
@@ -140,6 +137,14 @@ public class SimpleClient extends AbstractClient {
 			List<ChangePricesRequest> lst = message.getList();
 			EventBus.getDefault().post(new ShowChangePricesRequestEventTwo(lst));
 
+		}
+		else if(msg instanceof EnterWithOrderMessage) {
+			EnterWithOrderMessage message = (EnterWithOrderMessage) msg;
+			EventBus.getDefault().post(new EnterWithOrderEvent(message));
+		}
+		else if(msg instanceof EnterWithOutOrderMessage) {
+			EnterWithOutOrderMessage message = (EnterWithOutOrderMessage) msg;
+			EventBus.getDefault().post(new EnterWithOutOrderEvent(message));
 		}
 		else {
 			Message message = (Message) msg;

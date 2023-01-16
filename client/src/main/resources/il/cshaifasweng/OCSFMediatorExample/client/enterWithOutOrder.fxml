@@ -9,31 +9,32 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="518.0" prefWidth="634.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.Boundaries.EnterWithOutOrder">
+<AnchorPane prefHeight="518.0" prefWidth="634.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="il.cshaifasweng.OCSFMediatorExample.client.Boundaries.EnterWithOutOrder">
    <children>
-      <Label layoutX="153.0" layoutY="329.0" prefHeight="25.0" prefWidth="101.0" text="Email">
+      <Label layoutX="145.0" layoutY="360.0" prefHeight="25.0" prefWidth="101.0" text="Email">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="153.0" layoutY="198.0" prefHeight="25.0" prefWidth="101.0" text="Leaving  Date">
+      <Label layoutX="145.0" layoutY="291.0" prefHeight="25.0" prefWidth="101.0" text="Leaving  Date">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="153.0" layoutY="257.0" prefHeight="25.0" prefWidth="101.0" text="Leaving Time">
+      <Label layoutX="145.0" layoutY="325.0" prefHeight="25.0" prefWidth="101.0" text="Leaving Time">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="email" layoutX="288.0" layoutY="329.0" prefHeight="25.0" prefWidth="175.0" />
-      <DatePicker fx:id="leavingDate" layoutX="289.0" layoutY="198.0" />
-      <MenuButton fx:id="leavingMinutes" layoutX="388.0" layoutY="257.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Minutes">
+      <TextField fx:id="email" layoutX="288.0" layoutY="360.0" prefHeight="25.0" prefWidth="175.0" />
+      <DatePicker fx:id="leavingDate" layoutX="289.0" layoutY="291.0" />
+      <MenuButton fx:id="leavingMinutes" layoutX="387.0" layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Minutes">
          <items>
 
          </items>
       </MenuButton>
-      <MenuButton fx:id="leavingHours" layoutX="289.0" layoutY="257.0" mnemonicParsing="false" text="Hours">
+      <MenuButton fx:id="leavingHours" layoutX="289.0" layoutY="325.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="64.0" text="Hours">
          <items>
 
          </items>
@@ -53,11 +54,43 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Label layoutX="153.0" layoutY="126.0" prefHeight="25.0" prefWidth="101.0" text="Car Number">
+      <Label layoutX="145.0" layoutY="118.0" prefHeight="25.0" prefWidth="101.0" text="Car Number">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="carNumber" layoutX="288.0" layoutY="126.0" prefHeight="25.0" prefWidth="175.0" />
+      <TextField fx:id="carNumber" layoutX="288.0" layoutY="118.0" prefHeight="25.0" prefWidth="175.0" />
+      <Label layoutX="145.0" layoutY="164.0" prefHeight="25.0" prefWidth="101.0" text="Parking Lot">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <MenuButton fx:id="parkingLot" layoutX="288.0" layoutY="164.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="175.0" text="Choose Parking Lot">
+         <items>
+            <MenuItem mnemonicParsing="false" onAction="#HaifaPort" text="Haifa Port" />
+            <MenuItem mnemonicParsing="false" onAction="#Carmel" text="Carmel" />
+            <MenuItem mnemonicParsing="false" onAction="#Central_Station" text="Central Station" />
+         </items>
+      </MenuButton>
+      <DatePicker fx:id="arrivalDate" layoutX="288.0" layoutY="211.0" prefHeight="25.0" prefWidth="175.0" />
+      <Label layoutX="145.0" layoutY="211.0" prefHeight="25.0" prefWidth="101.0" text="Arrival Date">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <MenuButton fx:id="arrivalMinutes" layoutX="386.0" layoutY="250.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Minutes">
+         <items>
+         </items>
+      </MenuButton>
+      <MenuButton fx:id="arrivalHours" layoutX="288.0" layoutY="250.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="64.0" text="Hour">
+         <items>
+         </items>
+      </MenuButton>
+      <Label layoutX="145.0" layoutY="247.0" prefHeight="25.0" prefWidth="101.0" text="Arrival Time">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="status" layoutX="468.0" layoutY="466.0" prefHeight="17.0" prefWidth="119.0" />
    </children>
 </AnchorPane>

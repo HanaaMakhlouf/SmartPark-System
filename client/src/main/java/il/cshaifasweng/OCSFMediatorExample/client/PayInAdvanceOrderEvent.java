@@ -8,4 +8,12 @@ public class PayInAdvanceOrderEvent {
     public PayInAdvanceOrderEvent(PayInAdvanceOrderMessage message) {
         this.message = message;
     }
+
+    public PayInAdvanceOrderMessage getMessage() {
+        return message;
+    }
+
+    public void setMessage(PayInAdvanceOrderMessage message) {
+        this.message = message;
+    }
 }

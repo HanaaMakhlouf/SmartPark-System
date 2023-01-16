@@ -53,19 +53,10 @@
       <DatePicker fx:id="leavingDate" layoutX="290.0" layoutY="315.0" />
       <MenuButton fx:id="arrivalHours" layoutX="289.0" layoutY="261.0" mnemonicParsing="false" text="Hours">
          <items>
-<!--            <MenuItem mnemonicParsing="false" text="00:00" />-->
-<!--            <MenuItem mnemonicParsing="false" text="01:00" />-->
-<!--            <MenuItem mnemonicParsing="false" text="02:00" />-->
-<!--            <MenuItem mnemonicParsing="false" text="03:00" />-->
-<!--            <MenuItem mnemonicParsing="false" text="04:00" />-->
-<!--            <MenuItem mnemonicParsing="false" text="05:00" />-->
-<!--            <MenuItem mnemonicParsing="false" text="06:00" />-->
-<!--            <MenuItem mnemonicParsing="false" text="07:00" />-->
          </items>
       </MenuButton>
       <MenuButton fx:id="arrivalMinutes" layoutX="389.0" layoutY="261.0" mnemonicParsing="false" text="Minutes">
          <items>
-
          </items>
       </MenuButton>
       <MenuButton fx:id="leavingMinutes" layoutX="389.0" layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Minutes">

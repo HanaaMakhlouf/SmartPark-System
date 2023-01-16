@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "InAdvanceOrders")
-public class InAdvanceOrderEntity implements Serializable {
+@Table(name = "InPlaceOrders")
+public class InPlaceOrderEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +30,12 @@ public class InAdvanceOrderEntity implements Serializable {
     String arrivalHours;
     @Column(name = "parking_lot_name")
     String parkingLotName ;
-    @Column(name = "Car_Entered")
-    boolean carEntered ;
+    @Column(name = "Email")
+    String email ;
 
-    public InAdvanceOrderEntity(String carNumber,String clientId, String leavingMinutes, String leavingDate, String leavingHours, String arrivalMinutes,
-                                String arrivalDate, String arrivalHours, String parkingLotName) {
+
+    public InPlaceOrderEntity(String carNumber, String clientId, String leavingMinutes, String leavingDate, String leavingHours, String arrivalMinutes,
+                              String arrivalDate, String arrivalHours, String parkingLotName,String email) {
         this.carNumber = carNumber;
         this.UserID = clientId;
         this.leavingMinutes = leavingMinutes;
@@ -44,15 +45,15 @@ public class InAdvanceOrderEntity implements Serializable {
         this.arrivalDate = arrivalDate;
         this.arrivalHours = arrivalHours;
         this.parkingLotName = parkingLotName;
-        this.carEntered=false;
+        this.email = email;
     }
 
-    public boolean isCarEntered() {
-        return carEntered;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCarEntered(boolean carEntered) {
-        this.carEntered = carEntered;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUserID() {
@@ -143,7 +144,7 @@ public class InAdvanceOrderEntity implements Serializable {
         return parkingLotName;
     }
 
-    public InAdvanceOrderEntity() {
+    public InPlaceOrderEntity() {
 
     }
 }
