@@ -16,6 +16,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.MenuButton;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.zip.InflaterInputStream;
 
 public class UserBoundaryController {
+
 
     @FXML
     private Button backBtn;
@@ -92,7 +95,14 @@ public class UserBoundaryController {
     }
 
     @FXML
-    void exitParkingLot(ActionEvent event) {
+    void exitParkingLot(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../exitParking.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        ExitParking inadv = tableViewParent.getController();
+        inadv.setId(id);
 
     }
 

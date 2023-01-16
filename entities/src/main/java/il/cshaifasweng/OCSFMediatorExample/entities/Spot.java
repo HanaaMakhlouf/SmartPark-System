@@ -57,9 +57,19 @@ public class Spot {
         this.saved=b1;
         this.carNum = "";
     }
-
-
     public Spot() {
+    }
+
+
+    public Spot(Spot spot, ParkingLotEntitiy p1){
+        this.parkinglot = p1;
+        this.width = spot.getWidth();
+        this.row = spot.getRow();
+        this.column = spot.getColumn();
+        this.available = true;
+        this.saved = false;
+        this.carNum = spot.getCarNum();
+
     }
 
     public String getCarNum() {

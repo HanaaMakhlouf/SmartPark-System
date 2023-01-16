@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.ExitParking;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 //import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
@@ -293,9 +294,9 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
     }
 
     public static double calcFee(String startDate,String startHour,String startMin
-            ,String endDate,String endHour,String endMin){
+            ,String endDate,String endHour,String endMin, boolean isInPlaceOrder){
         Prices pricesData = getOfClass(Prices.class);
-        int perHour = pricesData.getIn_Advance_price();
+        int perHour = isInPlaceOrder ? pricesData.getIn_place_price() : pricesData.getIn_Advance_price();
         String arrivalTimeAndDate = startDate + " " + startHour + ":" + startMin;
         String leavingTimeAndDate = endDate + " " + endHour + ":" + endMin;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //  ??dd/MM/yyyy HH:mm instead??
@@ -367,6 +368,39 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         }
         session.getTransaction().commit();
     }
+    public static void exitCar(String carNum, int parkId) {
+        List<Spot> spots = getAll(Spot.class);
+        Spot carSpot = null;
+        List<String> carsToBeMoved = new ArrayList<String>();
+        for (Spot spot : spots) {
+            if (!spot.isAvailable() && spot.getCarNum().equals(carNum)) {
+                carSpot = spot;
+            }
+        for (Spot parkSpot : spots) {
+            if (parkSpot.getParkinglot().getId() == parkId && parkSpot.getColumn() == carSpot.getColumn() &&
+                    parkSpot.getRow() == carSpot.getRow() && parkSpot.getWidth() < carSpot.getWidth() && !parkSpot.isAvailable() &&
+                    !parkSpot.getCarNum().isEmpty()) {
+                carsToBeMoved.add(parkSpot.getCarNum());
+                // update spots database
+                ParkingLotEntitiy parking = getAllWhereIdEquals(ParkingLotEntitiy.class, String.valueOf(parkId), "id").get(0);
+                Spot newSpot = new Spot(parkSpot, parking);
+                session.beginTransaction();
+                session.update(newSpot);
+                session.flush();
+                session.getTransaction().commit();
+            }
+        }
+            spot.setAvailable(true);
+            spot.setCarNum("");
+            session.beginTransaction();
+            session.update(spot);
+            session.flush();
+            session.getTransaction().commit();
+            for(String car : carsToBeMoved) {
+                addCarToPark(parkId, car);
+            }
+        }
+    }
 
     public static int countFreeSpots(int parkId){
         int count = 0;
@@ -394,6 +428,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         try {
+
             if(msg instanceof logInMessage){
                 logInMessage message = (logInMessage) msg;
                 List<User> userList = getAll(User.class);
@@ -423,10 +458,6 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
 
                 SubscribersList.add(connection);
                 client.sendToClient(message);
-
-
-
-
             }
             else if(msg instanceof  OrderToDeleteMsg) {
                 OrderToDeleteMsg message = (OrderToDeleteMsg) msg;
@@ -541,7 +572,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 InAdvanceOrderValidator validator= new InAdvanceOrderValidator(carNum,parkingLot,arrivingHours
                         ,arrivingDate,arrivingMin,leavingHours,leavingDate,leavingMin, parkingLots, inAdvanceOrders);
                 message.setResult(validator.validateOrder());
-                message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
+                message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin, false));
                 message.setUserId(message.getUserId());
 //                message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
                 client.sendToClient(message);
@@ -667,7 +698,6 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 session.update(user);
                 session.getTransaction().commit();
 
-
             }
             else if(msg instanceof PayInAdvanceOrderMessage) {
                 PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
@@ -733,6 +763,97 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 }
                 client.sendToClient(message);
             }
+            else if(msg instanceof ExitParkingMessage) {
+                ExitParkingMessage message = (ExitParkingMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String leavingDate = message.getLeavingDate();
+                String leavingHours = message.getLeavingHours();
+                String leavingMinutes = message.getLeavingMinutes();
+                String  id = message.getUserId();
+                int parkId = getParkIdByName(parkingLot);
+                List<InPlaceOrderEntity> inPlaceOrders = getAll(InPlaceOrderEntity.class);
+                List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
+                List<Spot> spots = getAll(Spot.class);
+                ExitParkingLotValidator validator = new ExitParkingLotValidator(carNum,parkingLot,leavingHours
+                        ,leavingDate,leavingMinutes,spots, parkId);
+
+                boolean result = validator.validateOrder();
+                System.out.println(result);
+                ExitParkingLotService service = new ExitParkingLotService(carNum, result, message, inPlaceOrders, inAdvanceOrders);
+                ExitParkingMessage message1 = service.getMessage();
+                if(result) {
+                    double fee = 0;
+                    if (message1.isInPlaceOrder()) {
+                        // calculate fee
+                        InPlaceOrderEntity order = service.getOrderInPlace();
+                        fee = calcFee(order.getArrivalDate(), order.getArrivalHours(), order.getArrivalMinutes(),
+                                order.getLeavingDate(), order.getLeavingHours(), order.getLeavingMinutes(), true);
+                        message1.setFee(fee);
+                    } else {
+                        // calculate fee and update user balance
+                        InAdvanceOrderEntity order = service.getOrderInAdvance();
+                        fee = calcFee(order.getArrivalDate(), order.getArrivalHours(), order.getArrivalMinutes(),
+                                order.getLeavingDate(), order.getLeavingHours(), order.getLeavingMinutes(), false);
+                        double feeAccordingToParkedTime = calcFee(order.getArrivalDate(), order.getArrivalHours(), order.getArrivalMinutes(),
+                                leavingDate, leavingHours, leavingMinutes, false);
+                        fee -= feeAccordingToParkedTime;
+                        message1.setFee(fee);
+                        // Update balance
+                        List<User> lstUsers = getAllWhereIdEquals(User.class, id, "id");
+                        User us = lstUsers.get(0);
+                        us.setBalance(us.getBalance() + fee);
+                        session.beginTransaction();
+                        session.update(us);
+                        session.flush();
+                        session.getTransaction().commit();
+                        // delete order
+                        session.beginTransaction();
+                        session.delete(order);
+                        session.flush();
+                        session.getTransaction().commit();
+                        exitCar(carNum, parkId);
+
+                    }
+                }
+                client.sendToClient(message1);
+            } else if(msg instanceof PayInPlaceOrderMessage) {
+                PayInPlaceOrderMessage message = (PayInPlaceOrderMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
+                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
+                message.setResult(validator.validatePayment());
+                List<ParkingLotEntitiy> parkingLots = getAll(ParkingLotEntitiy.class);
+                int currParking = 0;
+                for(ParkingLotEntitiy park : parkingLots) {
+                    if (park.getName().equals(parkingLot)) {
+                        currParking = park.getId();
+                    }
+                }
+                List<InPlaceOrderEntity> orders = getAll(InPlaceOrderEntity.class);
+                InPlaceOrderEntity myOrder = null;
+                for(InPlaceOrderEntity order : orders){
+                    if(order.getCarNumber().equals(carNum)){
+                        myOrder = order;
+                        break;
+                    }
+                }
+                if(message.isResult()) {
+                    // delete order
+                    session.beginTransaction();
+                    session.delete(myOrder);
+                    session.flush();
+                    session.getTransaction().commit();
+                    exitCar(carNum, currParking);
+
+                }
+                /* needed
+                make InAdvanceOrderEntity and add to DB
+                validate payment
+                 */
+                client.sendToClient(message);
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -748,7 +869,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 } else if (request.equals("print parking table")){
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "b7badeeb95glcd")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM parkinglotss");
                         data.clear();
@@ -781,7 +902,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
 
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "b7badeeb95glcd")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
                         data2.clear();

@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 
 public class EnterWithOrder {
 
+
     @FXML
     private DatePicker arrivalDate;
 
@@ -44,6 +45,7 @@ public class EnterWithOrder {
 
     @FXML
     private MenuButton parkingLot;
+
     private Stage currentWindow;
     String userId;
 

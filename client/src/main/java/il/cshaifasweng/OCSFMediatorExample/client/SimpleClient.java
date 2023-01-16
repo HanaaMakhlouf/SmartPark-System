@@ -123,6 +123,14 @@ public class SimpleClient extends AbstractClient {
 			EnterWithOutOrderMessage message = (EnterWithOutOrderMessage) msg;
 			EventBus.getDefault().post(new EnterWithOutOrderEvent(message));
 		}
+		else if(msg instanceof ExitParkingMessage){
+			ExitParkingMessage message = (ExitParkingMessage) msg;
+			EventBus.getDefault().post(new ExitParkingLotEvent(message));
+		}
+		else if(msg instanceof PayInPlaceOrderMessage){
+			PayInPlaceOrderMessage message = (PayInPlaceOrderMessage) msg;
+			EventBus.getDefault().post(new PayInPlaceOrderEvent(message));
+		}
 		else {
 			Message message = (Message) msg;
 			if (message.getMessage().equals("update submitters IDs")) {
