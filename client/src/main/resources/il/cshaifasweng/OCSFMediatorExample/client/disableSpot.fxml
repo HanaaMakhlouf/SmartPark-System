@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.Boundaries.DisableSpotController">
+    <children>
+        <Text fontSmoothingType="LCD" layoutX="157.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Disable/Enable a parking spot" textAlignment="CENTER" wrappingWidth="308.77734375">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+        </Text>
+        <Text layoutX="31.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chooose parking lot">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Text>
+        <ComboBox fx:id="parkCombo" layoutX="161.0" layoutY="115.0" onAction="#parkSelected" prefWidth="150.0" />
+        <ComboBox fx:id="unsaveCombo" layoutX="418.0" layoutY="279.0" prefWidth="150.0" />
+        <ComboBox fx:id="saveCombo" layoutX="418.0" layoutY="187.0" prefWidth="150.0" />
+        <Text layoutX="20.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose a spot you want to disable from the next avaliabe spots ">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Text>
+        <Text layoutX="25.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose a praking spot you want to enable">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Text>
+        <Button fx:id="saveBtn" layoutX="261.0" layoutY="230.0" mnemonicParsing="false" onAction="#saveSpot" text="Disable" />
+        <Button fx:id="unsaveBtn" layoutX="259.0" layoutY="341.0" mnemonicParsing="false" onAction="#unsaveSpot" text="Enable" />
+        <Button fx:id="backBtn" layoutX="534.0" layoutY="359.0" mnemonicParsing="false" onAction="#goBack" text="Back" />
+        <Label fx:id="saveLabel" layoutX="326.0" layoutY="237.0" prefHeight="18.0" prefWidth="239.0" />
+        <Label fx:id="unsaveLabel" layoutX="319.0" layoutY="347.0" prefHeight="18.0" prefWidth="214.0" />
+    </children>
+</AnchorPane>

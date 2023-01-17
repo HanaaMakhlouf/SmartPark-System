@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Date;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
@@ -91,12 +93,13 @@ public class SendComplaintController implements Serializable {
         }
     }
 
+
     @FXML
     void sendComplaint(ActionEvent event) {
         String complaint = complaintContent.getText();
         String parkingLotName = chooseParkingLot.getSelectionModel().getSelectedItem();
         int park_id = 0;
-        if (parkingLotName.equals("Haifa port")) park_id = 1;
+        if (parkingLotName.equals("Haifa Port")) park_id = 1;
         else  if (parkingLotName.equals("Carmel")) park_id = 2;
         else if(parkingLotName.equals("Central Station")) park_id = 3;
         LocalDateTime currentDate =LocalDateTime.now();
@@ -180,6 +183,5 @@ public class SendComplaintController implements Serializable {
         assert sendComplaintBtn != null : "fx:id=\"sendComplaintBtn\" was not injected: check your FXML file 'sendComplaint1.fxml'.";
         chooseParkingLot.getItems().addAll(parkingLots);
     }
-
 
 }

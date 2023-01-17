@@ -96,8 +96,7 @@ public class GeneralManagerController {
 
 
     @Subscribe
-public void getSpots(GetSpotsEvent event) throws IOException {
-    System.out.println("WE ARE HERE");
+    public void getSpots(GetSpotsEvent event) throws IOException {
     List<AbsSpot> list = event.getMsg().getList();
     List<AbsSpot> p1_list = new ArrayList<>(),p2_list = new ArrayList<>()  ,p3_list = new ArrayList<>() ;
     for (int i = 0 ; i < list.size();i++){
@@ -396,8 +395,6 @@ void orderReports(ActionEvent event) throws IOException {
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
-
-
        EventBus.getDefault().register(this);
         assert confirmNewPricesBtn != null : "fx:id=\"confirmNewPricesBtn\" was not injected: check your FXML file 'generalManageBoundary.fxml'.";
         assert orderReportsBtn != null : "fx:id=\"orderReportsBtn\" was not injected: check your FXML file 'generalManageBoundary.fxml'.";

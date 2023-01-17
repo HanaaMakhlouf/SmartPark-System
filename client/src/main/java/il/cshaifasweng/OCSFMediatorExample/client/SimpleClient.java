@@ -37,14 +37,17 @@ public class SimpleClient extends AbstractClient {
 		System.out.println("Handle Message From Server!");
 		if(msg instanceof logInMessage){
 			logInMessage message = (logInMessage) msg;
-			EventBus.getDefault().post(new logInEvent(message.getResult()));
+			EventBus.getDefault().post(new logInEvent(message.getResult(),message.getParkingLotId()));
 		}
 		else if(msg instanceof GetSpotsMessage){
-			System.out.println("wwwwwwwwwwwwwwwwww");
 			GetSpotsMessage message = (GetSpotsMessage) msg;
-//			System.out.println(message.getList().get(0).getPark_id());
-//			List<AbsSpot> l = new ArrayList<>(message.getList());
-//			GetSpotsMessage ms = new GetSpotsMessage(l);
+			if(message.getFromWhom() == 1 )
+				EventBus.getDefault().post(new GetSpotsToSaveEvent(message));
+			else if(message.getFromWhom() == 2)
+				EventBus.getDefault().post(new GetSpotsToDisableEvent(message));
+			else if(message.getFromWhom() == 3)
+				EventBus.getDefault().post(new GetSpotsToSeeSpaceEvent(message));
+				else
 			EventBus.getDefault().post(new GetSpotsEvent(message));
 		}
 		else if(msg instanceof MemberLogInMessage) {
