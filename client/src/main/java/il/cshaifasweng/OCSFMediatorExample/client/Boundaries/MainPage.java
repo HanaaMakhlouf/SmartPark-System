@@ -98,6 +98,7 @@ public class MainPage {
                             currentWindow.show();
                             ParkingLotEmployeeController employee = tableViewParent.getController();
                             employee.setEmployee(idTxt.getText());
+                            employee.setPark_id(event.getPark_id());
                         }
                         else if(event.getResult() == 2) {
                             tableViewParent = new FXMLLoader(getClass().getResource("../managerBoundary.fxml"));

@@ -11,11 +11,13 @@ import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.ComplaintResponseController;
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.Navigate;
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.SaveSpotController;
 import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
 import il.cshaifasweng.OCSFMediatorExample.entities.CustomerServiceEmployee;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetComplaintsMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetSpotsMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetallOrdersOfClient;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -61,8 +63,17 @@ public class CustomerServiceEmployeeController {
     }
 
     @FXML
-    void saveSpot(ActionEvent event) {
-
+    void saveSpot(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("saveSpot.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        SaveSpotController cs_em = tableViewParent.getController();
+        cs_em.setCS_employee(getId());
+        GetSpotsMessage message = new GetSpotsMessage();
+        message.setFromWhom(1);
+        SimpleClient.getClient().sendToServer(message);
+        currentWindow.show();
     }
 
 
@@ -73,8 +84,8 @@ public class CustomerServiceEmployeeController {
         FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("complaintResponse.fxml"));
         Scene tableViewScene = new Scene(tableViewParent.load());
         currentWindow.setScene(tableViewScene);
-        ComplaintResponseController inadv = tableViewParent.getController();
-        inadv.setId(getId());
+        ComplaintResponseController user = tableViewParent.getController();
+        user.setId(getId());
         ArrayList<Complaint> list = new ArrayList<>();
         GetComplaintsMessage msg = new GetComplaintsMessage(list,id);
         msg.setGetForWhom(1);

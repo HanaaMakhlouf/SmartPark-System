@@ -5,9 +5,20 @@ import java.io.Serializable;
 
 public class AbsSpot implements Serializable {
     private int width_num;
+    private int height_num;
+    private int depth_num;
+    private boolean available;
+    private boolean saved;
+    private boolean disabled;
+    private int park_id;
+    private int spot_id;
 
-    public AbsSpot() {
+    public int getSpot_id() {
+        return spot_id;
+    }
 
+    public void setSpot_id(int spot_id) {
+        this.spot_id = spot_id;
     }
 
     public int getWidth_num() {
@@ -66,14 +77,10 @@ public class AbsSpot implements Serializable {
         this.park_id = park_id;
     }
 
-    private int height_num;
-    private int depth_num;
-    private boolean available;
-    private boolean saved;
-    private boolean disabled;
-    private int park_id;
 
-    public AbsSpot(int width_num, int height_num, int depth_num, boolean available, boolean saved, boolean disabled, int park_id) {
+
+    public AbsSpot(int s_id ,int width_num, int height_num, int depth_num, boolean available, boolean saved, boolean disabled, int park_id) {
+        this.spot_id = s_id;
         this.width_num = width_num;
         this.height_num = height_num;
         this.depth_num = depth_num;
@@ -82,5 +89,7 @@ public class AbsSpot implements Serializable {
         this.disabled = disabled;
         this.park_id = park_id;
     }
+
+
 
 }
