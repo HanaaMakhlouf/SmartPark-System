@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "InAdvanceOrders")
@@ -32,6 +33,8 @@ public class InAdvanceOrderEntity implements Serializable {
     String parkingLotName ;
     @Column(name = "Car_Entered")
     boolean carEntered ;
+    @Column(name = "Ordered_At")
+    LocalDateTime date;
 
     public InAdvanceOrderEntity(String carNumber,String clientId, String leavingMinutes, String leavingDate, String leavingHours, String arrivalMinutes,
                                 String arrivalDate, String arrivalHours, String parkingLotName) {
@@ -45,6 +48,8 @@ public class InAdvanceOrderEntity implements Serializable {
         this.arrivalHours = arrivalHours;
         this.parkingLotName = parkingLotName;
         this.carEntered=false;
+        this.date= LocalDateTime.now();
+
     }
 
     public boolean isCarEntered() {

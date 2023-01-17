@@ -17,6 +17,7 @@ C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaif
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\CustomerServiceEmployeeController.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SignUpEvent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PrimaryController.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\EnterWithOrderEvent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\UserBoundaryController.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ParkingLotEmployeeController.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ShowChangePricesRequestEvent.java
@@ -29,10 +30,12 @@ C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaif
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\AbstractClient.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\showSubsForAdminEvent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\GManagerrequests.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterWithOrder.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SecondaryController.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\GeneralManagerController.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\showTableEvent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ShowALLreportsReqEvent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SimpleChatClient.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ErrorEvent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PricesTable.java
@@ -46,6 +49,7 @@ C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaif
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ShowMessageFromOthersEvent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Reports.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\TrackComplaintEvent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ShowSendResultevent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ManagerController.java
@@ -67,4 +71,6 @@ C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaif
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SendComplaintController.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Boundaries\PayStandardMembership.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\EnterWithOutOrderEvent.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PayStandardMembershipEvent.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Makereports.java

@@ -72,8 +72,15 @@ public class GeneralManagerController {
     }
 
     @FXML
-    void orderReports(ActionEvent event) {
-
+    void orderReports(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("reports.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        Reports inadv = tableViewParent.getController();
+        System.out.println("gm id is "+id);
+        inadv.setId(id);
+        currentWindow.show();
     }
 
     @FXML

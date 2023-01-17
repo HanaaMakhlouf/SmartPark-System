@@ -1,8 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -12,10 +10,10 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
-import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
 //import il.cshaifasweng.OCSFMediatorExample.client.showSubsForAdminEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
@@ -82,8 +80,11 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         configuration.addAnnotatedClass(ParkingLotEntitiy.class);
         configuration.addAnnotatedClass(Spot.class);
         configuration.addAnnotatedClass(ChangePricesRequest.class);
-
+        configuration.addAnnotatedClass(OrdersReport.class);
+        configuration.addAnnotatedClass(ComplaintsReport.class);
         configuration.addAnnotatedClass(InPlaceOrderEntity.class);
+        configuration.addAnnotatedClass(RequestForReport.class);
+
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties()).build();
@@ -292,6 +293,44 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
         return allQuery.getResultList();
     }
+
+
+    public static <T, E> List<T> getAllforReport(Class<T> object,String OrderDatefield,String ParknameField, LocalDateTime from,LocalDateTime until, E parkname) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
+        Root<T> rootEntry = criteriaQuery.from(object);
+        Predicate datePredicate = builder.and(
+                builder.greaterThanOrEqualTo(rootEntry.get(OrderDatefield), from),
+                builder.lessThanOrEqualTo(rootEntry.get(OrderDatefield), until)
+        );
+        Predicate parknamePredicate = builder.equal(rootEntry.get(ParknameField), parkname);
+        Predicate finalPredicate = builder.and(datePredicate, parknamePredicate);
+        criteriaQuery.select(rootEntry).where(finalPredicate);
+        TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
+        return allQuery.getResultList();
+
+
+    }
+
+    public static <T, E> List<T> getAllforResolvedComplaintsReport(Class<T> object,String OrderDatefield,String ParknameField, LocalDateTime from,LocalDateTime until, E parkname,String respnse) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
+        Root<T> rootEntry = criteriaQuery.from(object);
+        Predicate datePredicate = builder.and(
+                builder.greaterThanOrEqualTo(rootEntry.get(OrderDatefield), from),
+                builder.lessThanOrEqualTo(rootEntry.get(OrderDatefield), until)
+        );
+        Predicate parknamePredicate = builder.equal(rootEntry.get(ParknameField), parkname);
+        Predicate responsePredicate = builder.notEqual(rootEntry.get(respnse),"");
+        Predicate finalPredicate = builder.and(datePredicate, parknamePredicate,responsePredicate);
+        criteriaQuery.select(rootEntry).where(finalPredicate);
+        TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
+        return allQuery.getResultList();
+
+
+    }
+
+
 
     public static <T> T getWhereIdEquals(Class<T> object,String id,String field) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -509,17 +548,17 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 List<CustomerServiceEmployee> cs_employeeListgetAll= getAll(CustomerServiceEmployee.class);
                 List<Subscriber> subs = getAll(Subscriber.class);
                 LogInController logInCntrl = new LogInController(message.getUserId(),message.getUserPass());
-                message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll));
+                message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll,subs));
                 SubscribedClient connection = new SubscribedClient(client);
                 connection.setClientID(Integer.parseInt(message.getUserId()));
                 SubscribersList.add(connection);
 
                 message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll,subs));
 
-                Subscriber connection = new Subscriber(Integer.parseInt(message.getUserId()));
+                Subscriber s = new Subscriber(Integer.parseInt(message.getUserId()));
                 if(message.getResult() !=0) {
                  session.beginTransaction();
-                 session.save(connection);
+                 session.save(s);
                 session.flush();
                 session.getTransaction().commit();  }
                 client.sendToClient(message);
@@ -530,6 +569,60 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 session.beginTransaction();
                 List<Subscriber> s = getAllWhereIdEquals(Subscriber.class,message.getId(),"id");
                 session.delete(s.get(0));
+                session.flush();
+                session.getTransaction().commit();
+
+            }
+            else if(msg instanceof makeAreportMSG)
+            {
+                makeAreportMSG message = (makeAreportMSG) msg;
+                if(message.getRequest_type().equals("Orders") && message.getMangerID() != null)
+                {
+                    List<Manager> mangers = getAllWhereIdEquals(Manager.class,Integer.parseInt(message.getMangerID()),"id");
+                    int parkname = mangers.get(0).getParkingLot();
+                   List<ParkingLotEntitiy> parks = getAllWhereIdEquals(ParkingLotEntitiy.class,parkname,"id");
+                    String parkname_string = parks.get(0).getName();
+                    List<RequestForReport> requests = getAllWhereIdEquals(RequestForReport.class,message.getRequestid(),"id");
+                    List<InAdvanceOrderEntity> inadv = getAllforReport(InAdvanceOrderEntity.class,"date","parkingLotName",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname_string);
+                    List<InPlaceOrderEntity> inplace = getAllforReport(InPlaceOrderEntity.class,"date","parkingLotName",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname_string);
+                    session.beginTransaction();
+                    OrdersReport rep = new OrdersReport(parkname_string,inplace.size(),inadv.size(),requests.get(0).getFrom(),requests.get(0).getUntil());
+                    session.save(rep);
+                    session.flush();
+                    session.getTransaction().commit();
+
+                }
+                if(message.getRequest_type().equals("Complaints") && message.getMangerID() != null)
+                {
+                    List<Manager> mangers = getAllWhereIdEquals(Manager.class,Integer.parseInt(message.getMangerID()),"id");
+                    int parkname = mangers.get(0).getParkingLot();
+                    List<ParkingLotEntitiy> parks = getAllWhereIdEquals(ParkingLotEntitiy.class,parkname,"id");
+                    String parkname_string = parks.get(0).getName();
+                    List<RequestForReport> requests = getAllWhereIdEquals(RequestForReport.class,message.getRequestid(),"id");
+                    List<Complaint> complaints = getAllforReport(Complaint.class,"date","park_id",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname);
+                    List<Complaint> Resolvedcomplaints = getAllforResolvedComplaintsReport(Complaint.class,"date","park_id",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname,"response");
+                    session.beginTransaction();
+                    ComplaintsReport rep = new ComplaintsReport(parkname_string,complaints.size(),Resolvedcomplaints.size(),requests.get(0).getFrom(),requests.get(0).getUntil());
+                    session.save(rep);
+                    session.flush();
+                    session.getTransaction().commit();
+
+                }
+
+
+
+            }
+
+
+
+            else if(msg instanceof RequestForReport)
+            {
+
+                RequestForReport message = (RequestForReport) msg;
+                session.beginTransaction();
+                System.out.println("attempt to save a request");
+                RequestForReport newMsg = new RequestForReport(message.getFrom(),message.getUntil(),message.getReport_type());
+               session.save(newMsg);
                 session.flush();
                 session.getTransaction().commit();
 
@@ -626,6 +719,20 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 newMsg.setId(message.getId());
                 newMsg.setUserbalance(balance);
                 client.sendToClient(newMsg);
+
+            }
+            else if(msg instanceof ShowAllReportrequestsMessage)
+            {
+                ShowAllReportrequestsMessage message = (ShowAllReportrequestsMessage) msg;
+
+
+                List<RequestForReport> Orders = getAllWhereIdEquals(RequestForReport.class,"Orders","Report_type");
+                List<RequestForReport> Compliants = getAllWhereIdEquals(RequestForReport.class,"Complaints","Report_type");
+                List<RequestForReport> disabled = getAllWhereIdEquals(RequestForReport.class,"Disabled","Report_type");
+                ShowAllReportrequestsMessage newMsg = new ShowAllReportrequestsMessage(Orders,Compliants,disabled);
+                client.sendToClient(newMsg);
+
+
 
             }
             else if(msg instanceof  GetallOrdersOfClient) {

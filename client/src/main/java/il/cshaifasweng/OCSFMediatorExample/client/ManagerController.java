@@ -7,15 +7,14 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.InAdvanceOrder;
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.Navigate;
 import il.cshaifasweng.OCSFMediatorExample.entities.ChangePricesRequest;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.LogoutMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.ShowRequestForGM;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.ShowRequestForManager;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.RequestForReport;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -71,8 +70,21 @@ public class ManagerController {
     }
 
     @FXML
-    void showReports(ActionEvent event) {
+    void showReports(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("makereports.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        List<RequestForReport> Orders = new ArrayList<>();
+        List<RequestForReport> Complaints = new ArrayList<>();
+        List<RequestForReport> Disabled = new ArrayList<>();
 
+        ShowAllReportrequestsMessage message = new ShowAllReportrequestsMessage(Orders,Complaints,Disabled);
+        SimpleClient.getClient().sendToServer(message);
+        Makereports inadv = tableViewParent.getController();
+        System.out.println("user id is "+id);
+        inadv.setManagerID(id);
+        currentWindow.show();
     }
 
     @FXML

@@ -11,6 +11,8 @@ C:\Users\saleh\IdeaProjects\car-parkinglot-system\server\src\main\java\il\cshaif
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ConnectionToClient.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\SimpleServer.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\validation\InAdvanceOrderValidator.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\validation\EnterWithOrderValidator.java
+C:\Users\saleh\IdeaProjects\car-parkinglot-system\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\validation\EnterWithOutOrderValidator.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableServer.java
 C:\Users\saleh\IdeaProjects\car-parkinglot-system\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableOriginatorServer.java

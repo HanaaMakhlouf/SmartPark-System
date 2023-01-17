@@ -74,6 +74,16 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new TrackComplaintEvent(message));
 		}
 
+		else if(msg instanceof ShowAllReportrequestsMessage)
+		{
+			ShowAllReportrequestsMessage message = (ShowAllReportrequestsMessage) msg;
+			EventBus.getDefault().post(new ShowALLreportsReqEvent(message));
+
+
+
+
+		}
+
 
 		else if(msg instanceof OrderToDeleteMsg)
 		{

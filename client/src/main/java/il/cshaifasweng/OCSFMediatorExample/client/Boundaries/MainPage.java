@@ -12,7 +12,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLOutput;
 import java.time.format.DateTimeFormatter;
@@ -42,7 +45,6 @@ public class MainPage {
     private Button signupBtn; // Value injected by FXMLLoader
     private int msgId;
     private Stage currentWindow;
-
 
     @FXML
     void login(ActionEvent event) throws IOException {
