@@ -76,9 +76,19 @@ public class Spot {
         this.carNum = "";
         this.leaving="";
     }
-
-
     public Spot() {
+    }
+
+
+    public Spot(Spot spot, ParkingLotEntitiy p1){
+        this.parkinglot = p1;
+        this.width_num = spot.getWidth_num();
+        this.depth_num = spot.getDepth_num();
+        this.height_num = spot.getHeight_num();
+        this.available = true;
+        this.saved = false;
+        this.carNum = spot.getCarNum();
+
     }
 
     public int getWidth_num() {
