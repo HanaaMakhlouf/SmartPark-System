@@ -330,6 +330,16 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
         return allQuery.getSingleResult();
     }
+    public static <T> T getWhereIdEquals(Class<T> object,String id1,String field1,String id2,String field2) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
+        Root<T> rootEntry = criteriaQuery.from(object);
+        criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field1), id1)
+                ,builder.equal(rootEntry.get(field2), id2));
+        TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
+        return allQuery.getSingleResult();
+    }
+
 
 //    public static List<Spot> getSpotsSorted(String parkId) {
 //        CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -572,16 +582,20 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 MemberLogInControler memberLogInCntrl = new MemberLogInControler(message.getMemberNumber(), message.getCarNumber());
                 message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList,sublst));
                 SubscribedClient connection = new SubscribedClient(client);
-                String st = message.getMemberNumber() ;
-//                long tmp2 = Long.getLong(st) ;
-//                System.out.println(tmp2 +"tmp2");
+                String st = message.getMemberNumber();
+                if(message.getResult() == 1){
+                    StandardMemberShipEntity standardMemberShip = getWhereIdEquals(StandardMemberShipEntity.class
+                    , message.getMemberNumber(),"membershipID" , message.getCarNumber(), "carNumber");
+                    message.setMemberPark(standardMemberShip.getParkingLot());
+                }
                 connection.setClientID(Integer.parseInt(st));
                 Subscriber s = new Subscriber(Integer.parseInt(message.getMemberNumber()));
-                if(message.getResult() !=0) {
+                if(message.getResult() > 0 ) {
                     session.beginTransaction();
                     session.save(s);
                     session.flush();
-                    session.getTransaction().commit();  }
+                    session.getTransaction().commit();
+                }
                 SubscribersList.add(connection);
                 client.sendToClient(message);
 
@@ -993,6 +1007,54 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                     session.flush();
                     newInPlace.setOrderID("20"+String.valueOf(newInPlace.getId()));
                     session.getTransaction().commit();
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof EnterFullMemberMessage) {
+                EnterFullMemberMessage message = (EnterFullMemberMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours();
+                String arrivingMin = message.getArrivingMinutes();
+                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours();
+                String leavingMin = message.getLeavingMinutes(),memberId=message.getUserId();
+                List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
+                FullMemberShipEntity fullMemberShip = getWhereIdEquals(FullMemberShipEntity.class,memberId,"MembershipID"
+                        ,carNum,"CarNumber");
+                EnterFullMemberValidator validator = new EnterFullMemberValidator(carNum,parkingLot,arrivingHours,arrivingDate
+                        ,arrivingMin,inAdvanceOrders,leavingMin,leavingDate,leavingHours);
+                message.setResult(validator.validateOrder(countFreeSpots(getParkIdByName(parkingLot))
+                        ,fullMemberShip.getHoursLeft(),fullMemberShip.isParked()));
+                if(message.getResult()){
+                    session.beginTransaction();
+                    fullMemberShip.setTimeEnteredPark(arrivingDate+" " + arrivingHours + ":" + arrivingMin);
+                    fullMemberShip.setParked(true);
+                    session.update(fullMemberShip);
+                    session.getTransaction().commit();
+                    parkInBestSpot(carNum,leavingDate,leavingHours,leavingMin,parkingLot);
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof EnterStandardMemberMessage) {
+                EnterStandardMemberMessage message = (EnterStandardMemberMessage) msg;
+                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
+                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours();
+                String arrivingMin = message.getArrivingMinutes();
+                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours();
+                String leavingMin = message.getLeavingMinutes(),memberId=message.getUserId();
+                List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
+                StandardMemberShipEntity standardMemberShip = getWhereIdEquals(StandardMemberShipEntity.class,memberId
+                        ,"membershipID",carNum,"carNumber");
+                EnterStandardMemberValidator validator = new EnterStandardMemberValidator(carNum,parkingLot,arrivingHours
+                        ,arrivingDate,arrivingMin,inAdvanceOrders,leavingMin,leavingDate,leavingHours);
+                message.setResult(validator.validateOrder(countFreeSpots(getParkIdByName(parkingLot))
+                        ,standardMemberShip.getHoursLeft(),standardMemberShip.isParked()));
+                if(message.getResult()){
+                    session.beginTransaction();
+                    standardMemberShip.setTimeEnteredPark(arrivingDate+" " + arrivingHours + ":" + arrivingMin);
+                    standardMemberShip.setParked(true);
+                    session.update(standardMemberShip);
+                    session.getTransaction().commit();
+                    parkInBestSpot(carNum,leavingDate,leavingHours,leavingMin,parkingLot);
                 }
                 client.sendToClient(message);
             }

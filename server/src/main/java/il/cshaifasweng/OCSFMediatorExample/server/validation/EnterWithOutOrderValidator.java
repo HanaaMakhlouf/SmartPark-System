@@ -51,10 +51,12 @@ public class EnterWithOutOrderValidator {
             String orderLeavingTime = order.getLeavingDate() + " " + order.getLeavingHours() + ":" + order.getLeavingMinutes();
             LocalDateTime orderArrival = LocalDateTime.parse(orderArrivalTime,formatter);
             LocalDateTime orderLeaving = LocalDateTime.parse(orderLeavingTime,formatter);
-            if((orderArrival.isBefore(dateTimeLeaving) && !orderLeaving.isBefore(dateTimeArrival))
-                    || (dateTimeArrival.isBefore(orderLeaving) && !dateTimeLeaving.isBefore(orderArrival))){
-                if (!order.isCarEntered()){
-                    counter++;
+            if(order.getParkingLotName().equals(parkingLot)){
+                if((orderArrival.isBefore(dateTimeLeaving) && !orderLeaving.isBefore(dateTimeArrival))
+                        || (dateTimeArrival.isBefore(orderLeaving) && !dateTimeLeaving.isBefore(orderArrival))){
+                    if (!order.isCarEntered()){
+                        counter++;
+                    }
                 }
             }
         }

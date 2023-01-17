@@ -15,16 +15,20 @@ public class StandardMemberShipEntity implements Serializable {
     @Id
     @Column(name = "id")
     private int id;
-    @Column(name = "CarNumber")
+    @Column(name = "carNumber")
     private String carNumber;
-    @Column(name = "StartingDate")
+    @Column(name = "startingDate")
     private String startingDate ;
     @Column(name = "endingDate")
     private String endingDate ;
-    @Column(name = "ParkingLot")
+    @Column(name = "parkingLot")
     private String parkingLot ;
-    @Column(name = "MembershipID")
+    @Column(name = "membershipID")
     private String membershipID ;
+    @Column(name = "hoursLeft")
+    private double hoursLeft;
+    private String timeEnteredPark;
+    private boolean isParked;
 
     public StandardMemberShipEntity(int id, String carNumber, String startingDate,String parkingLot) {
         this.id = id;
@@ -34,6 +38,9 @@ public class StandardMemberShipEntity implements Serializable {
         LocalDate dateTimeArrival = LocalDate.parse(startingDate,formatter).plusDays(28);
         this.endingDate = dateTimeArrival.format(formatter);
         this.parkingLot = parkingLot;
+        hoursLeft = 60;
+        this.timeEnteredPark="";
+        isParked = false;
     }
 
     public String getMembershipID() {
@@ -45,6 +52,30 @@ public class StandardMemberShipEntity implements Serializable {
     }
 
     public StandardMemberShipEntity() {
+    }
+
+    public String getTimeEnteredPark() {
+        return timeEnteredPark;
+    }
+
+    public void setTimeEnteredPark(String timeEnteredPark) {
+        this.timeEnteredPark = timeEnteredPark;
+    }
+
+    public boolean isParked() {
+        return isParked;
+    }
+
+    public void setParked(boolean parked) {
+        isParked = parked;
+    }
+
+    public double getHoursLeft() {
+        return hoursLeft;
+    }
+
+    public void setHoursLeft(double hoursLeft) {
+        this.hoursLeft = hoursLeft;
     }
 
     public String getParkingLot() {

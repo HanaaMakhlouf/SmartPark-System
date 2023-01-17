@@ -6,10 +6,19 @@ public class MemberLogInMessage implements Serializable {
     String memberNumber;
     String carNumber;
     int result;
+    String memberPark;
 
     public MemberLogInMessage(String memberNumber, String carNumber ) {
         this.memberNumber = memberNumber;
         this.carNumber = carNumber;
+    }
+
+    public String getMemberPark() {
+        return memberPark;
+    }
+
+    public void setMemberPark(String memberPark) {
+        this.memberPark = memberPark;
     }
 
     public void setResult(int result) {

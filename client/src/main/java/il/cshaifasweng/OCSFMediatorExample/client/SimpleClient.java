@@ -157,6 +157,14 @@ public class SimpleClient extends AbstractClient {
 			EnterWithOutOrderMessage message = (EnterWithOutOrderMessage) msg;
 			EventBus.getDefault().post(new EnterWithOutOrderEvent(message));
 		}
+		else if(msg instanceof EnterFullMemberMessage) {
+			EnterFullMemberMessage message = (EnterFullMemberMessage) msg;
+			EventBus.getDefault().post(new EnterFullMemberEvent(message));
+		}
+		else if(msg instanceof EnterStandardMemberMessage) {
+			EnterStandardMemberMessage message = (EnterStandardMemberMessage) msg;
+			EventBus.getDefault().post(new EnterStandardMemberEvent(message));
+		}
 		else {
 			Message message = (Message) msg;
 			if (message.getMessage().equals("update submitters IDs")) {
