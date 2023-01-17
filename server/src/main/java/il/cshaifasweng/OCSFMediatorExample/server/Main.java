@@ -8,8 +8,10 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -56,9 +58,6 @@ public class Main extends SimpleServer {
 
     private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadGroup");
 
-public static ArrayList<Spot> spots_1 = new ArrayList<>();
-public static ArrayList<Spot> spots_2 = new ArrayList<>();
-public static ArrayList<Spot> spots_3 = new ArrayList<>();
 
 
     public Main(int port) {
@@ -144,9 +143,9 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
     private static void InitParkings() {
         ParkingLotEntitiy p1 = new ParkingLotEntitiy(1,"Haifa Port");
         List<Spot> lst = new ArrayList<>();
-        for (int i = 0 ; i < 3 ; i++)
-            for (int j = 0 ; j < 4;j++)
-                for (int k = 0 ; k < 3;k++) {
+        for (int k = 0 ; k < 3;k++)
+              for (int i = 0 ; i < 3 ; i++)
+                    for (int j = 0 ; j < 4;j++){
                         Spot s = new Spot(i, j, k, true, false,p1);
                         session.save(s);
                         lst.add(s);
@@ -306,7 +305,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
         initParkingLots();
         initPrices();
         initUser();
-        InitParkings();
+    //    InitParkings();
         initInAdvanceOrders();
         List <Subscriber> lst = getAll(Subscriber.class);
         for(Subscriber s : lst) {
@@ -972,9 +971,63 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 message.setPark_num(park_num);
                 client.sendToClient(message);
             }
-           /* else if(msg instanceof SetUpMessage){
-                setUpPark(((SetUpMessage) msg).getPark_num());
-            }*/
+           else if(msg instanceof SetUpMessage){
+                SetUpMessage message =(SetUpMessage) msg;
+                session.beginTransaction();
+                if (message.getPark_num() == 1){
+                    ParkingLotEntitiy p1 = new ParkingLotEntitiy(1,"Haifa Port");
+                    List<Spot> lst = new ArrayList<>();
+                    for (int k = 0 ; k < 3;k++)
+                        for (int i = 0 ; i < 3 ; i++)
+                            for (int j = 0 ; j < 4;j++){
+                                Spot s = new Spot(i, j, k, true, false,p1);
+                                session.save(s);
+                                lst.add(s);
+                            }
+                    p1.setDepth(3);
+                    p1.setWidth(4);
+                    p1.setHeight(3);
+                    p1.setSpots(lst);
+                    session.save(p1);
+                    session.flush();
+                }
+                else if(message.getPark_num() == 2){
+                    ParkingLotEntitiy p2 = new ParkingLotEntitiy(2,"Carmel");
+                    List<Spot> lst2 = new ArrayList<>();
+                    for (int k = 0 ; k < 3;k++)
+                        for (int i = 0 ; i < 3 ; i++)
+                            for (int j = 0 ; j < 6;j++) {
+                                Spot s = new Spot(i, j, k, true, false,p2);
+                                session.save(s);
+                                lst2.add(s);
+                            }
+                    p2.setDepth(3);
+                    p2.setWidth(6);
+                    p2.setHeight(3);
+                    p2.setSpots(lst2);
+                    session.save(p2);
+                    session.flush();
+                }
+                else if(message.getPark_num() == 3){
+                    ParkingLotEntitiy p3 = new ParkingLotEntitiy(3,"Central Station");
+                    List<Spot> lst3 = new ArrayList<>();
+                    for (int k = 0 ; k < 3;k++)
+                        for (int i = 0 ; i < 3 ; i++)
+                            for (int j = 0 ; j < 8;j++) {
+                                Spot s = new Spot(i, j, k, true, false,p3);
+                                session.save(s);
+                                lst3.add(s);
+                            }
+                    p3.setDepth(3);
+                    p3.setWidth(8);
+                    p3.setHeight(3);
+                    p3.setSpots(lst3);
+                    session.save(p3);
+                    session.flush();
+                }
+                session.getTransaction().commit();
+                client.sendToClient(message);
+            }
             else if (msg instanceof SendComplaintMsg) {
                 SendComplaintMsg message = (SendComplaintMsg) msg;
                 Complaint complaint = new Complaint(message.getSender_id(), message.getCurrDate()
@@ -1165,8 +1218,6 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours();
                 String leavingMin = message.getLeavingMinutes(),memberId=message.getUserId();
                 List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
-                System.out.println("membershipid" + memberId);
-                System.out.println("car number"+carNum);
                 FullMemberShipEntity fullMemberShip = getWhereIdEquals(FullMemberShipEntity.class,memberId,"MembershipID"
                         ,carNum,"CarNumber");
                 EnterFullMemberValidator validator = new EnterFullMemberValidator(carNum,parkingLot,arrivingHours,arrivingDate
@@ -1392,7 +1443,41 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
             }
         }
     }
-
+//
+//    public class OrderCheckerThread extends Thread {
+//        private LocalDateTime orderTime;
+//
+//        public OrderCheckerThread(LocalDateTime orderTime) {
+//            this.orderTime = orderTime;
+//        }
+//        @Override
+//        public void run() {
+//            while (true) {
+//                List<Complaint> list = getAll(Complaint.class);
+//                for (int i = 0 ; i < list.size();i++){
+//                    LocalDateTime currentTime = LocalDateTime.now();
+//                    long hoursPassed = list.get(i).getDate().until(currentTime, ChronoUnit.HOURS);
+//                    if (hoursPassed >= 24) {
+//                        // Respond automatically
+//                      //  System.out.println("Order has passed 24 hours, responding automatically...");
+//                        SetComplaintRespondMessage message = new SetComplaintRespondMessage(list.get(i).getComplaintId()
+//                                ,"That's an automatic response, you got 50 ils refund,check you balance ",50);
+//                        try {
+//                            SimpleClient.getClient().sendToServer(message);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        break;
+//                    }
+//                }
+//                try {
+//                    Thread.sleep((long) 1.8e+6); // check every 30 minutes
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
     public static void main(String[] args) throws Exception {
 
@@ -1404,6 +1489,12 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
 
 
             initializeData();
+        initializeData();
+//
+//            LocalDateTime orderTime = LocalDateTime.now();
+//            OrderCheckerThread orderCheckerThread = new OrderCheckerThread(orderTime);
+//            orderCheckerThread.start();
+
 
         } catch (HibernateException e)
         {

@@ -69,6 +69,8 @@ public class ParkingLotEmployeeController {
         Navigate.navigate(event , "../mainPage.fxml");
     }
 
+    @FXML
+    private Label setLabel;
 
     @FXML
     void registerUnavailableSpot(ActionEvent event) throws IOException {
@@ -107,11 +109,52 @@ public class ParkingLotEmployeeController {
         SimpleClient.getClient().sendToServer(message);
 
     }
+    boolean p1 = false;
+    boolean p2 = false;
+    boolean p3 = false;
 
     @FXML
     void setup(ActionEvent event) throws IOException {
-       SetUpMessage message = new SetUpMessage(getPark_id());
-        SimpleClient.getClient().sendToServer(message);
+        if ((getPark_id() == 1 && p1) ||(getPark_id() == 2 && p2) || (getPark_id() == 3 && p3)){
+            setLabel.setText("Set up for this park has been done before!");
+            setLabel.setMinWidth(0);
+            setLabel.setPrefWidth(Control.USE_COMPUTED_SIZE);
+            setLabel.setMaxWidth(Double.MAX_VALUE);
+            setLabel.setTextFill(Color.RED);
+            FadeTransition ft = new FadeTransition(Duration.seconds(20), setLabel);
+            ft.setFromValue(1.0);
+            ft.setToValue(0.0);
+            ft.setCycleCount(1);
+            ft.play();
+            setupBtn.setDisable(true);
+        }
+        else {
+            SetUpMessage message = new SetUpMessage(getPark_id());
+            SimpleClient.getClient().sendToServer(message);
+        }
+       // setLabel.setText("All parking lots has been installed already!");
+    }
+
+    @Subscribe
+    public void setUpPark(SetUpEvent event) throws IOException{
+        Platform.runLater(() -> {
+            String[] parks = {"Haifa Port","Carmel","Central Station"};
+            String park = parks[event.getParkId()-1];
+            setLabel.setText( park +" Parking Lot setup is done successfully");
+            setLabel.setMinWidth(0);
+            setLabel.setPrefWidth(Control.USE_COMPUTED_SIZE);
+            setLabel.setMaxWidth(Double.MAX_VALUE);
+            setLabel.setTextFill(Color.DARKGREEN);
+            FadeTransition ft = new FadeTransition(Duration.seconds(20), setLabel);
+            ft.setFromValue(1.0);
+            ft.setToValue(0.0);
+            ft.setCycleCount(1);
+            ft.play();
+            if(event.getParkId() == 1) p1 = true;
+            if(event.getParkId() == 2) p2 = true;
+            if(event.getParkId() == 3) p3 = true;
+
+        });
     }
 
     List<AbsSpot> p1_list = new ArrayList<>(), p2_list = new ArrayList<>(), p3_list = new ArrayList<>();
