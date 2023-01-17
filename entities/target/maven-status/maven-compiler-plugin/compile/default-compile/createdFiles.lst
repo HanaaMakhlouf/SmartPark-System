@@ -32,6 +32,7 @@ il\cshaifasweng\OCSFMediatorExample\entities\LogIn.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetallOrdersOfClient.class
 il\cshaifasweng\OCSFMediatorExample\entities\Order.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayStandardMembershipMessage.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayRenewFullMembershipMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\FullMemberShipEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\Complaint.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\InAdvanceOrderMessage.class
