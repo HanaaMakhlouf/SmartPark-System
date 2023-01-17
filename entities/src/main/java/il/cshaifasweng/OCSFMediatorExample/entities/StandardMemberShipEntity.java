@@ -15,28 +15,30 @@ public class StandardMemberShipEntity implements Serializable {
     @Id
     @Column(name = "id")
     private int id;
-    @Column(name = "carNumber")
+    @Column(name = "CarNumber")
     private String carNumber;
-    @Column(name = "startingDate")
+    @Column(name = "StartingDate")
     private String startingDate ;
     @Column(name = "endingDate")
     private String endingDate ;
-    @Column(name = "parkingLot")
+    @Column(name = "ParkingLot")
     private String parkingLot ;
-    @Column(name = "membershipID")
+    @Column(name = "MembershipID")
     private String membershipID ;
     @Column(name = "hoursLeft")
     private double hoursLeft;
     private String timeEnteredPark;
     private boolean isParked;
 
+
+
     public StandardMemberShipEntity(int id, String carNumber, String startingDate,String parkingLot) {
         this.id = id;
         this.carNumber = carNumber;
         this.startingDate = startingDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dateTimeArrival = LocalDate.parse(startingDate,formatter).plusDays(28);
-        this.endingDate = dateTimeArrival.format(formatter);
+        LocalDate dateTimeEnd = LocalDate.parse(startingDate,formatter).plusDays(28);
+        this.endingDate = dateTimeEnd.format(formatter);
         this.parkingLot = parkingLot;
         hoursLeft = 60;
         this.timeEnteredPark="";

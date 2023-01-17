@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -15,7 +16,12 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
+
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.FullMembership;
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.ExitParking;
 import il.cshaifasweng.OCSFMediatorExample.client.GeneralManagerController;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
@@ -32,6 +38,8 @@ import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValid
 import il.cshaifasweng.OCSFMediatorExample.server.validation.PayValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.*;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableView;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -39,16 +47,16 @@ import org.hibernate.service.ServiceRegistry;
 
 
 public class Main extends SimpleServer {
-private static SimpleServer server;
-private static Session session;
-private Message serverMSG;
-private static SessionFactory sessionFactory = getSessionFactory();
-private static List<ParkingLots> data = new ArrayList<>();
-private static List<Prices> data2 = new ArrayList<>();
-private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
-private static ArrayList<ConnectionToClient> clientsConn = new ArrayList<>();
+    private static SimpleServer server;
+    private static Session session;
+    private Message serverMSG;
+    private static SessionFactory sessionFactory = getSessionFactory();
+    private static List<ParkingLots> data = new ArrayList<>();
+    private static List<Prices> data2 = new ArrayList<>();
+    private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
+    private static ArrayList<ConnectionToClient> clientsConn = new ArrayList<>();
 
-private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadGroup");
+    private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadGroup");
 
 
 
@@ -162,6 +170,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         p2.setDepth(3);
         p2.setWidth(6);
         p2.setHeight(3);
+     //   p2.setSpots(lst);
         p2.setSpots(lst2);
         session.save(p2);
         session.flush();
@@ -179,6 +188,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         p3.setDepth(3);
         p3.setWidth(8);
         p3.setHeight(3);
+     //   p3.setSpots(lst);
         p3.setSpots(lst3);
         session.save(p3);
         session.flush();
@@ -190,9 +200,12 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         User u1 = new User(208110130,"saed.diab.98@gmail.com","102030");
         User u2 = new User(123456789,"someone@gmail.com","405060");
         User u3 = new User(987654321,"someoneElse@gmail.com","708090");
+        User u4 = new User(211516950,"some@gmail.com","123");
+
         session.save(u1);
         session.save(u2);
         session.save(u3);
+        session.save(u4);
         session.flush();
         //   session.getTransaction().commit();
     }
@@ -207,7 +220,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         session.save(u2);
         session.save(u3);
         session.flush();
-       // session.getTransaction().commit();
+        // session.getTransaction().commit();
     }
 
     private static void initManagers(){
@@ -256,20 +269,34 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
 
     }
     private static void initStandardMembership(){
-        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(987654321,"987654321"
-                ,"29/01/2023","Haifa Port");
+
+        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(321321321,"321321321"
+                ,"10/01/2023","Haifa Port");
         session.save(tmp2);
         session.flush();
-        tmp2.setMembershipID("1"+tmp2.getId());
-
+        tmp2.setMembershipID("0"+tmp2.getId());
+//        LocalDate dateTime = LocalDate.now() ;
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//        LocalDate date = LocalDate.parse(tmp2.getEndingDate(),formatter);
+//        if(dateTime.isAfter(date)){
+//            session.delete(tmp2);
+//        }
         session.flush();
         // session.getTransaction().commit();
     }
     private static void initFulldMembership(){
-        FullMemberShipEntity tmp = new FullMemberShipEntity(123456789,"123456789","29/01/2023");
+        FullMemberShipEntity tmp = new FullMemberShipEntity(123123123,"123123123","20/01/2023");
         session.save(tmp);
         session.flush();
-        tmp.setMembershipID("0"+tmp.getId());
+        tmp.setMembershipID("1"+tmp.getId());
+//        LocalDate dateTime = LocalDate.now() ;
+//        String leaving = tmp.getEndingDate();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//        LocalDate date = LocalDate.parse(leaving,formatter);
+//
+//        if(dateTime.isAfter(date)){
+//            session.delete(tmp);
+//        }
         session.flush();
         // session.getTransaction().commit();
     }
@@ -315,7 +342,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
         Root<T> rootEntry = criteriaQuery.from(object);
-         criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field), id));
+        criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field), id));
         TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
         return allQuery.getResultList();
     }
@@ -584,6 +611,17 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 List<Subscriber> sublst = getAll(Subscriber.class);
                 MemberLogInControler memberLogInCntrl = new MemberLogInControler(message.getMemberNumber(), message.getCarNumber());
                 message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList, sublst));
+                //  message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList));
+                message.setDateTimeEnd(memberLogInCntrl.getDateTimeEnd());
+                message.setMemberId(memberLogInCntrl.getMemberId());
+                message.setFullMembership(memberLogInCntrl.isFullMembership());
+                boolean flag72 = memberLogInCntrl.isFullMembership();
+                double fee72 ;
+                if(flag72 == true)
+                    fee72 = calcFeeMembership("Full") ;
+                else
+                    fee72 = calcFeeMembership("Standard Single") ;
+                message.setFee72(fee72) ;
                 SubscribedClient connection = new SubscribedClient(client);
                 String st = message.getMemberNumber();
                 if(message.getResult() == 1){
@@ -591,6 +629,10 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                     , message.getMemberNumber(),"membershipID" , message.getCarNumber(), "carNumber");
                     message.setMemberPark(standardMemberShip.getParkingLot());
                 }
+
+                st = message.getMemberNumber();
+//                long tmp2 = Long.getLong(st) ;
+//                System.out.println(tmp2 +"tmp2");
                 connection.setClientID(Integer.parseInt(st));
                 Subscriber s = new Subscriber(Integer.parseInt(message.getMemberNumber()));
                 if(message.getResult() > 0 ) {
@@ -831,7 +873,62 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
-            } else if (msg instanceof StandardMembershipMessage) {
+            }else if(msg instanceof PayRenewFullMembershipMessage) {
+                PayRenewFullMembershipMessage message = (PayRenewFullMembershipMessage) msg;
+                boolean flag72 = message.isFullMember();
+                double fee72 ;
+                // System.out.println("flag72" + flagelse if (msg instanceof StandardMembershipMessage) {72);
+                if(flag72 == true)
+                    fee72 = calcFeeMembership("Full") ;
+                else
+                    fee72 = calcFeeMembership("Standard Single") ;
+                message.setFee(fee72);
+                int memberId = message.getMembershipId();
+                System.out.println("mem id" + memberId);
+                PayValidator validator = new PayValidator(message.getCardNumber()
+                        , message.getCvv(), message.getYear(), message.getMonth());
+                message.setResult(validator.validatePayment());
+                System.out.println(message.isResult());
+                if (message.isResult()){
+
+                    if(flag72 == true) {
+                        List<FullMemberShipEntity> list = getAllWhereIdEquals(FullMemberShipEntity.class, String.valueOf(memberId), "id");
+                        System.out.println(list);
+                        session.beginTransaction();
+                        FullMemberShipEntity full = list.get(0);
+                        String leavingdate = full.getEndingDate();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        LocalDate date = LocalDate.parse(leavingdate,formatter).plusDays(28);
+                        String newLeavingDate = date.format(formatter) ;
+                        full.setEndingDate(newLeavingDate);
+                        String memberNumber = full.getMembershipID();
+                        message.setMemberNumber(memberNumber);
+                        message.setLeavingDate(newLeavingDate);
+
+                        session.update(full);
+                        session.flush();
+                        session.getTransaction().commit();
+                    }else if (flag72 == false) {
+                        List<StandardMemberShipEntity> list = getAllWhereIdEquals(StandardMemberShipEntity.class, String.valueOf(memberId), "id");
+                        System.out.println(list);
+                        session.beginTransaction();
+                        StandardMemberShipEntity standard = list.get(0);
+                        String leavingdate = standard.getEndingDate();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        LocalDate date = LocalDate.parse(leavingdate,formatter).plusDays(28);
+                        String newLeavingDate = date.format(formatter) ;
+                        standard.setEndingDate(newLeavingDate);
+                        message.setLeavingDate(newLeavingDate);
+                        String memberNumber = standard.getMembershipID();
+                        message.setMemberNumber(memberNumber);
+                        session.update(standard);
+                        session.flush();
+                        session.getTransaction().commit();
+                    }
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof StandardMembershipMessage){
                 StandardMembershipMessage message = (StandardMembershipMessage) msg;
                 StandardMembershipValidator validator = new StandardMembershipValidator(message.getCarNumber()
                         , message.getStartDate(), message.getParkingLot());
@@ -941,7 +1038,6 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 session.flush();
                 session.getTransaction().commit();
             }
-
             else if(msg instanceof SetComplaintRespondMessage){
 //                System.out.println("Message is here");
                 SetComplaintRespondMessage message = (SetComplaintRespondMessage) msg;
@@ -1071,9 +1167,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 make InAdvanceOrderEntity and add to DB
                 validate payment
                  */
-            }
-
-            else if(msg instanceof EnterWithOrderMessage) {
+            } else if(msg instanceof EnterWithOrderMessage) {
                 EnterWithOrderMessage message = (EnterWithOrderMessage) msg;
                 String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
                 String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours();
@@ -1258,7 +1352,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
             e.printStackTrace();
         }
 
-    if(msg instanceof Message) {
+        if(msg instanceof Message) {
             Message message = (Message) msg;
             String request = message.getMessage();
             String action = message.getAction();
@@ -1270,9 +1364,9 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 } else if (request.equals("print parking table")){
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "Polkmn7220@")) {
                         Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery("SELECT * FROM parkinfglotss");
+                        ResultSet rs = stmt.executeQuery("SELECT * FROM parkinglotss");
                         data.clear();
                         while (rs.next()) {
                             // Add the data to the ObservableList
@@ -1303,48 +1397,48 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
 
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "Polkmn7220@")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
                         data2.clear();
 
-                    List<Prices> lst = getAll(Prices.class);
-                    message.setPlist(lst);
-                    message.setMessage("prices list is sent");
-                    client.sendToClient(message);
-                }
+                        List<Prices> lst = getAll(Prices.class);
+                        message.setPlist(lst);
+                        message.setMessage("prices list is sent");
+                        client.sendToClient(message);
+                    }
 
 
 
                     if (request.startsWith("attempt to change data")) {
 
-                    int arr[] = message.getChange_prices();
-                    CriteriaBuilder builder = session.getCriteriaBuilder();
-                    session.beginTransaction();
-                    CriteriaQuery<Prices> query = builder.createQuery(Prices.class);
-                    query.from(Prices.class);
-                    List<Prices> pricesdata = session.createQuery(query).getResultList();
-                    Prices price2 = pricesdata.get(0);
+                        int arr[] = message.getChange_prices();
+                        CriteriaBuilder builder = session.getCriteriaBuilder();
+                        session.beginTransaction();
+                        CriteriaQuery<Prices> query = builder.createQuery(Prices.class);
+                        query.from(Prices.class);
+                        List<Prices> pricesdata = session.createQuery(query).getResultList();
+                        Prices price2 = pricesdata.get(0);
 
 // update the entity's fields
-                    if (arr[0] != -1 && arr[0] != -0)
-                        price2.setFull_mem_price(arr[0]);
-                    if (arr[1] != -1 && arr[1] != -0)
-                        price2.setIn_Advance_price(arr[1]);
-                    if (arr[2] != -1 && arr[2] != -0)
-                        price2.setIn_place_price(arr[2]);
-                    if (arr[3] != -1 && arr[3] != -0)
-                        price2.setMultiple_cars_reg_mem_price(arr[3]);
-                    if (arr[4] != -1 && arr[4] != -0)
-                        price2.setSingle_car_reg_mem_price(arr[4]);
+                        if (arr[0] != -1 && arr[0] != -0)
+                            price2.setFull_mem_price(arr[0]);
+                        if (arr[1] != -1 && arr[1] != -0)
+                            price2.setIn_Advance_price(arr[1]);
+                        if (arr[2] != -1 && arr[2] != -0)
+                            price2.setIn_place_price(arr[2]);
+                        if (arr[3] != -1 && arr[3] != -0)
+                            price2.setMultiple_cars_reg_mem_price(arr[3]);
+                        if (arr[4] != -1 && arr[4] != -0)
+                            price2.setSingle_car_reg_mem_price(arr[4]);
 
 // save the updated entity
-                    session.save(price2);
-                    session.flush();
-                    session.getTransaction().commit();
-                    session.clear();
-                }
-            } }catch (Exception e) {
+                        session.save(price2);
+                        session.flush();
+                        session.getTransaction().commit();
+                        session.clear();
+                    }
+                } }catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -1391,9 +1485,10 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         server.listen();
         System.out.println("Server says : hi ");
         try {
-        session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
 
 
+            initializeData();
         initializeData();
 //
 //            LocalDateTime orderTime = LocalDateTime.now();
