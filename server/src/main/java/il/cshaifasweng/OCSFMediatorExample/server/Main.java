@@ -901,23 +901,23 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 session.getTransaction().commit();
 
 
-            } else if (msg instanceof PayInAdvanceOrderMessage) {
-                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
-                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
-                String leavingDate = message.getLeavingDate(), leavingHours = message.getLeavingHours(), leavingMin = message.getLeavingMinutes();
-                String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours(), arrivingMin = message.getArrivingMinutes();
-                String cvvCard = message.getCvv(), yearCard = message.getYear(), monthCard = message.getMonth(), cardNum = message.getCardNumber();
-                PayValidator validator = new PayValidator(cardNum, cvvCard, yearCard, monthCard);
-                message.setResult(validator.validatePayment());
-                if (message.isResult()) {
-                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum, message.getOrderId(), leavingMin, leavingDate
-                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
-                    session.beginTransaction();
-                    session.save(newInAdvance);
-                    session.flush();
-                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
-                    session.getTransaction().commit();
-                }
+//            } else if (msg instanceof PayInAdvanceOrderMessage) {
+//                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
+//                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
+//                String leavingDate = message.getLeavingDate(), leavingHours = message.getLeavingHours(), leavingMin = message.getLeavingMinutes();
+//                String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours(), arrivingMin = message.getArrivingMinutes();
+//                String cvvCard = message.getCvv(), yearCard = message.getYear(), monthCard = message.getMonth(), cardNum = message.getCardNumber();
+//                PayValidator validator = new PayValidator(cardNum, cvvCard, yearCard, monthCard);
+//                message.setResult(validator.validatePayment());
+//                if (message.isResult()) {
+//                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum, message.getOrderId(), leavingMin, leavingDate
+//                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
+//                    session.beginTransaction();
+//                    session.save(newInAdvance);
+//                    session.flush();
+//                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
+//                    session.getTransaction().commit();
+//                }
                 /* needed
                 make InAdvanceOrderEntity and add to DB
                 validate payment
