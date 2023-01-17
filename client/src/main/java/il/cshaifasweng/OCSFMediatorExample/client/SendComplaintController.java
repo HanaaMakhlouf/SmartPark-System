@@ -13,11 +13,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Date;
 
-import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.ComplaintResponseController;
-import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.Navigate;
-import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.TrackComplaintsController;
-import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.UserBoundaryController;
-import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetComplaintsMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
@@ -48,32 +44,53 @@ public class SendComplaintController implements Serializable {
 
     @FXML // fx:id="chooseParkingLot"
     private ChoiceBox<String> chooseParkingLot; // Value injected by FXMLLoader
-
-    private String[] parkingLots = {"Haifa Port" , "Carmel" , "Central Station"};
-
-    @FXML
-    void goBack(ActionEvent event) throws IOException {
-    //   Navigate.navigate(event,"../userBoundary.fxml");
-        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("userBoundary.fxml"));
-        Scene tableViewScene = new Scene(tableViewParent.load());
-        currentWindow.setScene(tableViewScene);
-        currentWindow.show();
-        UserBoundaryController user = tableViewParent.getController();
-        user.setUser(this.senderId);
-    }
-
     @FXML
     private Label label;
 
     private String senderId;
+    private String[] parkingLots = {"Haifa port" , "Carmel" , "Central Station"};
+    public   int flag2 ;
+    private String carNumber ;
+    private String endDate ;
+    String memberNumber ;
+    boolean isFullMember ;
+    private String memberPark;
 
-    public String getSenderId() {
-        return senderId;
+    public boolean isFullMember(boolean isFullMember) {
+        return this.isFullMember;
     }
 
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
+    public void setFullMember(boolean fullMember) {
+        isFullMember = fullMember;
+    }
+
+    @FXML
+    void goBack(ActionEvent event) throws IOException {
+    //   Navigate.navigate(event,"../userBoundary.fxml");
+        if(flag2 == 3) {
+            Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("userBoundary.fxml"));
+            Scene tableViewScene = new Scene(tableViewParent.load());
+            currentWindow.setScene(tableViewScene);
+            currentWindow.show();
+            UserBoundaryController user = tableViewParent.getController();
+            user.setUser(this.senderId);
+        }else if(flag2 == 4){
+            Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("memberPage.fxml"));
+            Scene tableViewScene = new Scene(tableViewParent.load());
+            currentWindow.setScene(tableViewScene);
+            currentWindow.show();
+            MemberPage member = tableViewParent.getController();
+            member.setIdMember(Integer.parseInt(this.senderId));
+            member.setDateTimeEnd(this.endDate);
+            member.setFullMember(this.isFullMember);
+            member.setMemberNumber(memberNumber);
+            member.setMemberPark(memberPark);
+            member.setCarNumber(this.carNumber);
+            System.out.println("full" + this.isFullMember);
+
+        }
     }
 
 
@@ -103,12 +120,60 @@ public class SendComplaintController implements Serializable {
         Scene tableViewScene = new Scene(tableViewParent.load());
         currentWindow.setScene(tableViewScene);
         TrackComplaintsController inadv = tableViewParent.getController();
-        inadv.setId(Integer.valueOf(getSenderId()));
+        inadv.setId(Integer.valueOf(this.senderId));
+        inadv.setFlag2(this.flag2);
+        inadv.setEndDate(this.endDate);
+        inadv.setFullMember(this.isFullMember);
+        inadv.setMemberNumber(this.memberNumber);
+        inadv.setMemberPark(this.memberPark);
+        inadv.setCarNumber(this.carNumber);
         ArrayList<Complaint> list = new ArrayList<>();
         GetComplaintsMessage msg = new GetComplaintsMessage(list,getSenderId());
         msg.setGetForWhom(2);
         SimpleClient.getClient().sendToServer(msg);
         currentWindow.show();
+    }
+    public int getFlag2() {
+        return flag2;
+    }
+    public void setFlag2(int flag2) {
+        this.flag2 = flag2;
+    }
+    public String getSenderId() {
+        return senderId;
+    }
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+    public String getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getCarNumber() {
+        return carNumber;
+    }
+
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
+    }
+
+    public String getMemberNumber() {
+        return memberNumber;
+    }
+
+    public void setMemberNumber(String memberNumber) {
+        this.memberNumber = memberNumber;
+    }
+
+    public String getMemberPark() {
+        return memberPark;
+    }
+
+    public void setMemberPark(String memberPark) {
+        this.memberPark = memberPark;
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

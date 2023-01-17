@@ -39,6 +39,8 @@ public class FullMembership {
     @FXML
     private Button payBt;
     String id;
+
+
     private Stage currentWindow;
 
     public String getId() {
@@ -65,6 +67,7 @@ public class FullMembership {
                     FullMemberShipEntity fullMemberShipEntity = event.getMessage().getFullMemberShipEntity();
                     FXMLLoader tableViewParent = null;
                     try {
+
                         tableViewParent = new FXMLLoader(getClass().getResource("../payFullMembership.fxml"));
                         Scene tableViewScene = new Scene(tableViewParent.load());
                         currentWindow.setScene(tableViewScene);
@@ -72,6 +75,7 @@ public class FullMembership {
                         PayFullMembership payFullMembership = tableViewParent.getController();
                         payFullMembership.setFullMemberShipEntity(fullMemberShipEntity);
                         payFullMembership.setFee(event.getMessage().getFee());
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -95,6 +99,7 @@ public class FullMembership {
     }
     @FXML
     void initialize() {
+
         EventBus.getDefault().register(this);
     }
 
