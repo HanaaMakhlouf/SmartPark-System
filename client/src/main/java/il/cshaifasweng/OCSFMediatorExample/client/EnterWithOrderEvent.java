@@ -1,6 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.EnterWithOrderMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.InAdvanceOrderMessage;
 import javafx.event.ActionEvent;
 
 public class EnterWithOrderEvent extends ActionEvent{

@@ -17,32 +17,71 @@ public class FullMemberShipEntity implements Serializable {
     @Column(name = "id")
     private int id;
     @Column(name = "CarNumber")
-    private String carNumber;
+    private String CarNumber;
     @Column(name = "StartingDate")
-    private String startingDate ;
+    private String StartingDate ;
     @Column(name = "endingDate")
     private String endingDate ;
     @Column(name = "MembershipID")
-    private String membershipID ;
+    private String MembershipID ;
+    @Column(name = "Hours_Left")
+    private double Hours_Left;
+    private String timeEnteredPark;
+    private boolean isParked;
 
     public FullMemberShipEntity(int id, String carNumber, String startingDate) {
         this.id = id;
-        this.carNumber = carNumber;
-        this.startingDate = startingDate;
+        this.CarNumber = carNumber;
+        this.StartingDate = startingDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dateTimeArrival = LocalDate.parse(startingDate,formatter).plusDays(28);
         this.endingDate = dateTimeArrival.format(formatter);
+        this.Hours_Left = 72;
+        this.timeEnteredPark="";
+        isParked = false;
     }
 
     public FullMemberShipEntity() {
     }
 
+    public boolean isParked() {
+        return isParked;
+    }
+
+    public void setParked(boolean parked) {
+        isParked = parked;
+    }
+
+    public double getHours_Left() {
+        return Hours_Left;
+    }
+
+    public void setHours_Left(double hours_Left) {
+        Hours_Left = hours_Left;
+    }
+
+    public String getTimeEnteredPark() {
+        return timeEnteredPark;
+    }
+
+    public void setTimeEnteredPark(String timeEnteredPark) {
+        this.timeEnteredPark = timeEnteredPark;
+    }
+
+    public double getHoursLeft() {
+        return Hours_Left;
+    }
+
+    public void setHoursLeft(double hoursLeft) {
+        this.Hours_Left = hoursLeft;
+    }
+
     public String getMembershipID() {
-        return membershipID;
+        return MembershipID;
     }
 
     public void setMembershipID(String membershipID) {
-        this.membershipID = membershipID;
+        this.MembershipID = membershipID;
     }
 
     public int getId() {
@@ -54,19 +93,19 @@ public class FullMemberShipEntity implements Serializable {
     }
 
     public String getCarNumber() {
-        return carNumber;
+        return CarNumber;
     }
 
     public void setCarNumber(String carNumber) {
-        this.carNumber = carNumber;
+        this.CarNumber = carNumber;
     }
 
     public String getStartingDate() {
-        return startingDate;
+        return StartingDate;
     }
 
     public void setStartingDate(String startingDate) {
-        this.startingDate = startingDate;
+        this.StartingDate = startingDate;
     }
 
     public String getEndingDate() {
