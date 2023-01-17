@@ -49,7 +49,7 @@ public class SendComplaintController implements Serializable {
     @FXML // fx:id="chooseParkingLot"
     private ChoiceBox<String> chooseParkingLot; // Value injected by FXMLLoader
 
-    private String[] parkingLots = {"Haifa port" , "Carmel" , "Central Station"};
+    private String[] parkingLots = {"Haifa Port" , "Carmel" , "Central Station"};
 
     @FXML
     void goBack(ActionEvent event) throws IOException {
@@ -61,7 +61,6 @@ public class SendComplaintController implements Serializable {
         currentWindow.show();
         UserBoundaryController user = tableViewParent.getController();
         user.setUser(this.senderId);
-
     }
 
     @FXML
@@ -83,7 +82,7 @@ public class SendComplaintController implements Serializable {
         String complaint = complaintContent.getText();
         String parkingLotName = chooseParkingLot.getSelectionModel().getSelectedItem();
         int park_id = 0;
-        if (parkingLotName.equals("Haifa port")) park_id = 1;
+        if (parkingLotName.equals("Haifa Port")) park_id = 1;
         else  if (parkingLotName.equals("Carmel")) park_id = 2;
         else if(parkingLotName.equals("Central Station")) park_id = 3;
         LocalDateTime currentDate =LocalDateTime.now();

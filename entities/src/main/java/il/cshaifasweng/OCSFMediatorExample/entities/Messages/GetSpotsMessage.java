@@ -12,6 +12,17 @@ import java.util.List;
 public class GetSpotsMessage implements Serializable {
 
     private List<AbsSpot> list=new ArrayList<>();
+    private int fromWhom = 0;
+
+    public int getFromWhom() {
+        return fromWhom;
+    }
+
+    public void setFromWhom(int fromWhom) {
+        this.fromWhom = fromWhom;
+    }
+
+
 
     public GetSpotsMessage(List<AbsSpot> list) {
         this.list = list;
