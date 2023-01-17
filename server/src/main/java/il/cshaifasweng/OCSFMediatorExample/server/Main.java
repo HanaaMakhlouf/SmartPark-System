@@ -133,9 +133,9 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
     private static void InitParkings() {
         ParkingLotEntitiy p1 = new ParkingLotEntitiy(1,"Haifa Port");
         List<Spot> lst = new ArrayList<>();
-        for (int i = 0 ; i < 3 ; i++)
-            for (int j = 0 ; j < 4;j++)
-                for (int k = 0 ; k < 3;k++) {
+        for (int k = 0 ; k < 3;k++)
+              for (int i = 0 ; i < 3 ; i++)
+                    for (int j = 0 ; j < 4;j++){
                         Spot s = new Spot(i, j, k, true, false,p1);
                         session.save(s);
                         lst.add(s);
@@ -150,9 +150,9 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
 
         ParkingLotEntitiy p2 = new ParkingLotEntitiy(2,"Carmel");
         List<Spot> lst2 = new ArrayList<>();
-        for (int i = 0 ; i < 3 ; i++)
-            for (int j = 0 ; j < 6;j++)
-                for (int k = 0 ; k < 3;k++) {
+        for (int k = 0 ; k < 3;k++)
+             for (int i = 0 ; i < 3 ; i++)
+                    for (int j = 0 ; j < 6;j++) {
                     Spot s = new Spot(i, j, k, true, false,p2);
                     session.save(s);
                     lst2.add(s);
@@ -168,9 +168,9 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
 
         ParkingLotEntitiy p3 = new ParkingLotEntitiy(3,"Central Station");
         List<Spot> lst3 = new ArrayList<>();
-        for (int i = 0 ; i < 3 ; i++)
-            for (int j = 0 ; j < 8;j++)
-                for (int k = 0 ; k < 3;k++) {
+        for (int k = 0 ; k < 3;k++)
+                 for (int i = 0 ; i < 3 ; i++)
+                    for (int j = 0 ; j < 8;j++) {
                     Spot s = new Spot(i, j, k, true, false,p3);
                     session.save(s);
                     lst3.add(s);
