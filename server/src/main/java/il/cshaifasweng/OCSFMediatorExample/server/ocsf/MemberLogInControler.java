@@ -32,7 +32,7 @@ public class MemberLogInControler {
             if (memberNumber.equals(standardMemberShip.getMembershipID())
                     && carNumber.equals(standardMemberShip.getCarNumber())) {
 
-                return 7;
+                return 1;
             }
         }
 
@@ -41,10 +41,10 @@ public class MemberLogInControler {
             if (memberNumber.equals(fullMemberShip.getMembershipID()) && carNumber.equals(fullMemberShip.getCarNumber())) {
 
 
-                return 7;
+                return 2;
             }
         }
-        return 0;
+        return -1;
     }
 
 

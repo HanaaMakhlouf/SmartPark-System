@@ -165,6 +165,14 @@ public class SimpleClient extends AbstractClient {
 			PayInPlaceOrderMessage message = (PayInPlaceOrderMessage) msg;
 			EventBus.getDefault().post(new PayInPlaceOrderEvent(message));
 		}
+		else if(msg instanceof EnterFullMemberMessage) {
+			EnterFullMemberMessage message = (EnterFullMemberMessage) msg;
+			EventBus.getDefault().post(new EnterFullMemberEvent(message));
+		}
+		else if(msg instanceof EnterStandardMemberMessage) {
+			EnterStandardMemberMessage message = (EnterStandardMemberMessage) msg;
+			EventBus.getDefault().post(new EnterStandardMemberEvent(message));
+		}
 		else {
 			Message message = (Message) msg;
 			if (message.getMessage().equals("update submitters IDs")) {

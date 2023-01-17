@@ -4,25 +4,26 @@ import il.cshaifasweng.OCSFMediatorExample.entities.InAdvanceOrderEntity;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
-public class EnterWithOutOrderValidator {
+public class EnterStandardMemberValidator {
     String carNumber;
     String parkingLot;
     String arrivalHours, arrivalDate , arrivalMinutes ;
-    private String leavingMinutes ;
-    private String leavingDate ;
-    private String leavingHours ;
+    String leavingMinutes ;
+    String leavingDate ;
+    String leavingHours ;
     List<InAdvanceOrderEntity> orders;
 
     public static void  validateInAdvaceOrder(){}
 
-    public EnterWithOutOrderValidator(String carNumber, String parkingLot, String arrivalHours
-            , String arrivalDate, String arrivalMinutes, List<InAdvanceOrderEntity> orders,String leavingMinutes, String leavingDate
-            , String leavingHours) {
+    public EnterStandardMemberValidator(String carNumber, String parkingLot, String arrivalHours
+            , String arrivalDate, String arrivalMinutes, List<InAdvanceOrderEntity> orders, String leavingMinutes
+            , String leavingDate, String leavingHours) {
         this.carNumber = carNumber;
         this.parkingLot = parkingLot;
         this.arrivalHours = arrivalHours;
@@ -34,9 +35,9 @@ public class EnterWithOutOrderValidator {
         this.orders = orders;
 
     }
-    public boolean validateOrder(int freeSpots) throws ParseException, IOException {
+    public boolean validateOrder(int freeSpots,double hours,boolean isParked) throws ParseException, IOException {
         if(arrivalDate == null || arrivalHours == null  || arrivalMinutes == null  || carNumber == null
-                || parkingLot == null ) {
+                || parkingLot == null || isParked) {
             return false ;
         }
         String arrivalTimeAndDate = arrivalDate + " " + arrivalHours + ":" + arrivalMinutes;
@@ -44,7 +45,6 @@ public class EnterWithOutOrderValidator {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //  ??dd/MM/yyyy HH:mm instead??
         LocalDateTime dateTimeArrival = LocalDateTime.parse(arrivalTimeAndDate,formatter);
         LocalDateTime dateTimeLeaving = LocalDateTime.parse(leavingTimeAndDate,formatter);
-
         int counter = 0;
         for(InAdvanceOrderEntity order : orders){
             String orderArrivalTime = order.getArrivalDate()+ " " + order.getArrivalHours() + ":" + order.getArrivalMinutes();
@@ -60,8 +60,20 @@ public class EnterWithOutOrderValidator {
                 }
             }
         }
-        return (freeSpots - counter) > 0;
+        return ((freeSpots - counter) > 0) && hours-getHoursUsed() > 0;
     }
+
+    public double getHoursUsed(){
+        String arrivalTimeAndDate = arrivalDate + " " + arrivalHours + ":" + arrivalMinutes;
+        String leavingTimeAndDate = leavingDate + " " + leavingHours + ":" + leavingMinutes;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); //  ??dd/MM/yyyy HH:mm instead??
+        LocalDateTime dateTimeArrival = LocalDateTime.parse(arrivalTimeAndDate,formatter);
+        LocalDateTime dateTimeLeaving = LocalDateTime.parse(leavingTimeAndDate,formatter);
+        Duration dur = Duration.between(dateTimeArrival,dateTimeLeaving);
+        return dur.toHours()+(double)(dur.toMinutesPart()/60);
+    }
+
+
 }
 
 //        for(InAdvanceOrderEntity order : orders){
