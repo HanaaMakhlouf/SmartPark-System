@@ -5,6 +5,7 @@ C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediato
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\EnterFullMemberMessage.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\Message.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\ShowRequestForGM.java
+C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\DisableSpotMessage.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetBalance.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\InAdvanceOrderMessage.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetallOrdersOfClient.java
@@ -33,6 +34,7 @@ C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediato
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\StandardMemberShipEntity.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\SendFailedMessage.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayInPlaceOrderMessage.java
+C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\SaveSpotMessage.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\InAdvanceOrderEntity.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetComplaintsMessage.java
 C:\java\car-parkinglot-system\entities\src\main\java\il\cshaifasweng\OCSFMediatorExample\entities\Car.java
