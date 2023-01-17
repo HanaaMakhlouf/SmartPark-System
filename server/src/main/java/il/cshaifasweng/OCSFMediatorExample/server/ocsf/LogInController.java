@@ -8,6 +8,15 @@ import il.cshaifasweng.OCSFMediatorExample.server.SubscribedClient;
 public class LogInController {
     String userId;
     String userPass;
+    private int parkingLotId = 0;
+
+    public int getParkingLotId() {
+        return parkingLotId;
+    }
+
+    public void setParkingLotId(int parkingLotId) {
+        this.parkingLotId = parkingLotId;
+    }
 
     public LogInController(String userid, String userpass) {
         this.userId = userid;
@@ -24,7 +33,7 @@ public class LogInController {
             if(s.getId() == Integer.parseInt(userId))
                 return 0;
 
-
+        if(userId.isEmpty() || userPass.isEmpty()) return 0;
         if ((Integer.parseInt(userId) == 0000  || Integer.parseInt(userId) == 0001) && userPass.equals("Admin"))
         return 6;
 
@@ -36,7 +45,9 @@ public class LogInController {
 
         for (ParkingLotEmployee employee : employeeList) {
             if (Integer.parseInt(userId) == employee.getId() && userPass.equals(employee.getPassword())) {
+                setParkingLotId(employee.getParkingLot());
                 return 3;
+
             }
         }
             for (Manager manager : managerList) {

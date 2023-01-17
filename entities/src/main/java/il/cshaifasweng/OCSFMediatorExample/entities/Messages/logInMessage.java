@@ -6,6 +6,17 @@ public class logInMessage implements Serializable {
     String userId;
     String userPass;
     int result;
+    private int parkingLotId = 0;
+
+    public int getParkingLotId() {
+        return parkingLotId;
+    }
+
+    public void setParkingLotId(int parkingLotId) {
+        this.parkingLotId = parkingLotId;
+    }
+
+
 
     public void setResult(int result) {
         this.result = result;

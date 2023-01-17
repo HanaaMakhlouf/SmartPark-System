@@ -37,14 +37,17 @@ public class SimpleClient extends AbstractClient {
 		System.out.println("Handle Message From Server!");
 		if(msg instanceof logInMessage){
 			logInMessage message = (logInMessage) msg;
-			EventBus.getDefault().post(new logInEvent(message.getResult()));
+			EventBus.getDefault().post(new logInEvent(message.getResult(),message.getParkingLotId()));
 		}
 		else if(msg instanceof GetSpotsMessage){
-			System.out.println("wwwwwwwwwwwwwwwwww");
 			GetSpotsMessage message = (GetSpotsMessage) msg;
-//			System.out.println(message.getList().get(0).getPark_id());
-//			List<AbsSpot> l = new ArrayList<>(message.getList());
-//			GetSpotsMessage ms = new GetSpotsMessage(l);
+			if(message.getFromWhom() == 1 )
+				EventBus.getDefault().post(new GetSpotsToSaveEvent(message));
+			else if(message.getFromWhom() == 2)
+				EventBus.getDefault().post(new GetSpotsToDisableEvent(message));
+			else if(message.getFromWhom() == 3)
+				EventBus.getDefault().post(new GetSpotsToSeeSpaceEvent(message));
+				else
 			EventBus.getDefault().post(new GetSpotsEvent(message));
 		}
 		else if(msg instanceof MemberLogInMessage) {
@@ -156,6 +159,22 @@ public class SimpleClient extends AbstractClient {
 		else if(msg instanceof EnterWithOutOrderMessage) {
 			EnterWithOutOrderMessage message = (EnterWithOutOrderMessage) msg;
 			EventBus.getDefault().post(new EnterWithOutOrderEvent(message));
+		}
+		else if(msg instanceof ExitParkingMessage){
+			ExitParkingMessage message = (ExitParkingMessage) msg;
+			EventBus.getDefault().post(new ExitParkingLotEvent(message));
+		}
+		else if(msg instanceof PayInPlaceOrderMessage){
+			PayInPlaceOrderMessage message = (PayInPlaceOrderMessage) msg;
+			EventBus.getDefault().post(new PayInPlaceOrderEvent(message));
+		}
+		else if(msg instanceof EnterFullMemberMessage) {
+			EnterFullMemberMessage message = (EnterFullMemberMessage) msg;
+			EventBus.getDefault().post(new EnterFullMemberEvent(message));
+		}
+		else if(msg instanceof EnterStandardMemberMessage) {
+			EnterStandardMemberMessage message = (EnterStandardMemberMessage) msg;
+			EventBus.getDefault().post(new EnterStandardMemberEvent(message));
 		}
 		else {
 			Message message = (Message) msg;
