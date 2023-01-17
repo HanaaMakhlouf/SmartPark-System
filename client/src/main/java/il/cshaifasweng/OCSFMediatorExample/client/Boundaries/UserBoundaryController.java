@@ -56,6 +56,7 @@ public class UserBoundaryController {
 
     private String id ;
 
+
     public void setUser(String id){
         this.id = id ;
     }
@@ -146,6 +147,7 @@ public class UserBoundaryController {
             currentWindow.show();
             RegisterAsAMember registerAsAMember = tableViewParent.getController();
             registerAsAMember.setId(this.id);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -153,6 +155,7 @@ public class UserBoundaryController {
 
     @FXML
     void sendComplaint(ActionEvent event) throws IOException {
+        System.out.println("user id is "+id);
         Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
         FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../sendComplaint1.fxml"));
         Scene tableViewScene = new Scene(tableViewParent.load());
@@ -160,6 +163,7 @@ public class UserBoundaryController {
         currentWindow.show();
         SendComplaintController complaint = tableViewParent.getController();
         complaint.setSenderId(this.id);
+        complaint.setFlag2(3);
     }
 
     @FXML

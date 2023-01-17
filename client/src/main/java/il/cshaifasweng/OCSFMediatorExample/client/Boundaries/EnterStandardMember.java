@@ -52,12 +52,14 @@ public class EnterStandardMember {
     @FXML
     private Label crntPark;
 
-    private String memberId;
+    private String memberNumber;
     private boolean isFullMember;
     private String carNum;
     private Stage currentWindow;
     private String parkingLot;
-
+    private int id ;
+    private double fee ;
+    private String endMemDate;
 
 
     @FXML
@@ -81,7 +83,7 @@ public class EnterStandardMember {
             leavingDate1 = leavingDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
         EnterStandardMemberMessage enterStandardMessage = new EnterStandardMemberMessage(carNum,leavingMinute, leavingDate1
-                , leavingHour, arrivalMinute, arrivalDate1, arrivalHour, parkingLot, this.memberId);
+                , leavingHour, arrivalMinute, arrivalDate1, arrivalHour, parkingLot, this.memberNumber);
         SimpleClient.getClient().sendToServer(enterStandardMessage);
         currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
@@ -115,10 +117,13 @@ public class EnterStandardMember {
         currentWindow.setScene(tableViewScene);
         currentWindow.show();
         MemberPage memberPage = tableViewParent.getController();
-        memberPage.setMemberNumber(memberId);
+        memberPage.setMemberNumber(memberNumber);
         memberPage.setFullMember(isFullMember);
         memberPage.setMemberPark(parkingLot);
-        memberPage.setCarNum(carNum);
+        memberPage.setCarNumber(carNum);
+        memberPage.setDateTimeEnd(this.endMemDate);
+        memberPage.setFee72(this.fee);
+        memberPage.setIdMember(this.id);
     }
 
     public boolean isFullMember() {
@@ -161,12 +166,12 @@ public class EnterStandardMember {
         return leavingMinutes;
     }
 
-    public String getId() {
-        return memberId;
+    public String getMemberNumber() {
+        return memberNumber;
     }
 
-    public void setId(String id) {
-        this.memberId = id;
+    public void setMemberNumber(String memberNumber) {
+        this.memberNumber = memberNumber;
     }
 
     public String getParkingLot() {
@@ -176,6 +181,30 @@ public class EnterStandardMember {
     public void setParkingLot(String parkingLot) {
         this.parkingLot = parkingLot;
         crntPark.setText(parkingLot);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public double getFee() {
+        return fee;
+    }
+
+    public void setFee(double fee) {
+        this.fee = fee;
+    }
+
+    public String getEndMemDate() {
+        return endMemDate;
+    }
+
+    public void setEndMemDate(String endMemDate) {
+        this.endMemDate = endMemDate;
     }
 
     private void setMenuItemsHour() {

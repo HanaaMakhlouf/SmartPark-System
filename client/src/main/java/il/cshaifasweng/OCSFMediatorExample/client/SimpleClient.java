@@ -116,6 +116,9 @@ public class SimpleClient extends AbstractClient {
 		else if(msg instanceof PayFullMembershipMessage){
 			PayFullMembershipMessage message = (PayFullMembershipMessage) msg;
 			EventBus.getDefault().post(new PayFullMembershipEvent(message));
+		}else if(msg instanceof PayRenewFullMembershipMessage){
+			PayRenewFullMembershipMessage message = (PayRenewFullMembershipMessage) msg;
+			EventBus.getDefault().post(new PayRenewFullMembershipEvent(message));
 		}
 		else if(msg instanceof FullMembershipMessage){
 			FullMembershipMessage message = (FullMembershipMessage) msg;

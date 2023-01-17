@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.client.*;
+import il.cshaifasweng.OCSFMediatorExample.client.SendComplaintController;
+import il.cshaifasweng.OCSFMediatorExample.client.TrackComplaintEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.GetComplaintsMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.User;
@@ -46,6 +48,13 @@ public class TrackComplaintsController {
 
     @FXML
     private TableView<Complaint> mytable;
+    public int flag2 ;
+    private int id;
+    private String endDate ;
+    boolean isFullMember ;
+    String memberNumber ;
+    private String memberPark;
+    private String carNumber ;
 
     Timeline timeline = new Timeline((new KeyFrame(Duration.seconds(3), event ->{
         new Thread(()->{
@@ -94,12 +103,18 @@ public class TrackComplaintsController {
         currentWindow.setScene(tableViewScene);
         currentWindow.show();
         SendComplaintController user = tableViewParent.getController();
+        user.setFlag2(this.flag2);
         user.setSenderId(String.valueOf(getId()));
+        user.setEndDate(this.endDate);
+        user.setFullMember(this.isFullMember);
+        user.setMemberPark(this.memberPark);
+        user.setMemberNumber(this.memberNumber);
+        user.setCarNumber(this.carNumber);
         timeline.stop();
     }
 
 
-    private int id;
+
 
     public int getId() {
         return id;
@@ -108,7 +123,50 @@ public class TrackComplaintsController {
     public void setId (int id) {
         this.id = id;
     }
+    public int getFlag2() {
+        return flag2;
+    }
+    public void setFlag2(int flag2) {
+        this.flag2 = flag2;
+    }
+    public String getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 
+    public boolean isFullMember(boolean isFullMember) {
+        return this.isFullMember;
+    }
+
+    public void setFullMember(boolean fullMember) {
+        isFullMember = fullMember;
+    }
+
+    public String getCarNumber() {
+        return carNumber;
+    }
+
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
+    }
+
+    public String getMemberNumber() {
+        return memberNumber;
+    }
+
+    public void setMemberNumber(String memberNumber) {
+        this.memberNumber = memberNumber;
+    }
+
+    public String getMemberPark() {
+        return memberPark;
+    }
+
+    public void setMemberPark(String memberPark) {
+        this.memberPark = memberPark;
+    }
 
     @FXML
     void initialize() {

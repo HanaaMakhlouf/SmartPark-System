@@ -29,6 +29,8 @@ public class FullMemberShipEntity implements Serializable {
     private String timeEnteredPark;
     private boolean isParked;
 
+
+
     public FullMemberShipEntity(int id, String carNumber, String startingDate) {
         this.id = id;
         this.CarNumber = carNumber;
