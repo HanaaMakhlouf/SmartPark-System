@@ -3,6 +3,7 @@ il\cshaifasweng\OCSFMediatorExample\entities\Messages\LogoutMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\SendComplaintMsg.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\MessageBetweenClients.class
 il\cshaifasweng\OCSFMediatorExample\entities\AbsSpot.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\EnterStandardMemberMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\OrderToDeleteMsg.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\AdminMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\ParkingLots.class
@@ -40,6 +41,7 @@ il\cshaifasweng\OCSFMediatorExample\entities\Prices.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\EnterWithOrderMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\ExitParkingMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\ApproveNewPrices.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\EnterFullMemberMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\MemberLogInMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\SetUpMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\ParkingLotEntitiy.class
