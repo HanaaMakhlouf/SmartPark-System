@@ -1026,9 +1026,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 make InAdvanceOrderEntity and add to DB
                 validate payment
                  */
-            } else if (msg instanceof EnterWithOrderMessage) {
             }
-
             else if(msg instanceof ShowRequestForGM)
             {
                 ShowRequestForGM message = (ShowRequestForGM) msg;
@@ -1116,9 +1114,7 @@ public static ArrayList<Spot> spots_3 = new ArrayList<>();
                 make InAdvanceOrderEntity and add to DB
                 validate payment
                  */
-            }
-
-            else if(msg instanceof EnterWithOrderMessage) {
+            } else if(msg instanceof EnterWithOrderMessage) {
                 EnterWithOrderMessage message = (EnterWithOrderMessage) msg;
                 String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
                 String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours();
