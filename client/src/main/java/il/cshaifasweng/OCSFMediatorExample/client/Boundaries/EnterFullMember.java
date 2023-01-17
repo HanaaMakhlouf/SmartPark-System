@@ -1,11 +1,10 @@
 package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
+import il.cshaifasweng.OCSFMediatorExample.client.EnterFullMemberEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.EnterWithOutOrderEvent;
-import il.cshaifasweng.OCSFMediatorExample.client.InAdvanceOrderEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.EnterWithOrderMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.EnterFullMemberMessage;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.EnterWithOutOrderMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.InAdvanceOrderMessage;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,10 +18,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.time.format.DateTimeFormatter;
 
-public class EnterWithOutOrder {
+public class EnterFullMember {
 
     @FXML
     private DatePicker arrivalDate;
@@ -37,12 +35,6 @@ public class EnterWithOutOrder {
     private Button backBt;
 
     @FXML
-    private TextField email;
-
-    @FXML
-    private TextField carNumber;
-
-    @FXML
     private DatePicker leavingDate;
 
     @FXML
@@ -55,12 +47,14 @@ public class EnterWithOutOrder {
     private MenuButton parkingLot;
 
     @FXML
-    private Button saveOrderBt;
+    private Button enterParkBtn;
 
     @FXML
     private Label status;
 
-    private String id;
+    private String memberId;
+    private boolean isFullMember;
+    private String carNum;
     private Stage currentWindow;
 
 
@@ -73,14 +67,12 @@ public class EnterWithOutOrder {
     }
 
     @FXML
-    void saveOrder(ActionEvent event) throws IOException {
+    void enterPark(ActionEvent event) throws IOException {
         String arrivalDate1 = null;
         String leavingDate1 = null;
-        String carNumb = carNumber.getText();
         String pLot = parkingLot.getText();
         String arrivalHour = arrivalHours.getText();
         String arrivalMinute = arrivalMinutes.getText();
-        String email1 = email.getText();
 
         String leavingHour = leavingHours.getText();
         String leavingMinute = leavingMinutes.getText();
@@ -88,14 +80,14 @@ public class EnterWithOutOrder {
             arrivalDate1 = arrivalDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             leavingDate1 = leavingDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
-        EnterWithOutOrderMessage enterWithOutOrderMessage = new EnterWithOutOrderMessage(carNumb, leavingMinute, leavingDate1
-                , leavingHour, arrivalMinute, arrivalDate1, arrivalHour, pLot, this.id,email1);
-        SimpleClient.getClient().sendToServer(enterWithOutOrderMessage);
+        EnterFullMemberMessage enterFullMessage = new EnterFullMemberMessage(carNum,leavingMinute, leavingDate1
+                , leavingHour, arrivalMinute, arrivalDate1, arrivalHour, pLot, this.memberId);
+        SimpleClient.getClient().sendToServer(enterFullMessage);
         currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
 
     @Subscribe
-    public void WithOutOrderProcess(EnterWithOutOrderEvent event) throws IOException {
+    public void enterFullMember(EnterFullMemberEvent event) throws IOException {
         if(event.getMessage().getResult()){
             Platform.runLater(new Runnable() {
                 public void run() {
@@ -105,21 +97,43 @@ public class EnterWithOutOrder {
             });
         }
         else {
-            status.setText("Error, Car Couldn't Be Parked!");
-            status.setTextFill(Paint.valueOf("#FF0000"));
+            Platform.runLater(new Runnable() {
+                public void run() {
+                    status.setText("Error, Car Couldn't Be Parked!");
+                    status.setTextFill(Paint.valueOf("#FF0000"));
+                }
+            });
+
         }
     }
 
     @FXML
     void back(ActionEvent event) throws IOException {
         Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../memberPage.fxml"));
         Scene tableViewScene = new Scene(tableViewParent.load());
         currentWindow.setScene(tableViewScene);
         currentWindow.show();
-        UserBoundaryController inadv = tableViewParent.getController();
-        inadv.setUser(id);
+        MemberPage memberPage = tableViewParent.getController();
+        memberPage.setMemberNumber(memberId);
+        memberPage.setFullMember(isFullMember);
+        memberPage.setCarNum(carNum);
+    }
 
+    public boolean isFullMember() {
+        return isFullMember;
+    }
+
+    public void setFullMember(boolean fullMember) {
+        isFullMember = fullMember;
+    }
+
+    public String getCarNum() {
+        return carNum;
+    }
+
+    public void setCarNum(String carNum) {
+        this.carNum = carNum;
     }
 
     public DatePicker getArrivalDate() {
@@ -146,14 +160,12 @@ public class EnterWithOutOrder {
         return leavingMinutes;
     }
 
-
-
     public String getId() {
-        return id;
+        return memberId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.memberId = id;
     }
 
     public void HaifaPort(ActionEvent actionEvent) {

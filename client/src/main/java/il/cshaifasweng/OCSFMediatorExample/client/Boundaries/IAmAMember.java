@@ -84,13 +84,28 @@ public class IAmAMember {
                 public void run() {
                     FXMLLoader tableViewParent = null;
                     try {
-                        if(event.getMsg1().getResult() == 7) {
+                        if(event.getMsg1().getResult() == 2) { // means we are FullMembers
+                            System.out.println("im full login");
                             tableViewParent = new FXMLLoader(getClass().getResource("../memberPage.fxml"));
                             Scene tableViewScene = new Scene(tableViewParent.load());
                             currentWindow.setScene(tableViewScene);
                             currentWindow.show();
                             MemberPage member = tableViewParent.getController();
                             member.setMember(memberNumber.getText());
+                            member.setFullMember(true);
+                            member.setCarNum(event.getMsg1().getCarNumber());
+                        }
+                        else if(event.getMsg1().getResult() == 1){
+                            System.out.println("im standard login");
+                            tableViewParent = new FXMLLoader(getClass().getResource("../memberPage.fxml"));
+                            Scene tableViewScene = new Scene(tableViewParent.load());
+                            currentWindow.setScene(tableViewScene);
+                            currentWindow.show();
+                            MemberPage member = tableViewParent.getController();
+                            member.setMember(memberNumber.getText());
+                            member.setFullMember(false);
+                            member.setCarNum(event.getMsg1().getCarNumber());
+                            member.setMemberPark(event.getMsg1().getMemberPark());
                         }
 
                         System.out.println(memberNumber.getText());

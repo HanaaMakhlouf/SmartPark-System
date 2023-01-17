@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.FullMemberShipEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.LogoutMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,6 +50,9 @@ public class MemberPage {
     private Button trackBt;
 
     private String memberNumber ;
+    private boolean isFullMember;
+    private String carNum;
+    private String memberPark;
 
     public void setMember(String memberNumber){
         this.memberNumber = memberNumber ;
@@ -60,6 +64,38 @@ public class MemberPage {
 
     @FXML
     void enterParkingLot(ActionEvent event) {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = null;
+        if(isFullMember){
+            try {
+                tableViewParent = new FXMLLoader(getClass().getResource("../enterFullMember.fxml"));
+                Scene tableViewScene = new Scene(tableViewParent.load());
+                currentWindow.setScene(tableViewScene);
+                currentWindow.show();
+                EnterFullMember enterFullMember = tableViewParent.getController();
+                enterFullMember.setFullMember(isFullMember);
+                enterFullMember.setId(memberNumber);
+                enterFullMember.setCarNum(carNum);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            try {
+                System.out.println("standard member here");
+                tableViewParent = new FXMLLoader(getClass().getResource("../enterStandardMember.fxml"));
+                Scene tableViewScene = new Scene(tableViewParent.load());
+                currentWindow.setScene(tableViewScene);
+                currentWindow.show();
+                EnterStandardMember enterStandardMember = tableViewParent.getController();
+                enterStandardMember.setFullMember(isFullMember);
+                enterStandardMember.setId(memberNumber);
+                enterStandardMember.setParkingLot(memberPark);
+                enterStandardMember.setCarNum(carNum);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -90,4 +126,31 @@ public class MemberPage {
 
     }
 
+    public String getMemberPark() {
+        return memberPark;
+    }
+
+    public void setMemberPark(String memberPark) {
+        this.memberPark = memberPark;
+    }
+
+    public void setMemberNumber(String memberNumber) {
+        this.memberNumber = memberNumber;
+    }
+
+    public boolean isFullMember() {
+        return isFullMember;
+    }
+
+    public void setFullMember(boolean fullMember) {
+        isFullMember = fullMember;
+    }
+
+    public String getCarNum() {
+        return carNum;
+    }
+
+    public void setCarNum(String carNum) {
+        this.carNum = carNum;
+    }
 }

@@ -1,8 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
-import il.cshaifasweng.OCSFMediatorExample.client.EnterWithOrderEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.ExitParkingLotEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.SimpleClient;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.EnterWithOrderMessage;
+import il.cshaifasweng.OCSFMediatorExample.entities.Messages.ExitParkingMessage;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,44 +18,34 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
-
-public class EnterWithOrder {
-
+public class ExitParking {
 
     @FXML
-    private DatePicker arrivalDate;
+    private DatePicker leavingDate;
 
     @FXML
-    private MenuButton arrivalHours;
+    private MenuButton leavingHours;
 
     @FXML
-    private MenuButton arrivalMinutes;
-
-    @FXML
-    private Button backBt;
-
-    @FXML
-    private TextField carNumber;
-
-    @FXML
-    private Button enterBtn;
+    private MenuButton leavingMinutes;
 
     @FXML
     private Label status;
 
     @FXML
-    private MenuButton parkingLot;
+    private Button backButton;
 
+    @FXML
+    private TextField carNumber;
+
+    @FXML
+    private Button exitButton;
+
+    private String userId;
     private Stage currentWindow;
-    String userId;
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+    @FXML
+    private MenuButton parkingLot;
 
     @FXML
     void initialize() {
@@ -65,43 +55,87 @@ public class EnterWithOrder {
     }
 
     @FXML
-    public void enter(ActionEvent actionEvent) throws IOException {
+    void Carmel(ActionEvent event) {
+        parkingLot.setText("Carmel");
+
+    }
+
+    @FXML
+    void Central_Station(ActionEvent event) {
+        parkingLot.setText("Central Station");
+    }
+
+    @FXML
+    void Exit(ActionEvent event) throws IOException {
         String carNum = carNumber.getText();
         String park = parkingLot.getText();
-        String arrivalDate1= null;
-        if(arrivalDate.getValue() != null){
-            arrivalDate1 = arrivalDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String leavingDate1 = null;
+        if(leavingDate.getValue() != null){
+            leavingDate1 = leavingDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
-        String arrivalHour = arrivalHours.getText();
-        String arrivalMinute = arrivalMinutes.getText();
-        EnterWithOrderMessage message = new EnterWithOrderMessage(carNum,arrivalMinute,arrivalDate1,arrivalHour
+        String leavingHour = leavingHours.getText();
+        String leavingMinute = leavingMinutes.getText();
+        ExitParkingMessage message = new ExitParkingMessage(carNum,leavingMinute,leavingDate1,leavingHour
                 ,park,userId);
         SimpleClient.getClient().sendToServer(message);
-//        carNumber.clear();
-//        parkingLot.setText("Choose Parking Lot");
-//        arrivalDate.cancelEdit();
-
-        currentWindow = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
 
     @Subscribe
-    public void enterWithOrder(EnterWithOrderEvent event){
-        if(event.getMessage().getResult()){
-            Platform.runLater(new Runnable() {
-                public void run() {
-                    status.setText("Car Has Been Parked!");
-                    status.setTextFill(Paint.valueOf("#228c22"));
-                }
-            });
+    public void ExitProcess(ExitParkingLotEvent event){
+        if(event.getMessage().getResult()) {
+            if (!event.getMessage().isInPlaceOrder()) {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        status.setText("Please wait few minutes at the front gate for your car.\n Fee: " + event.getMessage().getFee());
+                        status.setTextFill(Paint.valueOf("#228c22"));
+                    }
+                });
+            } else if (event.getMessage().isInPlaceOrder()) {
+                // move to pay
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        status.setText("");
+                        FXMLLoader tableViewParent = null;
+                        try {
+                            tableViewParent = new FXMLLoader(getClass().getResource("../payInPlaceOrder.fxml"));
+                            Scene tableViewScene = new Scene(tableViewParent.load());
+                            currentWindow.setScene(tableViewScene);
+                            currentWindow.show();
+                            PayInPlaceOrder payInPlaceOrder = tableViewParent.getController();
+                            System.out.println(event.getMessage().getFee());
+                            System.out.println(event.getMessage().getCarNumber());
+                            System.out.println(event.getMessage().getParkingLot());
+                            System.out.println(event.getMessage().getUserId());
+                            payInPlaceOrder.setFee(event.getMessage().getFee());
+                            payInPlaceOrder.setCarNumber(event.getMessage().getCarNumber());
+                            payInPlaceOrder.setParkingLot(event.getMessage().getParkingLot());
+                            payInPlaceOrder.setId(event.getMessage().getUserId());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+            }
         }
         else {
             Platform.runLater(new Runnable() {
                 public void run() {
-                    status.setText("Error, Car Couldn't Be Parked!");
+                    status.setText("Error, Please verify information.");
                     status.setTextFill(Paint.valueOf("#FF0000"));
                 }
             });
+
         }
+//        System.out.println("im in do_something");
+    }
+
+    @FXML
+    void HaifaPort(ActionEvent event) {
+        parkingLot.setText("Haifa Port");
+
     }
 
     @FXML
@@ -111,26 +145,25 @@ public class EnterWithOrder {
         Scene tableViewScene = new Scene(tableViewParent.load());
         currentWindow.setScene(tableViewScene);
         currentWindow.show();
-        UserBoundaryController inadv = tableViewParent.getController();
-        inadv.setUser(userId);
+        UserBoundaryController user = tableViewParent.getController();
+        user.setUser(this.userId);
     }
 
-
-
-    public DatePicker getArrivalDate() {
-        return arrivalDate;
+    public String getUserId() {
+        return userId;
     }
 
-    public void HaifaPort(ActionEvent actionEvent) {
-        parkingLot.setText("Haifa Port");
-    }
-    public void Carmel(ActionEvent actionEvent) {
-        parkingLot.setText("Carmel");
-    }
-    public void Central_Station(ActionEvent actionEvent) {
-        parkingLot.setText("Central Station");
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
+    public String getId() {
+        return userId;
+    }
+
+    public void setId(String id) {
+        this.userId = id;
+    }
 
     private void setMenuItemsHour(){
         MenuItem menuItem0 = new MenuItem("00");
@@ -158,78 +191,78 @@ public class EnterWithOrder {
         MenuItem menuItem22 = new MenuItem(String.valueOf(22));
         MenuItem menuItem23 = new MenuItem(String.valueOf(23));
         menuItem0.setOnAction(e -> {
-            arrivalHours.setText("00");
+            leavingHours.setText("00");
         });
         menuItem1.setOnAction(e -> {
-            arrivalHours.setText("01");
+            leavingHours.setText("01");
         });
         menuItem2.setOnAction(e -> {
-            arrivalHours.setText("02");
+            leavingHours.setText("02");
         });
         menuItem3.setOnAction(e -> {
-            arrivalHours.setText("03");
+            leavingHours.setText("03");
         });
         menuItem4.setOnAction(e -> {
-            arrivalHours.setText("04");
+            leavingHours.setText("04");
         });
         menuItem5.setOnAction(e -> {
-            arrivalHours.setText("05");
+            leavingHours.setText("05");
         });
         menuItem6.setOnAction(e -> {
-            arrivalHours.setText("06");
+            leavingHours.setText("06");
         });
         menuItem7.setOnAction(e -> {
-            arrivalHours.setText("07");
+            leavingHours.setText("07");
         });
         menuItem8.setOnAction(e -> {
-            arrivalHours.setText("08");
+            leavingHours.setText("08");
         });
         menuItem9.setOnAction(e -> {
-            arrivalHours.setText("09");
+            leavingHours.setText("09");
         });
         menuItem10.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(10));
+            leavingHours.setText(String.valueOf(10));
         });
         menuItem11.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(11));
+            leavingHours.setText(String.valueOf(11));
         });
         menuItem12.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(12));
+            leavingHours.setText(String.valueOf(12));
         });
         menuItem13.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(13));
+            leavingHours.setText(String.valueOf(13));
         });
         menuItem14.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(14));
+            leavingHours.setText(String.valueOf(14));
         });
         menuItem15.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(15));
+            leavingHours.setText(String.valueOf(15));
         });
         menuItem16.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(16));
+            leavingHours.setText(String.valueOf(16));
         });
         menuItem17.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(17));
+            leavingHours.setText(String.valueOf(17));
         });
         menuItem18.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(18));
+            leavingHours.setText(String.valueOf(18));
         });
         menuItem19.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(19));
+            leavingHours.setText(String.valueOf(19));
         });
         menuItem20.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(20));
+            leavingHours.setText(String.valueOf(20));
         });
         menuItem21.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(21));
+            leavingHours.setText(String.valueOf(21));
         });
         menuItem22.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(22));
+            leavingHours.setText(String.valueOf(22));
         });
         menuItem23.setOnAction(e -> {
-            arrivalHours.setText(String.valueOf(23));
+            leavingHours.setText(String.valueOf(23));
         });
-        arrivalHours.getItems().addAll(menuItem0,menuItem1,menuItem2,menuItem3,menuItem4,menuItem5,menuItem6,menuItem7,menuItem8
+        leavingHours.getItems().addAll(menuItem0,menuItem1,menuItem2,menuItem3,menuItem4,menuItem5,menuItem6,menuItem7,menuItem8
                 ,menuItem9,menuItem10,menuItem11,menuItem12,menuItem13,menuItem14,menuItem15,menuItem16,menuItem17,menuItem18,menuItem19
                 ,menuItem20,menuItem21,menuItem22,menuItem23);
     }
@@ -248,43 +281,44 @@ public class EnterWithOrder {
         MenuItem menuItem50 = new MenuItem(String.valueOf(50));
         MenuItem menuItem55 = new MenuItem(String.valueOf(55));
         menuItem0.setOnAction(e -> {
-            arrivalMinutes.setText("00");
+            leavingMinutes.setText("00");
         });
         menuItem5.setOnAction(e -> {
-            arrivalMinutes.setText("05");
+            leavingMinutes.setText("05");
         });
         menuItem10.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(10));
+            leavingMinutes.setText(String.valueOf(10));
         });
         menuItem15.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(15));
+            leavingMinutes.setText(String.valueOf(15));
         });
         menuItem20.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(20));
+            leavingMinutes.setText(String.valueOf(20));
         });
         menuItem25.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(25));
+            leavingMinutes.setText(String.valueOf(25));
         });
         menuItem30.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(30));
+            leavingMinutes.setText(String.valueOf(30));
         });
         menuItem35.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(35));
+            leavingMinutes.setText(String.valueOf(35));
         });
         menuItem40.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(40));
+            leavingMinutes.setText(String.valueOf(40));
         });
         menuItem45.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(45));
+            leavingMinutes.setText(String.valueOf(45));
         });
         menuItem50.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(50));
+            leavingMinutes.setText(String.valueOf(50));
         });
         menuItem55.setOnAction(e -> {
-            arrivalMinutes.setText(String.valueOf(55));
+            leavingMinutes.setText(String.valueOf(55));
         });
-        arrivalMinutes.getItems().addAll(menuItem0,menuItem5,menuItem10,menuItem15,menuItem20,menuItem25,menuItem30,menuItem35
+        leavingMinutes.getItems().addAll(menuItem0,menuItem5,menuItem10,menuItem15,menuItem20,menuItem25,menuItem30,menuItem35
                 ,menuItem40,menuItem45,menuItem50,menuItem55);
     }
+
 
 }

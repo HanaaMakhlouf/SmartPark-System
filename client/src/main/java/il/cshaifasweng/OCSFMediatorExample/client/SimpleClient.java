@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.AbsSpot;
 import il.cshaifasweng.OCSFMediatorExample.entities.ChangePricesRequest;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.*;
@@ -33,10 +34,20 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
+		System.out.println("Handle Message From Server!");
 		if(msg instanceof logInMessage){
 			logInMessage message = (logInMessage) msg;
 			EventBus.getDefault().post(new logInEvent(message.getResult()));
-		}else if(msg instanceof MemberLogInMessage) {
+		}
+		else if(msg instanceof GetSpotsMessage){
+			System.out.println("wwwwwwwwwwwwwwwwww");
+			GetSpotsMessage message = (GetSpotsMessage) msg;
+//			System.out.println(message.getList().get(0).getPark_id());
+//			List<AbsSpot> l = new ArrayList<>(message.getList());
+//			GetSpotsMessage ms = new GetSpotsMessage(l);
+			EventBus.getDefault().post(new GetSpotsEvent(message));
+		}
+		else if(msg instanceof MemberLogInMessage) {
 			MemberLogInMessage message = (MemberLogInMessage) msg;
 			EventBus.getDefault().post(new LogInMemberEvent(message));
 		}
@@ -155,6 +166,22 @@ public class SimpleClient extends AbstractClient {
 		else if(msg instanceof EnterWithOutOrderMessage) {
 			EnterWithOutOrderMessage message = (EnterWithOutOrderMessage) msg;
 			EventBus.getDefault().post(new EnterWithOutOrderEvent(message));
+		}
+		else if(msg instanceof ExitParkingMessage){
+			ExitParkingMessage message = (ExitParkingMessage) msg;
+			EventBus.getDefault().post(new ExitParkingLotEvent(message));
+		}
+		else if(msg instanceof PayInPlaceOrderMessage){
+			PayInPlaceOrderMessage message = (PayInPlaceOrderMessage) msg;
+			EventBus.getDefault().post(new PayInPlaceOrderEvent(message));
+		}
+		else if(msg instanceof EnterFullMemberMessage) {
+			EnterFullMemberMessage message = (EnterFullMemberMessage) msg;
+			EventBus.getDefault().post(new EnterFullMemberEvent(message));
+		}
+		else if(msg instanceof EnterStandardMemberMessage) {
+			EnterStandardMemberMessage message = (EnterStandardMemberMessage) msg;
+			EventBus.getDefault().post(new EnterStandardMemberEvent(message));
 		}
 		else {
 			Message message = (Message) msg;
