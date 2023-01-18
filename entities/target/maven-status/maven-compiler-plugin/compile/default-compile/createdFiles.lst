@@ -13,6 +13,7 @@ il\cshaifasweng\OCSFMediatorExample\entities\DisabledSpotReport.class
 il\cshaifasweng\OCSFMediatorExample\entities\ParkingLotEmployee.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\ShowALLreportsMSG.class
 il\cshaifasweng\OCSFMediatorExample\entities\Spot.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\ExitFullMemberMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Subscriber.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\DisableSpotMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\Message.class
@@ -38,10 +39,12 @@ il\cshaifasweng\OCSFMediatorExample\entities\InAdvanceOrderEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\ShowCOMPrepBYrepID.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\ShowRequestForManager.class
 il\cshaifasweng\OCSFMediatorExample\entities\LogIn.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\ExitStandardMemberMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\GetallOrdersOfClient.class
 il\cshaifasweng\OCSFMediatorExample\entities\Order.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayStandardMembershipMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\ShowDSBLrepBYrepID.class
+il\cshaifasweng\OCSFMediatorExample\entities\Messages\PayRenewFullMembershipMessage.class
 il\cshaifasweng\OCSFMediatorExample\entities\FullMemberShipEntity.class
 il\cshaifasweng\OCSFMediatorExample\entities\Complaint.class
 il\cshaifasweng\OCSFMediatorExample\entities\Messages\InAdvanceOrderMessage.class

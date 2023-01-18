@@ -11,9 +11,9 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.AllpreparedReports">
    <content>
-      <AnchorPane prefHeight="1982.0" prefWidth="1272.0">
+      <AnchorPane prefHeight="2196.0" prefWidth="1272.0">
          <children>
-            <TableView fx:id="ORDtble" layoutX="14.0" layoutY="14.0" prefHeight="170.0" prefWidth="622.0">
+            <TableView fx:id="ORDtble" layoutX="19.0" layoutY="148.0" prefHeight="170.0" prefWidth="622.0">
               <columns>
                 <TableColumn fx:id="ORDrepid" prefWidth="75.0" text="Report id" />
                 <TableColumn fx:id="ORDparkname" prefWidth="75.0" text="Park name" />
@@ -23,7 +23,7 @@
                   <TableColumn fx:id="ORDinplace" prefWidth="166.4000244140625" text="num of inplace orders" />
               </columns>
             </TableView>
-            <TableView fx:id="COMtble" layoutX="24.0" layoutY="788.0" prefHeight="200.0" prefWidth="772.0">
+            <TableView fx:id="COMtble" layoutX="30.0" layoutY="940.0" prefHeight="200.0" prefWidth="772.0">
               <columns>
                 <TableColumn fx:id="COMrepid" prefWidth="75.0" text="Report id" />
                 <TableColumn fx:id="COMparkname" prefWidth="75.0" text="park name" />
@@ -34,7 +34,7 @@
                   <TableColumn fx:id="COMunresolvednum" minWidth="0.0" prefWidth="175.20001220703125" text="unresolved complaints num" />
               </columns>
             </TableView>
-            <TableView fx:id="DIStble" layoutX="97.0" layoutY="1476.0" prefHeight="200.0" prefWidth="422.0">
+            <TableView fx:id="DIStble" layoutX="56.0" layoutY="1676.0" prefHeight="200.0" prefWidth="422.0">
               <columns>
                 <TableColumn fx:id="DISrepid" prefWidth="75.0" text="report id" />
                 <TableColumn fx:id="DISparkname" prefWidth="75.0" text="park name" />
@@ -43,10 +43,10 @@
                   <TableColumn fx:id="DISuntil" prefWidth="69.60003662109375" text="until" />
               </columns>
             </TableView>
-            <ComboBox fx:id="ORDcombo" layoutX="710.0" layoutY="73.0" prefWidth="150.0" />
-            <ComboBox fx:id="COMcombo" layoutX="808.0" layoutY="849.0" prefWidth="150.0" />
-            <ComboBox fx:id="DIScombo" layoutX="586.0" layoutY="1557.0" prefWidth="150.0" />
-            <TableView fx:id="ORDORDtble" layoutX="291.0" layoutY="291.0" prefHeight="255.0" prefWidth="539.0">
+            <ComboBox fx:id="ORDcombo" layoutX="715.0" layoutY="207.0" prefWidth="150.0" />
+            <ComboBox fx:id="COMcombo" layoutX="814.0" layoutY="1001.0" prefWidth="150.0" />
+            <ComboBox fx:id="DIScombo" layoutX="545.0" layoutY="1757.0" prefWidth="150.0" />
+            <TableView fx:id="ORDORDtble" layoutX="296.0" layoutY="425.0" prefHeight="255.0" prefWidth="539.0">
               <columns>
                 <TableColumn fx:id="ORDORDrepid" prefWidth="75.0" text="report id" />
                 <TableColumn fx:id="ORDORDparkname" prefWidth="111.20002746582031" text="parking name" />
@@ -55,7 +55,7 @@
                   <TableColumn fx:id="ORDORDorderedat" prefWidth="159.20000000000005" text="ordered at" />
               </columns>
             </TableView>
-            <TableView fx:id="COMCOMtble" layoutX="323.0" layoutY="1061.0" prefHeight="229.0" prefWidth="392.0">
+            <TableView fx:id="COMCOMtble" layoutX="329.0" layoutY="1213.0" prefHeight="229.0" prefWidth="392.0">
               <columns>
                 <TableColumn fx:id="COMCOMrepid" prefWidth="75.0" text="Report id" />
                 <TableColumn fx:id="COMCOMparkname" prefWidth="75.0" text="park name" />
@@ -63,7 +63,7 @@
                   <TableColumn fx:id="COMCOMstatus" prefWidth="137.5999755859375" text="complaint status" />
               </columns>
             </TableView>
-            <TableView fx:id="DISDIStble" layoutX="380.0" layoutY="1709.0" prefHeight="200.0" prefWidth="362.0">
+            <TableView fx:id="DISDIStble" layoutX="339.0" layoutY="1909.0" prefHeight="200.0" prefWidth="362.0">
               <columns>
                 <TableColumn fx:id="DISDISrepid" prefWidth="75.0" text="report id" />
                 <TableColumn fx:id="DISDISparkname" prefWidth="75.0" text="park name" />
@@ -71,26 +71,31 @@
                   <TableColumn fx:id="DISDIStime" prefWidth="140.0" text="Disabling time" />
               </columns>
             </TableView>
-            <Button layoutX="857.0" layoutY="895.0" mnemonicParsing="false" onAction="#showCOM" text="show" />
-            <Button fx:id="ORDbtn" layoutX="759.0" layoutY="116.0" mnemonicParsing="false" onAction="#showORD" text="show" />
-            <Button fx:id="DISbtn" layoutX="635.0" layoutY="1631.0" mnemonicParsing="false" onAction="#showDIS" text="show" />
-            <Button fx:id="backbtn" layoutX="65.0" layoutY="1884.0" mnemonicParsing="false" onAction="#backto" text="back" />
-            <Label fx:id="labelmsg1" layoutX="771.0" layoutY="167.0" />
-            <Label fx:id="labelmsg2" layoutX="823.0" layoutY="945.0" />
-            <Label fx:id="labelmsg3" layoutX="621.0" layoutY="1676.0" />
-            <Label layoutX="333.0" layoutY="1360.0" text="disabled spots  reports section ">
+            <Button layoutX="863.0" layoutY="1047.0" mnemonicParsing="false" onAction="#showCOM" text="show" />
+            <Button fx:id="ORDbtn" layoutX="764.0" layoutY="250.0" mnemonicParsing="false" onAction="#showORD" text="show" />
+            <Button fx:id="DISbtn" layoutX="594.0" layoutY="1831.0" mnemonicParsing="false" onAction="#showDIS" text="show" />
+            <Button fx:id="backbtn" layoutX="24.0" layoutY="2084.0" mnemonicParsing="false" onAction="#backto" text="back" />
+            <Label fx:id="labelmsg1" layoutX="776.0" layoutY="301.0" />
+            <Label fx:id="labelmsg2" layoutX="829.0" layoutY="1097.0" />
+            <Label fx:id="labelmsg3" layoutX="580.0" layoutY="1876.0" />
+            <Label layoutX="292.0" layoutY="1560.0" text="disabled spots  reports section ">
                <font>
                   <Font name="System Bold" size="23.0" />
                </font>
             </Label>
-            <Label layoutX="617.0" layoutY="1517.0" text="please choose a report id and click show to view it in table below" />
-            <Label layoutX="284.0" layoutY="702.0" text="Complaints Status  reports section ">
+            <Label layoutX="576.0" layoutY="1717.0" text="please choose a report id and click show to view it in table below" />
+            <Label layoutX="290.0" layoutY="854.0" text="Complaints Status  reports section ">
                <font>
                   <Font name="System Bold" size="23.0" />
                </font>
             </Label>
-            <Label layoutX="715.0" layoutY="37.0" text="please choose a report id and click show to view it in table below" />
-            <Label layoutX="823.0" layoutY="818.0" text="please choose a report id and click show to view it in table below" />
+            <Label layoutX="720.0" layoutY="171.0" text="please choose a report id and click show to view it in table below" />
+            <Label layoutX="829.0" layoutY="970.0" text="please choose a report id and click show to view it in table below" />
+            <Label layoutX="345.0" layoutY="73.0" text="Orders  reports section ">
+               <font>
+                  <Font name="System Bold" size="23.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </content>
