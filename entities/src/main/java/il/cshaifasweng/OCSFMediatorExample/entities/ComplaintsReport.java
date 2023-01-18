@@ -1,11 +1,12 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ComplaintsReport")
-public class ComplaintsReport {
+public class ComplaintsReport implements Serializable {
     @Id
     @Column(name = "id_of_report")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

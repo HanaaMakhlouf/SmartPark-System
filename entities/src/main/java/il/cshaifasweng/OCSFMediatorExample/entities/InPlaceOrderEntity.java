@@ -53,6 +53,14 @@ public class InPlaceOrderEntity implements Serializable {
         this.date= LocalDateTime.now();
     }
 
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
     public String getEmail() {
         return email;
     }

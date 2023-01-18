@@ -64,6 +64,7 @@
             <Label fx:id="labelmsg" layoutX="229.0" layoutY="398.0" prefHeight="18.0" prefWidth="17.0" />
             <Label fx:id="labelmsg2" layoutX="224.0" layoutY="768.0" />
             <Label fx:id="labelmsg3" layoutX="238.0" layoutY="1147.0" prefHeight="18.0" prefWidth="17.0" />
+            <Button fx:id="backbtn" layoutX="14.0" layoutY="1134.0" mnemonicParsing="false" onAction="#backto" text="back" />
          </children>
       </AnchorPane>
    </content>

@@ -1,11 +1,14 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "OrdersReport")
-public class OrdersReport {
+public class OrdersReport implements Serializable {
     @Id
     @Column(name = "id_of_report")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +28,7 @@ public class OrdersReport {
 
     @Column(name = "untillDate")
     LocalDateTime until;
+
 
     public OrdersReport(String park, int inplace, int inadvance,LocalDateTime from,LocalDateTime until) {
         Park = park;

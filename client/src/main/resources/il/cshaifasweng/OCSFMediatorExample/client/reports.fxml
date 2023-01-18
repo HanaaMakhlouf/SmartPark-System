@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="435.0" prefWidth="642.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.Reports">
    <children>
       <DatePicker fx:id="fromdate" layoutX="272.0" layoutY="138.0" />
@@ -31,5 +30,8 @@
       </Label>
       <Button fx:id="PreparedRequestsbtn" layoutX="486.0" layoutY="389.0" mnemonicParsing="false" onAction="#gotoPreparedReports" text="see all prepared reports" />
       <Button fx:id="backbtn" layoutX="42.0" layoutY="389.0" mnemonicParsing="false" onAction="#backto" text="back" />
+      <Label fx:id="labelmsg1" layoutX="258.0" layoutY="268.0" />
+      <Label fx:id="labelmsg2" layoutX="267.0" layoutY="317.0" />
+      <Label fx:id="labelmsg3" layoutX="244.0" layoutY="372.0" />
    </children>
 </AnchorPane>

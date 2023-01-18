@@ -79,6 +79,43 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new SetBalanceEvent(message.getUserbalance()));
 
 		}
+		else if(msg instanceof ShowALLreportsMSG)
+		{
+			ShowALLreportsMSG message = (ShowALLreportsMSG) msg;
+			EventBus.getDefault().post(new ShowAllReportsEvent(message));
+
+
+		}
+		else if(msg instanceof ShowORDERSrepBYrepID)
+		{
+			ShowORDERSrepBYrepID message = (ShowORDERSrepBYrepID) msg;
+			EventBus.getDefault().post(new ShowORDEvent(message));
+
+
+
+
+		}
+
+
+		else if(msg instanceof ShowCOMPrepBYrepID)
+		{
+			ShowCOMPrepBYrepID message = (ShowCOMPrepBYrepID) msg;
+			EventBus.getDefault().post(new ShowCOMEvent(message));
+
+
+
+
+		}
+		else if(msg instanceof ShowDSBLrepBYrepID)
+		{
+			ShowDSBLrepBYrepID message = (ShowDSBLrepBYrepID) msg;
+			EventBus.getDefault().post(new ShowDSBLEvent(message));
+
+
+
+
+		}
+
 		else if(msg instanceof GetComplaintsMessage){
 			GetComplaintsMessage message = (GetComplaintsMessage) msg;
 			//System.out.println(message.getGetForWhom());

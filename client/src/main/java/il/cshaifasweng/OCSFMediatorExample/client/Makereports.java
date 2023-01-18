@@ -10,9 +10,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -108,6 +112,20 @@ public class Makereports {
         ManagerID = managerID;
     }
 
+
+    @FXML
+    private Button backbtn;
+
+    @FXML
+    void backto(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("managerBoundary.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        currentWindow.show();
+        ManagerController inadv = tableViewParent.getController();
+        inadv.setManager(ManagerID);
+    }
     @FXML
     void PrepareComplaints(ActionEvent event) throws IOException {
         Integer requestID = combxComplaints.getSelectionModel().getSelectedItem();
@@ -148,8 +166,42 @@ public class Makereports {
     }
 
     @FXML
-    void PrepareDisabled(ActionEvent event) {
+    void PrepareDisabled(ActionEvent event) throws IOException {
+        Integer requestID = combxDisabled.getSelectionModel().getSelectedItem();
+        if (requestID != null)
+        {
+            makeAreportMSG msg = new makeAreportMSG(requestID,"Disabled",ManagerID);
+            SimpleClient.getClient().sendToServer(msg);
 
+
+
+            labelmsg3.setText("report prepared successfully");
+            labelmsg3.setMinWidth(0);
+            labelmsg3.setPrefWidth(Control.USE_COMPUTED_SIZE);
+            labelmsg3.setMaxWidth(Double.MAX_VALUE);
+            labelmsg3.setTextFill(Color.GREEN);
+            FadeTransition ft = new FadeTransition(Duration.seconds(10), labelmsg3);
+            ft.setFromValue(1.0);
+            ft.setToValue(0.0);
+            ft.setCycleCount(1);
+            ft.play();
+            combxDisabled.getItems().remove(requestID);
+
+
+        }
+        else {
+            labelmsg3.setText("please choose the request ID first ");
+            labelmsg3.setMinWidth(0);
+            labelmsg3.setPrefWidth(Control.USE_COMPUTED_SIZE);
+            labelmsg3.setMaxWidth(Double.MAX_VALUE);
+            labelmsg3.setTextFill(Color.RED);
+            FadeTransition ft = new FadeTransition(Duration.seconds(10), labelmsg3);
+            ft.setFromValue(1.0);
+            ft.setToValue(0.0);
+            ft.setCycleCount(1);
+            ft.play();
+
+        }
     }
 
     @FXML

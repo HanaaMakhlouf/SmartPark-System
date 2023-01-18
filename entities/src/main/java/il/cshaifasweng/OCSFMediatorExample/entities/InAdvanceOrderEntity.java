@@ -36,6 +36,8 @@ public class InAdvanceOrderEntity implements Serializable {
     @Column(name = "Ordered_At")
     LocalDateTime date;
 
+
+
     public InAdvanceOrderEntity(String carNumber,String clientId, String leavingMinutes, String leavingDate, String leavingHours, String arrivalMinutes,
                                 String arrivalDate, String arrivalHours, String parkingLotName) {
         this.carNumber = carNumber;
@@ -50,6 +52,14 @@ public class InAdvanceOrderEntity implements Serializable {
         this.carEntered=false;
         this.date= LocalDateTime.now();
 
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     public boolean isCarEntered() {
