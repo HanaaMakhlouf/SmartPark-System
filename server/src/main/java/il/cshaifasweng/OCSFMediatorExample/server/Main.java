@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -91,8 +92,19 @@ public class Main extends SimpleServer {
         configuration.addAnnotatedClass(ParkingLotEntitiy.class);
         configuration.addAnnotatedClass(Spot.class);
         configuration.addAnnotatedClass(ChangePricesRequest.class);
-
+        configuration.addAnnotatedClass(OrdersReport.class);
+        configuration.addAnnotatedClass(ComplaintsReport.class);
         configuration.addAnnotatedClass(InPlaceOrderEntity.class);
+        configuration.addAnnotatedClass(RequestForReport.class);
+        configuration.addAnnotatedClass(DisabledSpotReport.class);
+        configuration.addAnnotatedClass(DisabledSpotHistory.class);
+        configuration.addAnnotatedClass(ALLOrdersInTimePeriod.class);
+        configuration.addAnnotatedClass(ComplaintsDataForReport.class);
+        configuration.addAnnotatedClass(DisabledDataReport.class);
+
+
+
+
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -346,6 +358,61 @@ public class Main extends SimpleServer {
         TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
         return allQuery.getResultList();
     }
+
+
+    public static <T, E> List<T> getAllforReport(Class<T> object,String OrderDatefield,String ParknameField, LocalDateTime from,LocalDateTime until, E parkname) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
+        Root<T> rootEntry = criteriaQuery.from(object);
+        Predicate datePredicate = builder.and(
+                builder.greaterThanOrEqualTo(rootEntry.get(OrderDatefield), from),
+                builder.lessThanOrEqualTo(rootEntry.get(OrderDatefield), until)
+        );
+        Predicate parknamePredicate = builder.equal(rootEntry.get(ParknameField), parkname);
+        Predicate finalPredicate = builder.and(datePredicate, parknamePredicate);
+        criteriaQuery.select(rootEntry).where(finalPredicate);
+        TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
+        return allQuery.getResultList();
+
+
+    }
+
+    public static <T, E> List<T> getAllforResolvedComplaintsReport(Class<T> object,String OrderDatefield,String ParknameField, LocalDateTime from,LocalDateTime until, E parkname,String respnse) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
+        Root<T> rootEntry = criteriaQuery.from(object);
+        Predicate datePredicate = builder.and(
+                builder.greaterThanOrEqualTo(rootEntry.get(OrderDatefield), from),
+                builder.lessThanOrEqualTo(rootEntry.get(OrderDatefield), until)
+        );
+        Predicate parknamePredicate = builder.equal(rootEntry.get(ParknameField), parkname);
+        Predicate responsePredicate = builder.notEqual(rootEntry.get(respnse),"");
+        Predicate finalPredicate = builder.and(datePredicate, parknamePredicate,responsePredicate);
+        criteriaQuery.select(rootEntry).where(finalPredicate);
+        TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
+        return allQuery.getResultList();
+
+
+    }
+
+    public static <T, E> List<T> getAllforUnResolvedComplaintsReport(Class<T> object,String OrderDatefield,String ParknameField, LocalDateTime from,LocalDateTime until, E parkname,String respnse) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
+        Root<T> rootEntry = criteriaQuery.from(object);
+        Predicate datePredicate = builder.and(
+                builder.greaterThanOrEqualTo(rootEntry.get(OrderDatefield), from),
+                builder.lessThanOrEqualTo(rootEntry.get(OrderDatefield), until)
+        );
+        Predicate parknamePredicate = builder.equal(rootEntry.get(ParknameField), parkname);
+        Predicate responsePredicate = builder.equal(rootEntry.get(respnse),"");
+        Predicate finalPredicate = builder.and(datePredicate, parknamePredicate,responsePredicate);
+        criteriaQuery.select(rootEntry).where(finalPredicate);
+        TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
+        return allQuery.getResultList();
+
+
+    }
+
 
     public static <T> T getWhereIdEquals(Class<T> object,String id,String field) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -649,31 +716,194 @@ public class Main extends SimpleServer {
                 List<ParkingLotEmployee> employeeList = getAll(ParkingLotEmployee.class);
                 List<GeneralManager> gmList = getAll(GeneralManager.class);
                 List<CustomerServiceEmployee> cs_employeeListgetAll = getAll(CustomerServiceEmployee.class);
+                List<Subscriber> subs = getAll(Subscriber.class);
+                LogInController logInCntrl = new LogInController(message.getUserId(), message.getUserPass());
+                message.setResult(logInCntrl.validateUserCredentials(userList, managerList, employeeList, gmList, cs_employeeListgetAll, subs));
                 SubscribedClient connection = new SubscribedClient(client);
                 connection.setClientID(Integer.parseInt(message.getUserId()));
                 SubscribersList.add(connection);
-                List<Subscriber> subs = getAll(Subscriber.class);
-                LogInController logInCntrl = new LogInController(message.getUserId(),message.getUserPass());
                 message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll,subs));
 
-            //    message.setResult(logInCntrl.validateUserCredentials(userList,managerList,employeeList,gmList,cs_employeeListgetAll,subs));
-
-                if(!message.getUserId().isEmpty() && !message.getUserPass().isEmpty() ) {
-                    Subscriber s = new Subscriber(Integer.parseInt(message.getUserId()));
-                    if (message.getResult() != 0) {
-                        session.beginTransaction();
-                        session.save(s);
-                        session.flush();
-                        session.getTransaction().commit();
-                    }
-                }
-                message.setParkingLotId(logInCntrl.getParkingLotId());
+                Subscriber s = new Subscriber(Integer.parseInt(message.getUserId()));
+                if(message.getResult() !=0) {
+                 session.beginTransaction();
+                 session.save(s);
+                session.flush();
+                session.getTransaction().commit();  }
                 client.sendToClient(message);
             } else if (msg instanceof LogoutMessage) {
                 LogoutMessage message = (LogoutMessage) msg;
                 session.beginTransaction();
                 List<Subscriber> s = getAllWhereIdEquals(Subscriber.class, message.getId(), "id");
                 session.delete(s.get(0));
+                session.flush();
+                session.getTransaction().commit();
+
+            }
+            else if(msg instanceof ShowORDERSrepBYrepID)
+            {
+                ShowORDERSrepBYrepID message = (ShowORDERSrepBYrepID) msg;
+                int id = message.getRepid();
+                List<ALLOrdersInTimePeriod> lst =getAllWhereIdEquals(ALLOrdersInTimePeriod.class,id,"repid");
+                    ShowORDERSrepBYrepID newMSG = new ShowORDERSrepBYrepID(id);
+                    newMSG.setLst(lst);
+                    client.sendToClient(newMSG);
+
+
+
+            }
+            else if(msg instanceof ShowCOMPrepBYrepID)
+            {
+                ShowCOMPrepBYrepID message = (ShowCOMPrepBYrepID) msg;
+                int id = message.getRepid();
+                List<ComplaintsDataForReport> lst =getAllWhereIdEquals(ComplaintsDataForReport.class,id,"repid");
+                ShowCOMPrepBYrepID newMSG = new ShowCOMPrepBYrepID(id);
+                newMSG.setLst(lst);
+                client.sendToClient(newMSG);
+
+
+
+            }
+            else if(msg instanceof ShowDSBLrepBYrepID)
+            {
+                ShowDSBLrepBYrepID message = (ShowDSBLrepBYrepID) msg;
+                int id = message.getRepid();
+                List<DisabledDataReport> lst =getAllWhereIdEquals(DisabledDataReport.class,id,"repid");
+                ShowDSBLrepBYrepID newMSG = new ShowDSBLrepBYrepID(id);
+                newMSG.setLst(lst);
+                client.sendToClient(newMSG);
+
+
+
+            }
+
+            else if(msg instanceof ShowALLreportsMSG)
+            {
+                ShowALLreportsMSG message = (ShowALLreportsMSG) msg;
+                message.setOlst(getAll(OrdersReport.class));
+                message.setClst(getAll(ComplaintsReport.class));
+                message.setDlst(getAll(DisabledSpotReport.class));
+                client.sendToClient(message);
+
+
+
+
+            }
+            else if(msg instanceof makeAreportMSG)
+            {
+                makeAreportMSG message = (makeAreportMSG) msg;
+                if(message.getRequest_type().equals("Orders") && message.getMangerID() != null)
+                {
+                    List<Manager> mangers = getAllWhereIdEquals(Manager.class,Integer.parseInt(message.getMangerID()),"id");
+                    int parkname = mangers.get(0).getParkingLot();
+                   List<ParkingLotEntitiy> parks = getAllWhereIdEquals(ParkingLotEntitiy.class,parkname,"id");
+                    String parkname_string = parks.get(0).getName();
+                    List<RequestForReport> requests = getAllWhereIdEquals(RequestForReport.class,message.getRequestid(),"id");
+                    List<InAdvanceOrderEntity> inadv = getAllforReport(InAdvanceOrderEntity.class,"date","parkingLotName",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname_string);
+                    List<InPlaceOrderEntity> inplace = getAllforReport(InPlaceOrderEntity.class,"date","parkingLotName",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname_string);
+                    session.beginTransaction();
+
+
+                    OrdersReport rep = new OrdersReport(parkname_string,inplace.size(),inadv.size(),requests.get(0).getFrom(),requests.get(0).getUntil());
+
+
+                    session.save(rep);
+                    session.flush();
+
+
+
+
+                    for(InAdvanceOrderEntity i : inadv)
+                    {
+                        ALLOrdersInTimePeriod o = new ALLOrdersInTimePeriod(rep.getId(),i.getOrderID(),i.getParkingLotName(),i.getDate(),"In advance order");
+                        session.save(o);
+                        session.flush();
+
+                    }
+
+                    for(InPlaceOrderEntity i : inplace)
+                    {
+                        ALLOrdersInTimePeriod o = new ALLOrdersInTimePeriod(rep.getId(),i.getOrderID(),i.getParkingLotName(),i.getDate(),"In place order");
+                        session.save(o);
+                        session.flush();
+
+                    }
+                    session.getTransaction().commit();
+
+                }
+                if(message.getRequest_type().equals("Complaints") && message.getMangerID() != null)
+                {
+                    List<Manager> mangers = getAllWhereIdEquals(Manager.class,Integer.parseInt(message.getMangerID()),"id");
+                    int parkname = mangers.get(0).getParkingLot();
+                    List<ParkingLotEntitiy> parks = getAllWhereIdEquals(ParkingLotEntitiy.class,parkname,"id");
+                    String parkname_string = parks.get(0).getName();
+                    List<RequestForReport> requests = getAllWhereIdEquals(RequestForReport.class,message.getRequestid(),"id");
+                    List<Complaint> complaints = getAllforReport(Complaint.class,"date","park_id",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname);
+                    List<Complaint> Resolvedcomplaints = getAllforResolvedComplaintsReport(Complaint.class,"date","park_id",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname,"response");
+                    List<Complaint> UNResolvedcomplaints = getAllforUnResolvedComplaintsReport(Complaint.class,"date","park_id",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname,"response");
+
+                    session.beginTransaction();
+                    ComplaintsReport rep = new ComplaintsReport(parkname_string,complaints.size(),Resolvedcomplaints.size(),requests.get(0).getFrom(),requests.get(0).getUntil());
+                    session.save(rep);
+                    session.flush();
+
+                    for(Complaint c : UNResolvedcomplaints)
+                    {
+                        ComplaintsDataForReport comp = new ComplaintsDataForReport(rep.getId(), "UnResolved Complaint",parkname_string,c.getDate());
+                        session.save(comp);
+                        session.flush();
+
+                    }
+                    for(Complaint c : Resolvedcomplaints)
+                    {
+                        ComplaintsDataForReport comp = new ComplaintsDataForReport(rep.getId(), "Resolved Complaint",parkname_string,c.getDate());
+                        session.save(comp);
+                        session.flush();
+
+                    }
+                    session.getTransaction().commit();
+
+                }
+                if(message.getRequest_type().equals("Disabled") && message.getMangerID() != null)
+                {
+                    List<Manager> mangers = getAllWhereIdEquals(Manager.class,Integer.parseInt(message.getMangerID()),"id");
+                    int parkname = mangers.get(0).getParkingLot();
+                    List<ParkingLotEntitiy> parks = getAllWhereIdEquals(ParkingLotEntitiy.class,parkname,"id");
+                    String parkname_string = parks.get(0).getName();
+                    List<RequestForReport> requests = getAllWhereIdEquals(RequestForReport.class,message.getRequestid(),"id");
+                    List<DisabledSpotHistory> Disabled = getAllforReport(DisabledSpotHistory.class,"time_of_disabling","Park",requests.get(0).getFrom(),requests.get(0).getUntil(),parkname_string);
+                    int size = Disabled.size();
+
+                    session.beginTransaction();
+                    if(Disabled.isEmpty()) size =0;
+                    DisabledSpotReport rep = new DisabledSpotReport(parkname_string,size,requests.get(0).getFrom(),requests.get(0).getUntil());
+                    session.save(rep);
+                    session.flush();
+
+                    for(DisabledSpotHistory h : Disabled) {
+
+                        DisabledDataReport disp = new DisabledDataReport(rep.getId(), parkname_string, h.getSpot_number(), h.getTime_of_disabling());
+                        session.save(disp);
+                        session.flush();
+
+                    }
+                    session.getTransaction().commit();
+                }
+
+
+
+            }
+
+
+
+            else if(msg instanceof RequestForReport)
+            {
+
+                RequestForReport message = (RequestForReport) msg;
+                session.beginTransaction();
+                System.out.println("attempt to save a request");
+                RequestForReport newMsg = new RequestForReport(message.getFrom(),message.getUntil(),message.getReport_type());
+               session.save(newMsg);
                 session.flush();
                 session.getTransaction().commit();
 
@@ -778,6 +1008,22 @@ public class Main extends SimpleServer {
                 newMsg.setUserbalance(balance);
                 client.sendToClient(newMsg);
 
+            }
+            else if(msg instanceof ShowAllReportrequestsMessage)
+            {
+                ShowAllReportrequestsMessage message = (ShowAllReportrequestsMessage) msg;
+
+
+                List<RequestForReport> Orders = getAllWhereIdEquals(RequestForReport.class,"Orders","Report_type");
+                List<RequestForReport> Compliants = getAllWhereIdEquals(RequestForReport.class,"Complaints","Report_type");
+                List<RequestForReport> disabled = getAllWhereIdEquals(RequestForReport.class,"Disabled","Report_type");
+                ShowAllReportrequestsMessage newMsg = new ShowAllReportrequestsMessage(Orders,Compliants,disabled);
+                client.sendToClient(newMsg);
+
+
+
+            }
+            else if(msg instanceof  GetallOrdersOfClient) {
             } else if (msg instanceof GetallOrdersOfClient) {
                 GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
                 List<InAdvanceOrderEntity> List = getAllWhereIdEquals(InAdvanceOrderEntity.class, message.getId(), "UserID");
@@ -825,8 +1071,15 @@ public class Main extends SimpleServer {
                 int spot_id = message.getSpot_id();
                 boolean newDis = message.isIfDis();
                 session.beginTransaction();
+
                 List<Spot> lstUsers = getAllWhereIdEquals(Spot.class,spot_id,"spotid");
                 Spot user = lstUsers.get(0);
+                if(newDis) {
+                    DisabledSpotHistory hist = new DisabledSpotHistory(user.getParkinglot().getName(),user.getSpotid());
+                    session.save(hist);
+                    session.flush();
+
+                }
                 user.setDisabled(newDis);
                 session.update(user);
                 session.flush();

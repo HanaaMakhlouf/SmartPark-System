@@ -83,6 +83,43 @@ public class SimpleClient extends AbstractClient {
 			SetUpMessage message = (SetUpMessage) msg;
 			EventBus.getDefault().post(new SetUpEvent(message.getPark_num()));
 		}
+		else if(msg instanceof ShowALLreportsMSG)
+		{
+			ShowALLreportsMSG message = (ShowALLreportsMSG) msg;
+			EventBus.getDefault().post(new ShowAllReportsEvent(message));
+
+
+		}
+		else if(msg instanceof ShowORDERSrepBYrepID)
+		{
+			ShowORDERSrepBYrepID message = (ShowORDERSrepBYrepID) msg;
+			EventBus.getDefault().post(new ShowORDEvent(message));
+
+
+
+
+		}
+
+
+		else if(msg instanceof ShowCOMPrepBYrepID)
+		{
+			ShowCOMPrepBYrepID message = (ShowCOMPrepBYrepID) msg;
+			EventBus.getDefault().post(new ShowCOMEvent(message));
+
+
+
+
+		}
+		else if(msg instanceof ShowDSBLrepBYrepID)
+		{
+			ShowDSBLrepBYrepID message = (ShowDSBLrepBYrepID) msg;
+			EventBus.getDefault().post(new ShowDSBLEvent(message));
+
+
+
+
+		}
+
 		else if(msg instanceof GetComplaintsMessage){
 			GetComplaintsMessage message = (GetComplaintsMessage) msg;
 			//System.out.println(message.getGetForWhom());
@@ -90,6 +127,16 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new ShowComplaintsEvent(message));
 			else
 			EventBus.getDefault().post(new TrackComplaintEvent(message));
+		}
+
+		else if(msg instanceof ShowAllReportrequestsMessage)
+		{
+			ShowAllReportrequestsMessage message = (ShowAllReportrequestsMessage) msg;
+			EventBus.getDefault().post(new ShowALLreportsReqEvent(message));
+
+
+
+
 		}
 
 

@@ -1,6 +1,7 @@
 /**
  * Sample Skeleton for 'generalManageBoundary.fxml' Controller Class
  */
+
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
@@ -66,7 +67,11 @@ public class GeneralManagerController {
 
     @FXML
     private Label status;
+    @FXML
+    private Button realorderreports;
 
+
+    private String id;
 
     @FXML
     void goBack(ActionEvent event) throws IOException {
@@ -372,8 +377,8 @@ public class GeneralManagerController {
 
 @FXML
 void orderReports(ActionEvent event) throws IOException {
-        GetSpotsMessage msg = new GetSpotsMessage();
-            SimpleClient.getClient().sendToServer(msg);
+    GetSpotsMessage msg = new GetSpotsMessage();
+    SimpleClient.getClient().sendToServer(msg);
     status.setText("PDF file has been downloaded to your /Downloads Directory ");
     status.setMinWidth(0);
     status.setPrefWidth(Control.USE_COMPUTED_SIZE);
@@ -384,6 +389,17 @@ void orderReports(ActionEvent event) throws IOException {
     ft.setToValue(0.0);
     ft.setCycleCount(1);
     ft.play();
+}
+    @FXML
+    void orderReprts1(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("reports.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+        Reports inadv = tableViewParent.getController();
+        System.out.println("gm id is "+id);
+        inadv.setId(id);
+        currentWindow.show();
     }
 
 
@@ -402,7 +418,6 @@ void orderReports(ActionEvent event) throws IOException {
 
     }
 
-    private String id;
     public void setGM(String text) {
         this.id = text;
     }

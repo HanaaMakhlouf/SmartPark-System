@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "InPlaceOrders")
@@ -32,6 +33,9 @@ public class InPlaceOrderEntity implements Serializable {
     String parkingLotName ;
     @Column(name = "Email")
     String email ;
+    @Column(name = "Ordered_At")
+    LocalDateTime date;
+
 
 
     public InPlaceOrderEntity(String carNumber, String clientId, String leavingMinutes, String leavingDate, String leavingHours, String arrivalMinutes,
@@ -46,6 +50,15 @@ public class InPlaceOrderEntity implements Serializable {
         this.arrivalHours = arrivalHours;
         this.parkingLotName = parkingLotName;
         this.email = email;
+        this.date= LocalDateTime.now();
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     public String getEmail() {

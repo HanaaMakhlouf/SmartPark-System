@@ -13,10 +13,11 @@
             <Font size="19.0" />
          </font>
       </Text>
-      <Button fx:id="orderReportsBtn" layoutX="217.0" layoutY="145.0" mnemonicParsing="false" onAction="#orderReports" text="Download Status Image" />
-      <Button fx:id="confirmNewPricesBtn" layoutX="229.0" layoutY="200.0" mnemonicParsing="false" onAction="#confirmNewPrices" text="Confirm new prices" />
-      <Button fx:id="showPricesBtn" layoutX="248.0" layoutY="257.0" mnemonicParsing="false" onAction="#showPrices" text="Show prices" />
+      <Button fx:id="orderReportsBtn" layoutX="216.0" layoutY="194.0" mnemonicParsing="false" onAction="#orderReports" text="Download Status Image" />
+      <Button fx:id="confirmNewPricesBtn" layoutX="228.0" layoutY="250.0" mnemonicParsing="false" onAction="#confirmNewPrices" text="Confirm new prices" />
+      <Button fx:id="showPricesBtn" layoutX="248.0" layoutY="303.0" mnemonicParsing="false" onAction="#showPrices" text="Show prices" />
       <Button fx:id="goBackBtn" layoutX="476.0" layoutY="329.0" mnemonicParsing="false" onAction="#goBack" prefHeight="36.0" prefWidth="66.0" text="Back" />
       <Label fx:id="status" layoutX="197.0" layoutY="176.0" prefHeight="17.0" prefWidth="364.0" />
+      <Button fx:id="realorderreports" layoutX="173.0" layoutY="131.0" mnemonicParsing="false" onAction="#orderReprts1" text="order reports and view prepared reports" />
    </children>
 </AnchorPane>
