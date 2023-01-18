@@ -15,40 +15,65 @@ public class StandardMemberShipEntity implements Serializable {
     @Id
     @Column(name = "id")
     private int id;
-    @Column(name = "carNumber")
-    private String carNumber;
-    @Column(name = "startingDate")
-    private String startingDate ;
+    @Column(name = "CarNumber")
+    private String CarNumber;
+    @Column(name = "StartingDate")
+    private String StartingDate ;
     @Column(name = "endingDate")
     private String endingDate ;
-    @Column(name = "parkingLot")
-    private String parkingLot ;
-    @Column(name = "membershipID")
-    private String membershipID ;
-    @Column(name = "hoursLeft")
-    private double hoursLeft;
+    @Column(name = "ParkingLot")
+    private String ParkingLot ;
+    @Column(name = "MembershipID")
+    private String MembershipID ;
+    @Column(name = "hours_Left")
+    private double hours_Left;
     private String timeEnteredPark;
     private boolean isParked;
+    private String parkedLocation;
+
+
 
     public StandardMemberShipEntity(int id, String carNumber, String startingDate,String parkingLot) {
         this.id = id;
-        this.carNumber = carNumber;
-        this.startingDate = startingDate;
+        this.CarNumber = carNumber;
+        this.StartingDate = startingDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dateTimeArrival = LocalDate.parse(startingDate,formatter).plusDays(28);
-        this.endingDate = dateTimeArrival.format(formatter);
-        this.parkingLot = parkingLot;
-        hoursLeft = 60;
+        LocalDate dateTimeEnd = LocalDate.parse(startingDate,formatter).plusDays(28);
+        this.endingDate = dateTimeEnd.format(formatter);
+        this.ParkingLot = parkingLot;
+        hours_Left = 60;
         this.timeEnteredPark="";
         isParked = false;
+        parkedLocation=null;
+    }
+
+    public double getHours_Left() {
+        return hours_Left;
+    }
+
+    public void setHours_Left(double hoursLeft) {
+        if(hoursLeft <=0){
+            this.hours_Left = 0;
+        }
+        else{
+            this.hours_Left = hoursLeft;
+        }
+    }
+
+    public String getParkedLocation() {
+        return parkedLocation;
+    }
+
+    public void setParkedLocation(String parkedLocation) {
+        this.parkedLocation = parkedLocation;
     }
 
     public String getMembershipID() {
-        return membershipID;
+        return MembershipID;
     }
 
     public void setMembershipID(String membershipID) {
-        this.membershipID = membershipID;
+        this.MembershipID = membershipID;
     }
 
     public StandardMemberShipEntity() {
@@ -71,19 +96,19 @@ public class StandardMemberShipEntity implements Serializable {
     }
 
     public double getHoursLeft() {
-        return hoursLeft;
+        return hours_Left;
     }
 
     public void setHoursLeft(double hoursLeft) {
-        this.hoursLeft = hoursLeft;
+        this.hours_Left = hoursLeft;
     }
 
     public String getParkingLot() {
-        return parkingLot;
+        return ParkingLot;
     }
 
     public void setParkingLot(String parkingLot) {
-        this.parkingLot = parkingLot;
+        this.ParkingLot = parkingLot;
     }
 
     public int getId() {
@@ -96,19 +121,19 @@ public class StandardMemberShipEntity implements Serializable {
 
     public String getCarNumber() {
 
-        return carNumber;
+        return CarNumber;
     }
 
     public void setCarNumber(String carNumber) {
-        this.carNumber = carNumber;
+        this.CarNumber = carNumber;
     }
 
     public String getStartingDate() {
-        return startingDate;
+        return StartingDate;
     }
 
     public void setStartingDate(String startingDate) {
-        this.startingDate = startingDate;
+        this.StartingDate = startingDate;
     }
 
     public String getEndingDate() {

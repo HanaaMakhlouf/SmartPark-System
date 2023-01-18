@@ -5,16 +5,24 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
+
+import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.FullMembership;
 import il.cshaifasweng.OCSFMediatorExample.client.Boundaries.ExitParking;
 import il.cshaifasweng.OCSFMediatorExample.client.GeneralManagerController;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.SendComplaintMsg;
@@ -31,6 +39,8 @@ import il.cshaifasweng.OCSFMediatorExample.server.validation.InAdvanceOrderValid
 import il.cshaifasweng.OCSFMediatorExample.server.validation.PayValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.SignUpValidator;
 import il.cshaifasweng.OCSFMediatorExample.server.validation.*;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableView;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -38,16 +48,16 @@ import org.hibernate.service.ServiceRegistry;
 
 
 public class Main extends SimpleServer {
-private static SimpleServer server;
-private static Session session;
-private Message serverMSG;
-private static SessionFactory sessionFactory = getSessionFactory();
-private static List<ParkingLots> data = new ArrayList<>();
-private static List<Prices> data2 = new ArrayList<>();
-private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
-private static ArrayList<ConnectionToClient> clientsConn = new ArrayList<>();
+    private static SimpleServer server;
+    private static Session session;
+    private Message serverMSG;
+    private static SessionFactory sessionFactory = getSessionFactory();
+    private static List<ParkingLots> data = new ArrayList<>();
+    private static List<Prices> data2 = new ArrayList<>();
+    private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
+    private static ArrayList<ConnectionToClient> clientsConn = new ArrayList<>();
 
-private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadGroup");
+    private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadGroup");
 
 
 
@@ -202,9 +212,12 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         User u1 = new User(208110130,"saed.diab.98@gmail.com","102030");
         User u2 = new User(123456789,"someone@gmail.com","405060");
         User u3 = new User(987654321,"someoneElse@gmail.com","708090");
+        User u4 = new User(211516950,"some@gmail.com","123");
+
         session.save(u1);
         session.save(u2);
         session.save(u3);
+        session.save(u4);
         session.flush();
         //   session.getTransaction().commit();
     }
@@ -219,7 +232,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         session.save(u2);
         session.save(u3);
         session.flush();
-       // session.getTransaction().commit();
+        // session.getTransaction().commit();
     }
 
     private static void initManagers(){
@@ -268,20 +281,34 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
 
     }
     private static void initStandardMembership(){
-        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(987654321,"987654321"
-                ,"29/01/2023","Haifa Port");
+
+        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(321321321,"321321321"
+                ,"10/01/2023","Haifa Port");
         session.save(tmp2);
         session.flush();
-        tmp2.setMembershipID("1"+tmp2.getId());
-
+        tmp2.setMembershipID("0"+tmp2.getId());
+//        LocalDate dateTime = LocalDate.now() ;
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//        LocalDate date = LocalDate.parse(tmp2.getEndingDate(),formatter);
+//        if(dateTime.isAfter(date)){
+//            session.delete(tmp2);
+//        }
         session.flush();
         // session.getTransaction().commit();
     }
     private static void initFulldMembership(){
-        FullMemberShipEntity tmp = new FullMemberShipEntity(123456789,"123456789","29/01/2023");
+        FullMemberShipEntity tmp = new FullMemberShipEntity(123123123,"123123123","20/01/2023");
         session.save(tmp);
         session.flush();
-        tmp.setMembershipID("0"+tmp.getId());
+        tmp.setMembershipID("1"+tmp.getId());
+//        LocalDate dateTime = LocalDate.now() ;
+//        String leaving = tmp.getEndingDate();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//        LocalDate date = LocalDate.parse(leaving,formatter);
+//
+//        if(dateTime.isAfter(date)){
+//            session.delete(tmp);
+//        }
         session.flush();
         // session.getTransaction().commit();
     }
@@ -290,7 +317,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         initParkingLots();
         initPrices();
         initUser();
-        InitParkings();
+    //    InitParkings();
         initInAdvanceOrders();
         List <Subscriber> lst = getAll(Subscriber.class);
         for(Subscriber s : lst) {
@@ -327,7 +354,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = builder.createQuery(object);
         Root<T> rootEntry = criteriaQuery.from(object);
-         criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field), id));
+        criteriaQuery.select(rootEntry).where(builder.equal(rootEntry.get(field), id));
         TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
         return allQuery.getResultList();
     }
@@ -486,19 +513,19 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         return null;
     }
 
-    public void parkInBestSpot(String carNum,String leavingDate,String leavingHour,String leavingMin,String park){
+    public static void parkInBestSpot(String carNum,String leavingDate,String park){
         ParkingLotEntitiy parkingLot= getWhereIdEquals(ParkingLotEntitiy.class,park,"name");
         session.beginTransaction();
-        String leavingTimeAndDate = leavingDate + " " + leavingHour + ":" + leavingMin;
+//        String leavingTimeAndDate = leavingDate + " " + leavingHour + ":" + leavingMin;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime leavingTime = LocalDateTime.parse(leavingTimeAndDate,formatter);
+        LocalDateTime leavingTime = LocalDateTime.parse(leavingDate,formatter);
         for (int i=0;i<parkingLot.getDepth();i++){
             for (int j = 0; j < parkingLot.getWidth(); j++) {
                 for (int k = 0; k <parkingLot.getHeight(); k++) {
                     Spot spot = getSpotAtCords(i,j,k,parkingLot.getId());
                     if(spot.isAvailable() && !spot.isSaved()){
                         if(i == 0){
-                            spot.setLeaving(leavingTimeAndDate);
+                            spot.setLeaving(leavingDate);
                             spot.setCarNum(carNum);
                             spot.setAvailable(false);
                             session.getTransaction().commit();
@@ -511,7 +538,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                             LocalDateTime spotLeavingTime = LocalDateTime.parse(spotLeaving, formatter);
                             if(leavingTime.isBefore(spotLeavingTime) || spotLeavingTime.equals(leavingTime)){
                                 System.out.println("inside the IF");
-                                spot.setLeaving(leavingTimeAndDate);
+                                spot.setLeaving(leavingDate);
                                 spot.setCarNum(carNum);
                                 spot.setAvailable(false);
                                 session.getTransaction().commit();
@@ -526,7 +553,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         List<Spot> spots = getAll(Spot.class);
         for (Spot spot:spots){
             if(spot.getParkinglot().getId()==parkingLot.getId() && spot.isAvailable() && !(spot.isSaved())){
-                spot.setLeaving(leavingTimeAndDate);
+                spot.setLeaving(leavingDate);
                 spot.setAvailable(false);
                 spot.setCarNum(carNum);
             }
@@ -547,39 +574,112 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         }
         session.getTransaction().commit();
     }
+
+    static class carData{
+        String carNum;
+        String leavingDate;
+        String park;
+
+        public carData(String carNum, String leavingDate, String park) {
+            this.carNum = carNum;
+            this.leavingDate = leavingDate;
+            this.park = park;
+        }
+    }
     public static void exitCar(String carNum, int parkId) {
         List<Spot> spots = getAll(Spot.class);
         Spot carSpot = null;
-        List<String> carsToBeMoved = new ArrayList<String>();
+        List<carData> carsToBeMoved = new ArrayList<>();
+        ParkingLotEntitiy parking = getWhereIdEquals(ParkingLotEntitiy.class, String.valueOf(parkId), "id");
         for (Spot spot : spots) {
             if (!spot.isAvailable() && spot.getCarNum().equals(carNum)) {
                 carSpot = spot;
             }
-        for (Spot parkSpot : spots) {
-            if (parkSpot.getParkinglot().getId() == parkId && parkSpot.getHeight_num() == carSpot.getHeight_num() &&
-                    parkSpot.getDepth_num() == carSpot.getDepth_num() && parkSpot.getWidth_num() < carSpot.getWidth_num() && !parkSpot.isAvailable() &&
-                    !parkSpot.getCarNum().isEmpty()) {
-                carsToBeMoved.add(parkSpot.getCarNum());
-                // update spots database
-                ParkingLotEntitiy parking = getAllWhereIdEquals(ParkingLotEntitiy.class, String.valueOf(parkId), "id").get(0);
-                Spot newSpot = new Spot(parkSpot, parking);
+        }
+        for (int i = carSpot.getDepth_num() + 1; i < parking.getDepth(); i++) {
+            Spot spot = getSpotAtCords(i, carSpot.getWidth_num(), carSpot.getHeight_num(), parking.getId());
+            if(!spot.isAvailable()){
                 session.beginTransaction();
-                session.update(newSpot);
+                carsToBeMoved.add(new carData(spot.getCarNum(), spot.getLeaving(), parking.getName()));
+                spot.resetSpot();
+                session.update(spot);
                 session.flush();
                 session.getTransaction().commit();
             }
         }
-            spot.setAvailable(true);
-            spot.setCarNum("");
-            session.beginTransaction();
-            session.update(spot);
-            session.flush();
-            session.getTransaction().commit();
-            for(String car : carsToBeMoved) {
-                addCarToPark(parkId, car);
-            }
+        session.beginTransaction();
+        carSpot.resetSpot();
+        session.update(carSpot);
+        session.flush();
+        session.getTransaction().commit();
+        for (Main.carData carData : carsToBeMoved) {
+            parkInBestSpot(carData.carNum, carData.leavingDate, carData.park);
         }
+
     }
+//        for (Spot parkSpot : spots) {
+//            if (parkSpot.getParkinglot().getId() == parkId && parkSpot.getHeight_num() == carSpot.getHeight_num() &&
+//                    parkSpot.getDepth_num() == carSpot.getDepth_num() && parkSpot.getWidth_num() < carSpot.getWidth_num() && !parkSpot.isAvailable() &&
+//                    !parkSpot.getCarNum().isEmpty()) {
+//                carsToBeMoved2.add(new carData(parkSpot.getCarNum(),parkSpot.getLeaving()
+//                        ,parkSpot.getParkinglot().getName()));
+//
+//                carsToBeMoved.add(parkSpot.getCarNum());
+//                // update spots database
+//                ParkingLotEntitiy parking = getAllWhereIdEquals(ParkingLotEntitiy.class, String.valueOf(parkId), "id").get(0);
+//                List<Spot> spots1 = getAllWhereIdEquals(Spot.class,parking.getName(),"")
+//                Spot newSpot = new Spot(parkSpot, parking);
+//                session.beginTransaction();
+//                session.update(newSpot);
+//                session.flush();
+//                session.getTransaction().commit();
+//            }
+//        }
+//        spot.setAvailable(true);
+//        spot.setCarNum("");
+//        session.beginTransaction();
+//        session.update(spot);
+//        session.flush();
+//        session.getTransaction().commit();
+//        for(String car : carsToBeMoved) {
+//            addCarToPark(parkId, car);
+//        }
+//    }
+
+
+//    public static void exitCar(String carNum, int parkId) {
+//        List<Spot> spots = getAll(Spot.class);
+//        Spot carSpot = null;
+//        List<String> carsToBeMoved = new ArrayList<String>();
+//        for (Spot spot : spots) {
+//            if (!spot.isAvailable() && spot.getCarNum().equals(carNum)) {
+//                carSpot = spot;
+//            }
+//        for (Spot parkSpot : spots) {
+//            if (parkSpot.getParkinglot().getId() == parkId && parkSpot.getHeight_num() == carSpot.getHeight_num() &&
+//                    parkSpot.getDepth_num() == carSpot.getDepth_num() && parkSpot.getWidth_num() < carSpot.getWidth_num() && !parkSpot.isAvailable() &&
+//                    !parkSpot.getCarNum().isEmpty()) {
+//                carsToBeMoved.add(parkSpot.getCarNum());
+//                // update spots database
+//                ParkingLotEntitiy parking = getAllWhereIdEquals(ParkingLotEntitiy.class, String.valueOf(parkId), "id").get(0);
+//                Spot newSpot = new Spot(parkSpot, parking);
+//                session.beginTransaction();
+//                session.update(newSpot);
+//                session.flush();
+//                session.getTransaction().commit();
+//            }
+//        }
+//            spot.setAvailable(true);
+//            spot.setCarNum("");
+//            session.beginTransaction();
+//            session.update(spot);
+//            session.flush();
+//            session.getTransaction().commit();
+//            for(String car : carsToBeMoved) {
+//                addCarToPark(parkId, car);
+//            }
+//        }
+//    }
 
     public static int countFreeSpots(int parkId){
         int count = 0;
@@ -814,13 +914,28 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 List<Subscriber> sublst = getAll(Subscriber.class);
                 MemberLogInControler memberLogInCntrl = new MemberLogInControler(message.getMemberNumber(), message.getCarNumber());
                 message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList, sublst));
+                //  message.setResult(memberLogInCntrl.validateMemberCredentials(standardMemberShipList, fullmembershipList));
+                message.setDateTimeEnd(memberLogInCntrl.getDateTimeEnd());
+                message.setMemberId(memberLogInCntrl.getMemberId());
+                message.setFullMembership(memberLogInCntrl.isFullMembership());
+                boolean flag72 = memberLogInCntrl.isFullMembership();
+                double fee72 ;
+                if(flag72 == true)
+                    fee72 = calcFeeMembership("Full") ;
+                else
+                    fee72 = calcFeeMembership("Standard Single") ;
+                message.setFee72(fee72) ;
                 SubscribedClient connection = new SubscribedClient(client);
                 String st = message.getMemberNumber();
                 if(message.getResult() == 1){
                     StandardMemberShipEntity standardMemberShip = getWhereIdEquals(StandardMemberShipEntity.class
-                    , message.getMemberNumber(),"membershipID" , message.getCarNumber(), "carNumber");
+                    , message.getMemberNumber(),"MembershipID" , message.getCarNumber(), "CarNumber");
                     message.setMemberPark(standardMemberShip.getParkingLot());
                 }
+
+                st = message.getMemberNumber();
+//                long tmp2 = Long.getLong(st) ;
+//                System.out.println(tmp2 +"tmp2");
                 connection.setClientID(Integer.parseInt(st));
                 Subscriber s = new Subscriber(Integer.parseInt(message.getMemberNumber()));
                 if(message.getResult() > 0 ) {
@@ -1084,7 +1199,62 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                     session.getTransaction().commit();
                 }
                 client.sendToClient(message);
-            } else if (msg instanceof StandardMembershipMessage) {
+            }else if(msg instanceof PayRenewFullMembershipMessage) {
+                PayRenewFullMembershipMessage message = (PayRenewFullMembershipMessage) msg;
+                boolean flag72 = message.isFullMember();
+                double fee72 ;
+                // System.out.println("flag72" + flagelse if (msg instanceof StandardMembershipMessage) {72);
+                if(flag72 == true)
+                    fee72 = calcFeeMembership("Full") ;
+                else
+                    fee72 = calcFeeMembership("Standard Single") ;
+                message.setFee(fee72);
+                int memberId = message.getMembershipId();
+                System.out.println("mem id" + memberId);
+                PayValidator validator = new PayValidator(message.getCardNumber()
+                        , message.getCvv(), message.getYear(), message.getMonth());
+                message.setResult(validator.validatePayment());
+                System.out.println(message.isResult());
+                if (message.isResult()){
+
+                    if(flag72 == true) {
+                        List<FullMemberShipEntity> list = getAllWhereIdEquals(FullMemberShipEntity.class, String.valueOf(memberId), "id");
+                        System.out.println(list);
+                        session.beginTransaction();
+                        FullMemberShipEntity full = list.get(0);
+                        String leavingdate = full.getEndingDate();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        LocalDate date = LocalDate.parse(leavingdate,formatter).plusDays(28);
+                        String newLeavingDate = date.format(formatter) ;
+                        full.setEndingDate(newLeavingDate);
+                        String memberNumber = full.getMembershipID();
+                        message.setMemberNumber(memberNumber);
+                        message.setLeavingDate(newLeavingDate);
+
+                        session.update(full);
+                        session.flush();
+                        session.getTransaction().commit();
+                    }else if (flag72 == false) {
+                        List<StandardMemberShipEntity> list = getAllWhereIdEquals(StandardMemberShipEntity.class, String.valueOf(memberId), "id");
+                        System.out.println(list);
+                        session.beginTransaction();
+                        StandardMemberShipEntity standard = list.get(0);
+                        String leavingdate = standard.getEndingDate();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        LocalDate date = LocalDate.parse(leavingdate,formatter).plusDays(28);
+                        String newLeavingDate = date.format(formatter) ;
+                        standard.setEndingDate(newLeavingDate);
+                        message.setLeavingDate(newLeavingDate);
+                        String memberNumber = standard.getMembershipID();
+                        message.setMemberNumber(memberNumber);
+                        session.update(standard);
+                        session.flush();
+                        session.getTransaction().commit();
+                    }
+                }
+                client.sendToClient(message);
+            }
+            else if(msg instanceof StandardMembershipMessage){
                 StandardMembershipMessage message = (StandardMembershipMessage) msg;
                 StandardMembershipValidator validator = new StandardMembershipValidator(message.getCarNumber()
                         , message.getStartDate(), message.getParkingLot());
@@ -1127,9 +1297,63 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 message.setPark_num(park_num);
                 client.sendToClient(message);
             }
-           /* else if(msg instanceof SetUpMessage){
-                setUpPark(((SetUpMessage) msg).getPark_num());
-            }*/
+           else if(msg instanceof SetUpMessage){
+                SetUpMessage message =(SetUpMessage) msg;
+                session.beginTransaction();
+                if (message.getPark_num() == 1){
+                    ParkingLotEntitiy p1 = new ParkingLotEntitiy(1,"Haifa Port");
+                    List<Spot> lst = new ArrayList<>();
+                    for (int k = 0 ; k < 3;k++)
+                        for (int i = 0 ; i < 3 ; i++)
+                            for (int j = 0 ; j < 4;j++){
+                                Spot s = new Spot(i, j, k, true, false,p1);
+                                session.save(s);
+                                lst.add(s);
+                            }
+                    p1.setDepth(3);
+                    p1.setWidth(4);
+                    p1.setHeight(3);
+                    p1.setSpots(lst);
+                    session.save(p1);
+                    session.flush();
+                }
+                else if(message.getPark_num() == 2){
+                    ParkingLotEntitiy p2 = new ParkingLotEntitiy(2,"Carmel");
+                    List<Spot> lst2 = new ArrayList<>();
+                    for (int k = 0 ; k < 3;k++)
+                        for (int i = 0 ; i < 3 ; i++)
+                            for (int j = 0 ; j < 6;j++) {
+                                Spot s = new Spot(i, j, k, true, false,p2);
+                                session.save(s);
+                                lst2.add(s);
+                            }
+                    p2.setDepth(3);
+                    p2.setWidth(6);
+                    p2.setHeight(3);
+                    p2.setSpots(lst2);
+                    session.save(p2);
+                    session.flush();
+                }
+                else if(message.getPark_num() == 3){
+                    ParkingLotEntitiy p3 = new ParkingLotEntitiy(3,"Central Station");
+                    List<Spot> lst3 = new ArrayList<>();
+                    for (int k = 0 ; k < 3;k++)
+                        for (int i = 0 ; i < 3 ; i++)
+                            for (int j = 0 ; j < 8;j++) {
+                                Spot s = new Spot(i, j, k, true, false,p3);
+                                session.save(s);
+                                lst3.add(s);
+                            }
+                    p3.setDepth(3);
+                    p3.setWidth(8);
+                    p3.setHeight(3);
+                    p3.setSpots(lst3);
+                    session.save(p3);
+                    session.flush();
+                }
+                session.getTransaction().commit();
+                client.sendToClient(message);
+            }
             else if (msg instanceof SendComplaintMsg) {
                 SendComplaintMsg message = (SendComplaintMsg) msg;
                 Complaint complaint = new Complaint(message.getSender_id(), message.getCurrDate()
@@ -1181,9 +1405,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 make InAdvanceOrderEntity and add to DB
                 validate payment
                  */
-            } else if (msg instanceof EnterWithOrderMessage) {
             }
-
             else if(msg instanceof ShowRequestForGM)
             {
                 ShowRequestForGM message = (ShowRequestForGM) msg;
@@ -1192,9 +1414,6 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 ShowRequestForGM newMsg = new ShowRequestForGM();
                 newMsg.setList(lst);
                 client.sendToClient(newMsg);
-
-
-
 
             }
             else if(msg instanceof ShowRequestForManager)
@@ -1226,12 +1445,8 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 session.delete(r);
                 session.flush();
                 session.getTransaction().commit();
-
-
             }
-
-            else if(msg instanceof ApproveNewPrices)
-            {
+            else if(msg instanceof ApproveNewPrices) {
                 session.beginTransaction();
                 ApproveNewPrices message = (ApproveNewPrices) msg;
                 List<ChangePricesRequest> lst = getAllWhereIdEquals(ChangePricesRequest.class,message.getReqIDtoApprove(),"requestID");
@@ -1249,31 +1464,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                }
                 session.getTransaction().commit();
 
-            }
-            else if(msg instanceof PayInAdvanceOrderMessage) {
-                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
-                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
-                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
-                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
-                message.setResult(validator.validatePayment());
-                if(message.isResult()) {
-                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getOrderId(), leavingMin, leavingDate
-                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
-                    session.beginTransaction();
-                    session.save(newInAdvance);
-                    session.flush();
-                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
-                    session.getTransaction().commit();
-                }
-                /* needed
-                make InAdvanceOrderEntity and add to DB
-                validate payment
-                 */
-            }
-
-            else if(msg instanceof EnterWithOrderMessage) {
+            } else if(msg instanceof EnterWithOrderMessage) {
                 EnterWithOrderMessage message = (EnterWithOrderMessage) msg;
                 String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
                 String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours();
@@ -1286,8 +1477,9 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 if (message.getResult()) {
                     InAdvanceOrderEntity order = validator.getOrder();
                     order.setCarEntered(true);
-                    parkInBestSpot(carNum, order.getLeavingDate(), order.getLeavingHours(), order.getLeavingMinutes()
-                            , parkingLot);
+                    String leavingTimeAndDate = order.getLeavingDate() + " " + order.getLeavingHours() + ":"
+                            + order.getLeavingMinutes();
+                    parkInBestSpot(carNum, leavingTimeAndDate, parkingLot);
 //                    addCarToPark(parkId,carNum);
                 }
                 client.sendToClient(message);
@@ -1304,7 +1496,8 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                         , arrivingDate, arrivingMin, inAdvanceOrders, leavingMin, leavingDate, leavingHours);
                 message.setResult(validator.validateOrder(countFreeSpots(getParkIdByName(parkingLot))));
                 if (message.getResult()) {
-                    parkInBestSpot(carNum, leavingDate, leavingHours, leavingMin, parkingLot);
+                    String leavingTimeAndDate = leavingDate + " " + leavingHours + ":" + leavingMin;
+                    parkInBestSpot(carNum, leavingTimeAndDate, parkingLot);
 //                    addCarToPark(parkId,carNum);
                     InPlaceOrderEntity newInPlace = new InPlaceOrderEntity(carNum, message.getUserId(), leavingMin, leavingDate
                             , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot, email);
@@ -1334,9 +1527,11 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                     session.beginTransaction();
                     fullMemberShip.setTimeEnteredPark(arrivingDate+" " + arrivingHours + ":" + arrivingMin);
                     fullMemberShip.setParked(true);
+                    fullMemberShip.setParkedLocation(parkingLot);
                     session.update(fullMemberShip);
                     session.getTransaction().commit();
-                    parkInBestSpot(carNum,leavingDate,leavingHours,leavingMin,parkingLot);
+                    String leavingTimeAndDate = leavingDate + " " + leavingHours + ":" + leavingMin;
+                    parkInBestSpot(carNum, leavingTimeAndDate, parkingLot);
                 }
                 client.sendToClient(message);
             }
@@ -1349,7 +1544,7 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                 String leavingMin = message.getLeavingMinutes(),memberId=message.getUserId();
                 List<InAdvanceOrderEntity> inAdvanceOrders = getAll(InAdvanceOrderEntity.class);
                 StandardMemberShipEntity standardMemberShip = getWhereIdEquals(StandardMemberShipEntity.class,memberId
-                        ,"membershipID",carNum,"carNumber");
+                        ,"MembershipID",carNum,"CarNumber");
                 EnterStandardMemberValidator validator = new EnterStandardMemberValidator(carNum,parkingLot,arrivingHours
                         ,arrivingDate,arrivingMin,inAdvanceOrders,leavingMin,leavingDate,leavingHours);
                 message.setResult(validator.validateOrder(countFreeSpots(getParkIdByName(parkingLot))
@@ -1358,9 +1553,11 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                     session.beginTransaction();
                     standardMemberShip.setTimeEnteredPark(arrivingDate+" " + arrivingHours + ":" + arrivingMin);
                     standardMemberShip.setParked(true);
+                    standardMemberShip.setParkedLocation(parkingLot);
                     session.update(standardMemberShip);
                     session.getTransaction().commit();
-                    parkInBestSpot(carNum,leavingDate,leavingHours,leavingMin,parkingLot);
+                    String leavingTimeAndDate = leavingDate + " " + leavingHours + ":" + leavingMin;
+                    parkInBestSpot(carNum, leavingTimeAndDate, parkingLot);
                 }
                 client.sendToClient(message);
             } else if (msg instanceof ExitParkingMessage) {
@@ -1412,7 +1609,6 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                         session.flush();
                         session.getTransaction().commit();
                         exitCar(carNum, parkId);
-
                     }
                 }
                 client.sendToClient(message1);
@@ -1444,21 +1640,75 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                     session.flush();
                     session.getTransaction().commit();
                     exitCar(carNum, currParking);
-
                 }
-                /* needed
-                make InAdvanceOrderEntity and add to DB
-                validate payment
-                 */
                 client.sendToClient(message);
-
+            }
+            else if (msg instanceof ExitFullMemberMessage) {
+                ExitFullMemberMessage message = (ExitFullMemberMessage) msg;
+                String carNum = message.getCarNumber();
+                String leavingDate = message.getLeavingDate();
+                String leavingHours = message.getLeavingHours();
+                String leavingMinutes = message.getLeavingMinutes();
+                FullMemberShipEntity fullMember = getWhereIdEquals(FullMemberShipEntity.class,carNum,"CarNumber");
+                String arrivingDate = fullMember.getTimeEnteredPark();
+                int parkId = getParkIdByName(fullMember.getParkedLocation());
+                String leavingTimeAndDate = leavingDate + " " + leavingHours + ":" + leavingMinutes;
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                LocalDateTime dateTimeArrival = LocalDateTime.parse(arrivingDate,formatter);
+                LocalDateTime dateTimeLeaving = LocalDateTime.parse(leavingTimeAndDate,formatter);
+                message.setResult(!dateTimeLeaving.isBefore(dateTimeArrival) && !dateTimeLeaving.equals(dateTimeArrival));
+                if(message.getResult()){
+                    Duration dur = Duration.between(dateTimeArrival,dateTimeLeaving);
+                    double hoursParked = dur.toHours()+(double)(dur.toMinutesPart());
+                    session.beginTransaction();
+                    fullMember.setHoursLeft(fullMember.getHours_Left()-hoursParked);
+                    fullMember.setParkedLocation(null);
+                    fullMember.setParked(false);
+                    fullMember.setTimeEnteredPark("");
+                    message.setHoursLeft(fullMember.getHours_Left());
+                    session.update(fullMember);
+                    session.flush();
+                    session.getTransaction().commit();
+                    exitCar(carNum, parkId);
+                }
+                client.sendToClient(message);
+            }
+            else if (msg instanceof ExitStandardMemberMessage) {
+                ExitStandardMemberMessage message = (ExitStandardMemberMessage) msg;
+                String carNum = message.getCarNumber();
+                String leavingDate = message.getLeavingDate();
+                String leavingHours = message.getLeavingHours();
+                String leavingMinutes = message.getLeavingMinutes();
+                StandardMemberShipEntity standardMember = getWhereIdEquals(StandardMemberShipEntity.class,carNum,"CarNumber");
+                String arrivingDate = standardMember.getTimeEnteredPark();
+                int parkId = getParkIdByName(standardMember.getParkedLocation());
+                String leavingTimeAndDate = leavingDate + " " + leavingHours + ":" + leavingMinutes;
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                LocalDateTime dateTimeArrival = LocalDateTime.parse(arrivingDate,formatter);
+                LocalDateTime dateTimeLeaving = LocalDateTime.parse(leavingTimeAndDate,formatter);
+                message.setResult(!dateTimeLeaving.isBefore(dateTimeArrival) && !dateTimeLeaving.equals(dateTimeArrival));
+                if(message.getResult()){
+                    Duration dur = Duration.between(dateTimeArrival,dateTimeLeaving);
+                    double hoursParked = dur.toHours()+(double)(dur.toMinutesPart());
+                    session.beginTransaction();
+                    standardMember.setHours_Left(standardMember.getHours_Left()-hoursParked);
+                    standardMember.setParkedLocation(null);
+                    standardMember.setParked(false);
+                    standardMember.setTimeEnteredPark("");
+                    message.setHoursLeft(standardMember.getHours_Left());
+                    session.update(standardMember);
+                    session.flush();
+                    session.getTransaction().commit();
+                    exitCar(carNum, parkId);
+                }
+                client.sendToClient(message);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-    if(msg instanceof Message) {
+        if(msg instanceof Message) {
             Message message = (Message) msg;
             String request = message.getMessage();
             String action = message.getAction();
@@ -1508,48 +1758,82 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
                         ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
                         data2.clear();
 
-                    List<Prices> lst = getAll(Prices.class);
-                    message.setPlist(lst);
-                    message.setMessage("prices list is sent");
-                    client.sendToClient(message);
-                }
+                        List<Prices> lst = getAll(Prices.class);
+                        message.setPlist(lst);
+                        message.setMessage("prices list is sent");
+                        client.sendToClient(message);
+                    }
 
 
 
                     if (request.startsWith("attempt to change data")) {
 
-                    int arr[] = message.getChange_prices();
-                    CriteriaBuilder builder = session.getCriteriaBuilder();
-                    session.beginTransaction();
-                    CriteriaQuery<Prices> query = builder.createQuery(Prices.class);
-                    query.from(Prices.class);
-                    List<Prices> pricesdata = session.createQuery(query).getResultList();
-                    Prices price2 = pricesdata.get(0);
+                        int arr[] = message.getChange_prices();
+                        CriteriaBuilder builder = session.getCriteriaBuilder();
+                        session.beginTransaction();
+                        CriteriaQuery<Prices> query = builder.createQuery(Prices.class);
+                        query.from(Prices.class);
+                        List<Prices> pricesdata = session.createQuery(query).getResultList();
+                        Prices price2 = pricesdata.get(0);
 
 // update the entity's fields
-                    if (arr[0] != -1 && arr[0] != -0)
-                        price2.setFull_mem_price(arr[0]);
-                    if (arr[1] != -1 && arr[1] != -0)
-                        price2.setIn_Advance_price(arr[1]);
-                    if (arr[2] != -1 && arr[2] != -0)
-                        price2.setIn_place_price(arr[2]);
-                    if (arr[3] != -1 && arr[3] != -0)
-                        price2.setMultiple_cars_reg_mem_price(arr[3]);
-                    if (arr[4] != -1 && arr[4] != -0)
-                        price2.setSingle_car_reg_mem_price(arr[4]);
+                        if (arr[0] != -1 && arr[0] != -0)
+                            price2.setFull_mem_price(arr[0]);
+                        if (arr[1] != -1 && arr[1] != -0)
+                            price2.setIn_Advance_price(arr[1]);
+                        if (arr[2] != -1 && arr[2] != -0)
+                            price2.setIn_place_price(arr[2]);
+                        if (arr[3] != -1 && arr[3] != -0)
+                            price2.setMultiple_cars_reg_mem_price(arr[3]);
+                        if (arr[4] != -1 && arr[4] != -0)
+                            price2.setSingle_car_reg_mem_price(arr[4]);
 
 // save the updated entity
-                    session.save(price2);
-                    session.flush();
-                    session.getTransaction().commit();
-                    session.clear();
-                }
-            } }catch (Exception e) {
+                        session.save(price2);
+                        session.flush();
+                        session.getTransaction().commit();
+                        session.clear();
+                    }
+                } }catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
+//
+//    public class OrderCheckerThread extends Thread {
+//        private LocalDateTime orderTime;
+//
+//        public OrderCheckerThread(LocalDateTime orderTime) {
+//            this.orderTime = orderTime;
+//        }
+//        @Override
+//        public void run() {
+//            while (true) {
+//                List<Complaint> list = getAll(Complaint.class);
+//                for (int i = 0 ; i < list.size();i++){
+//                    LocalDateTime currentTime = LocalDateTime.now();
+//                    long hoursPassed = list.get(i).getDate().until(currentTime, ChronoUnit.HOURS);
+//                    if (hoursPassed >= 24) {
+//                        // Respond automatically
+//                      //  System.out.println("Order has passed 24 hours, responding automatically...");
+//                        SetComplaintRespondMessage message = new SetComplaintRespondMessage(list.get(i).getComplaintId()
+//                                ,"That's an automatic response, you got 50 ils refund,check you balance ",50);
+//                        try {
+//                            SimpleClient.getClient().sendToServer(message);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        break;
+//                    }
+//                }
+//                try {
+//                    Thread.sleep((long) 1.8e+6); // check every 30 minutes
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
     public static void main(String[] args) throws Exception {
 
@@ -1557,10 +1841,16 @@ private static ThreadGroup threadGroup = new ThreadGroup("SignedUpclientsThreadG
         server.listen();
         System.out.println("Server says : hi ");
         try {
-        session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
 
 
+//            initializeData();
         initializeData();
+//
+//            LocalDateTime orderTime = LocalDateTime.now();
+//            OrderCheckerThread orderCheckerThread = new OrderCheckerThread(orderTime);
+//            orderCheckerThread.start();
+
 
         } catch (HibernateException e)
         {

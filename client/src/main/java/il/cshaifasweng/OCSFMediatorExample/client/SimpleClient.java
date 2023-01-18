@@ -79,6 +79,10 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new SetBalanceEvent(message.getUserbalance()));
 
 		}
+		else if(msg instanceof SetUpMessage){
+			SetUpMessage message = (SetUpMessage) msg;
+			EventBus.getDefault().post(new SetUpEvent(message.getPark_num()));
+		}
 		else if(msg instanceof ShowALLreportsMSG)
 		{
 			ShowALLreportsMSG message = (ShowALLreportsMSG) msg;
@@ -166,6 +170,9 @@ public class SimpleClient extends AbstractClient {
 		else if(msg instanceof PayFullMembershipMessage){
 			PayFullMembershipMessage message = (PayFullMembershipMessage) msg;
 			EventBus.getDefault().post(new PayFullMembershipEvent(message));
+		}else if(msg instanceof PayRenewFullMembershipMessage){
+			PayRenewFullMembershipMessage message = (PayRenewFullMembershipMessage) msg;
+			EventBus.getDefault().post(new PayRenewFullMembershipEvent(message));
 		}
 		else if(msg instanceof FullMembershipMessage){
 			FullMembershipMessage message = (FullMembershipMessage) msg;
@@ -222,6 +229,14 @@ public class SimpleClient extends AbstractClient {
 		else if(msg instanceof EnterStandardMemberMessage) {
 			EnterStandardMemberMessage message = (EnterStandardMemberMessage) msg;
 			EventBus.getDefault().post(new EnterStandardMemberEvent(message));
+		}
+		else if(msg instanceof ExitFullMemberMessage) {
+			ExitFullMemberMessage message = (ExitFullMemberMessage) msg;
+			EventBus.getDefault().post(new ExitFullParkingLotEvent(message));
+		}
+		else if(msg instanceof ExitStandardMemberMessage) {
+			ExitStandardMemberMessage message = (ExitStandardMemberMessage) msg;
+			EventBus.getDefault().post(new ExitStandardParkingLotEvent(message));
 		}
 		else {
 			Message message = (Message) msg;

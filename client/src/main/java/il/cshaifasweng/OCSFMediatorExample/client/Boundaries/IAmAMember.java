@@ -18,6 +18,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javafx.application.Platform;
@@ -55,6 +57,8 @@ import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 
 public class IAmAMember {
+    @FXML
+    private Button backBtn;
 
     @FXML
     private TextField carNumber;
@@ -66,6 +70,17 @@ public class IAmAMember {
     private TextField memberNumber;
 
     private Stage currentWindow;
+
+    private  String dateTimeEnd ;
+    private  int idMember ;
+    private boolean isFullMember ;
+    private String carNum ;
+    private double fee72 ;
+    private String memberPark ;
+    @FXML
+    void goBack(ActionEvent event) throws IOException {
+        Navigate.navigate(event , "../MainPage.fxml");
+    }
 
     @FXML
     void login(ActionEvent event) throws IOException {
@@ -91,9 +106,20 @@ public class IAmAMember {
                             currentWindow.setScene(tableViewScene);
                             currentWindow.show();
                             MemberPage member = tableViewParent.getController();
-                            member.setMember(memberNumber.getText());
+                            member.setMemberNumber(memberNumber.getText());
                             member.setFullMember(true);
-                            member.setCarNum(event.getMsg1().getCarNumber());
+                            member.setCarNumber(event.getMsg1().getCarNumber());
+                            dateTimeEnd = event.getMsg1().getDateTimeEnd();
+                            idMember = event.getMsg1().getMemberId();
+                            isFullMember = event.getMsg1().isFullMembership();
+                            carNum = event.getMsg1().getCarNumber();
+                            fee72 = event.getMsg1().getFee72();
+                            //   System.out.println(dateTimeEnd);
+                            member.setDateTimeEnd(dateTimeEnd);
+                            member.setIdMember(idMember);
+                            member.setFullMember(isFullMember);
+                            member.setCarNumber(carNum);
+                            member.setFee72(fee72);
                         }
                         else if(event.getMsg1().getResult() == 1){
                             System.out.println("im standard login");
@@ -102,13 +128,24 @@ public class IAmAMember {
                             currentWindow.setScene(tableViewScene);
                             currentWindow.show();
                             MemberPage member = tableViewParent.getController();
-                            member.setMember(memberNumber.getText());
-                            member.setFullMember(false);
-                            member.setCarNum(event.getMsg1().getCarNumber());
-                            member.setMemberPark(event.getMsg1().getMemberPark());
+                            memberPark = event.getMsg1().getMemberPark();
+                            dateTimeEnd = event.getMsg1().getDateTimeEnd();
+                            idMember = event.getMsg1().getMemberId();
+                            isFullMember = event.getMsg1().isFullMembership();
+                            carNum = event.getMsg1().getCarNumber();
+                            fee72 = event.getMsg1().getFee72();
+
+                         //   System.out.println(dateTimeEnd);
+                            member.setMemberNumber(memberNumber.getText());
+                            member.setDateTimeEnd(dateTimeEnd);
+                            member.setIdMember(idMember);
+                            member.setFullMember(isFullMember);
+                            member.setCarNumber(carNum);
+                            member.setFee72(fee72);
+                            member.setMemberPark(memberPark);
                         }
 
-                        System.out.println(memberNumber.getText());
+                        System.out.println("I am a member"+ memberNumber.getText());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
