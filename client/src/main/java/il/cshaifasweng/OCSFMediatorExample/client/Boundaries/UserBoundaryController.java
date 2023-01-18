@@ -178,7 +178,8 @@ public class UserBoundaryController {
         msg.setLst(list);
         SimpleClient.getClient().sendToServer(msg);
         currentWindow.show();
-
+        TrackOrders track = tableViewParent.getController();
+        track.setId(id);
         /*InAdvanceOrder inadv = tableViewParent.getController();
         System.out.println("user id is "+id);
         inadv.setId(id);*/

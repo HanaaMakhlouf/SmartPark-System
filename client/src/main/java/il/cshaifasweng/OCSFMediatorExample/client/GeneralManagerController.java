@@ -404,7 +404,18 @@ void orderReports(ActionEvent event) throws IOException {
 
 
     @FXML
-    void showPrices(ActionEvent event) {
+    void showPrices(ActionEvent event) throws IOException {
+        Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("pricesGM.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent.load());
+        currentWindow.setScene(tableViewScene);
+
+        Message message = new Message(3, "print prices table");
+        SimpleClient.getClient().sendToServer(message);
+        pricesGM inadv = tableViewParent.getController();
+        System.out.println("user id is "+id);
+        inadv.setId(id);
+        currentWindow.show();
 
     }
 

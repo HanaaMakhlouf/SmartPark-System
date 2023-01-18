@@ -117,9 +117,9 @@ public class EnterFullMember {
         currentWindow.setScene(tableViewScene);
         currentWindow.show();
         MemberPage memberPage = tableViewParent.getController();
-        memberPage.setMemberNumber(memberNumber);
-        memberPage.setFullMember(isFullMember);
-        memberPage.setCarNumber(carNum);
+        memberPage.setMemberNumber(this.memberNumber);
+        memberPage.setFullMember(this.isFullMember);
+        memberPage.setCarNumber(this.carNum);
         memberPage.setDateTimeEnd(this.endMemDate);
         memberPage.setFee72(this.fee);
         memberPage.setIdMember(this.id);

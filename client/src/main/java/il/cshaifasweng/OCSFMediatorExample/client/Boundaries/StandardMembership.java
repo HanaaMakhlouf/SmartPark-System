@@ -19,6 +19,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,6 +28,8 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 public class StandardMembership {
+    @FXML
+    private Label statusSt;
 
     @FXML
     private DatePicker arrivalDate;
@@ -101,10 +104,15 @@ public class StandardMembership {
                     }
                 }
             });
+        }else {
+            Platform.runLater(new Runnable() {
+                public void run() {
+                    statusSt.setText("Could Not Register, please Check Date Or If Already a Member");
+                    statusSt.setTextFill(Paint.valueOf("#df2c14"));
+                }
+            });
         }
-        else {
-            System.out.println("failed");
-        }
+
     }
 
     public void HaifaPort(ActionEvent actionEvent) {

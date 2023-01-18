@@ -139,6 +139,7 @@ public class ParkingLotEmployeeController {
     public void setUpPark(SetUpEvent event) throws IOException{
         Platform.runLater(() -> {
             String[] parks = {"Haifa Port","Carmel","Central Station"};
+            System.out.println(event.getParkId());
             String park = parks[event.getParkId()-1];
             setLabel.setText( park +" Parking Lot setup is done successfully");
             setLabel.setMinWidth(0);

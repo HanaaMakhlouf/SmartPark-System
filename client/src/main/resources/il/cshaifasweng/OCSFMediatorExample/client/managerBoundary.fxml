@@ -8,8 +8,7 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ManagerController">
    <children>
       <Button fx:id="showReportsBtn" layoutX="246.0" layoutY="160.0" mnemonicParsing="false" onAction="#showReports" text=" prepare reports " />
-      <Button fx:id="statusImageReportBtn" layoutX="239.0" layoutY="200.0" mnemonicParsing="false" onAction="#statusImageReport" text="Status image report" />
-      <Button fx:id="changePricesBtn" layoutX="216.0" layoutY="242.0" mnemonicParsing="false" onAction="#changePrices" text="request to change the prices" />
+      <Button fx:id="changePricesBtn" layoutX="216.0" layoutY="220.0" mnemonicParsing="false" onAction="#changePrices" text="request to change the prices" />
       <Text layoutX="202.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Manager's workspace" wrappingWidth="195.33984375">
          <font>
             <Font size="20.0" />

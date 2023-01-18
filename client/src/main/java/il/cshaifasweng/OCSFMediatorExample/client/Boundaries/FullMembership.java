@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,7 +24,8 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 public class FullMembership {
-
+    @FXML
+    private Label status;
     @FXML
     private DatePicker arrivalDate;
 
@@ -83,20 +85,27 @@ public class FullMembership {
             });
         }
         else {
-            System.out.println("failed");
+            Platform.runLater(new Runnable() {
+                public void run() {
+                    status.setText("Could Not Register, please Check Date Or If Already a Member");
+                    status.setTextFill(Paint.valueOf("#df2c14"));
+                }
+            });
         }
     }
+
     @FXML
     void back(ActionEvent event) throws IOException {
         Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("userBoundary.fxml"));
+        FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../registerAsAMember.fxml"));
         Scene tableViewScene = new Scene(tableViewParent.load());
         currentWindow.setScene(tableViewScene);
         currentWindow.show();
-        UserBoundaryController user = tableViewParent.getController();
-        user.setUser(this.id);
+        RegisterAsAMember user = tableViewParent.getController();
+        user.setId(this.id);
 //        Navigate.navigate(event, "../registerAsAMember.fxml");
     }
+
     @FXML
     void initialize() {
 

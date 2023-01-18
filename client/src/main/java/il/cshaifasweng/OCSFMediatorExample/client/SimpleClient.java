@@ -260,6 +260,7 @@ public class SimpleClient extends AbstractClient {
 
 				if(message.getId() == 0) EventBus.getDefault().post(new showptableEvent(message.getPlist()));
 				if(message.getId() == 1 ) EventBus.getDefault().post(new showptableEventTwo(message.getPlist()));
+				if(message.getId() == 3 ) EventBus.getDefault().post(new showptableEventt(message.getPlist()));
 
 			} else {
 				EventBus.getDefault().post(new MessageEvent(message));

@@ -97,10 +97,12 @@ il\cshaifasweng\OCSFMediatorExample\client\ParkingTable.class
 il\cshaifasweng\OCSFMediatorExample\client\Makereports$1$2.class
 il\cshaifasweng\OCSFMediatorExample\client\AllpreparedReports$4.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership.class
+il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership$2.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder$1.class
 il\cshaifasweng\OCSFMediatorExample\client\ShowALLreportsReqEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterFullMember$2.class
 il\cshaifasweng\OCSFMediatorExample\client\AllpreparedReports$1$3.class
+il\cshaifasweng\OCSFMediatorExample\client\Boundaries\StandardMembership$2.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\FullMembership$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterStandardMember$2.class
 il\cshaifasweng\OCSFMediatorExample\client\MessageEvent.class
@@ -144,6 +146,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\InAdvanceOrder.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\TrackOrders$1.class
 il\cshaifasweng\OCSFMediatorExample\client\EnterWithOutOrderEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ShowORDEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\showptableEventt.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\EnterWithOrder.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class
 il\cshaifasweng\OCSFMediatorExample\client\GetSpotsToDisableEvent.class
@@ -152,3 +155,4 @@ il\cshaifasweng\OCSFMediatorExample\client\Boundaries\MainPage.class
 il\cshaifasweng\OCSFMediatorExample\client\ExitParkingLotEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Boundaries\PayInAdvanceOrder.class
 il\cshaifasweng\OCSFMediatorExample\client\GetSpotsToSeeSpaceEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\pricesGM.class

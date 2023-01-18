@@ -315,9 +315,10 @@ public class Main extends SimpleServer {
     private static void initializeData() throws Exception {
         session.beginTransaction();
         initParkingLots();
+
         initPrices();
         initUser();
-    //    InitParkings();
+        //InitParkings();
         initInAdvanceOrders();
         List <Subscriber> lst = getAll(Subscriber.class);
         for(Subscriber s : lst) {
@@ -617,69 +618,6 @@ public class Main extends SimpleServer {
         }
 
     }
-//        for (Spot parkSpot : spots) {
-//            if (parkSpot.getParkinglot().getId() == parkId && parkSpot.getHeight_num() == carSpot.getHeight_num() &&
-//                    parkSpot.getDepth_num() == carSpot.getDepth_num() && parkSpot.getWidth_num() < carSpot.getWidth_num() && !parkSpot.isAvailable() &&
-//                    !parkSpot.getCarNum().isEmpty()) {
-//                carsToBeMoved2.add(new carData(parkSpot.getCarNum(),parkSpot.getLeaving()
-//                        ,parkSpot.getParkinglot().getName()));
-//
-//                carsToBeMoved.add(parkSpot.getCarNum());
-//                // update spots database
-//                ParkingLotEntitiy parking = getAllWhereIdEquals(ParkingLotEntitiy.class, String.valueOf(parkId), "id").get(0);
-//                List<Spot> spots1 = getAllWhereIdEquals(Spot.class,parking.getName(),"")
-//                Spot newSpot = new Spot(parkSpot, parking);
-//                session.beginTransaction();
-//                session.update(newSpot);
-//                session.flush();
-//                session.getTransaction().commit();
-//            }
-//        }
-//        spot.setAvailable(true);
-//        spot.setCarNum("");
-//        session.beginTransaction();
-//        session.update(spot);
-//        session.flush();
-//        session.getTransaction().commit();
-//        for(String car : carsToBeMoved) {
-//            addCarToPark(parkId, car);
-//        }
-//    }
-
-
-//    public static void exitCar(String carNum, int parkId) {
-//        List<Spot> spots = getAll(Spot.class);
-//        Spot carSpot = null;
-//        List<String> carsToBeMoved = new ArrayList<String>();
-//        for (Spot spot : spots) {
-//            if (!spot.isAvailable() && spot.getCarNum().equals(carNum)) {
-//                carSpot = spot;
-//            }
-//        for (Spot parkSpot : spots) {
-//            if (parkSpot.getParkinglot().getId() == parkId && parkSpot.getHeight_num() == carSpot.getHeight_num() &&
-//                    parkSpot.getDepth_num() == carSpot.getDepth_num() && parkSpot.getWidth_num() < carSpot.getWidth_num() && !parkSpot.isAvailable() &&
-//                    !parkSpot.getCarNum().isEmpty()) {
-//                carsToBeMoved.add(parkSpot.getCarNum());
-//                // update spots database
-//                ParkingLotEntitiy parking = getAllWhereIdEquals(ParkingLotEntitiy.class, String.valueOf(parkId), "id").get(0);
-//                Spot newSpot = new Spot(parkSpot, parking);
-//                session.beginTransaction();
-//                session.update(newSpot);
-//                session.flush();
-//                session.getTransaction().commit();
-//            }
-//        }
-//            spot.setAvailable(true);
-//            spot.setCarNum("");
-//            session.beginTransaction();
-//            session.update(spot);
-//            session.flush();
-//            session.getTransaction().commit();
-//            for(String car : carsToBeMoved) {
-//                addCarToPark(parkId, car);
-//            }
-//        }
-//    }
 
     public static int countFreeSpots(int parkId){
         int count = 0;
@@ -730,6 +668,7 @@ public class Main extends SimpleServer {
                  session.save(s);
                 session.flush();
                 session.getTransaction().commit();  }
+                message.setParkingLotId(logInCntrl.getParkingLotId());
                 client.sendToClient(message);
             } else if (msg instanceof LogoutMessage) {
                 LogoutMessage message = (LogoutMessage) msg;
@@ -1023,8 +962,7 @@ public class Main extends SimpleServer {
 
 
             }
-            else if(msg instanceof  GetallOrdersOfClient) {
-            } else if (msg instanceof GetallOrdersOfClient) {
+            else if (msg instanceof GetallOrdersOfClient) {
                 GetallOrdersOfClient message = (GetallOrdersOfClient) msg;
                 List<InAdvanceOrderEntity> List = getAllWhereIdEquals(InAdvanceOrderEntity.class, message.getId(), "UserID");
                 System.out.println("attepmpt to print from list ");
@@ -1175,7 +1113,16 @@ public class Main extends SimpleServer {
                 FullMembershipMessage message = (FullMembershipMessage) msg;
                 FullMembershipValidator validator = new FullMembershipValidator(message.getCarNumber()
                         , message.getStartDate());
-                message.setResult(validator.validateMembership());
+                boolean alreadyMember = false;
+                List<FullMemberShipEntity> fullMemberShipEntities = getAll(FullMemberShipEntity.class);
+                for (FullMemberShipEntity fullmember:fullMemberShipEntities){
+                    if (message.getId().equals(String.valueOf(fullmember.getId()))
+                            && message.getCarNumber().equals(fullmember.getCarNumber())) {
+                        alreadyMember = true;
+                        break;
+                    }
+                }
+                message.setResult(validator.validateMembership()&& !alreadyMember);
                 if (message.isResult()) {
                     FullMemberShipEntity fullMemberShipEntity = new FullMemberShipEntity(Integer.parseInt(message.getId())
                             , message.getCarNumber(), message.getStartDate());
@@ -1258,16 +1205,26 @@ public class Main extends SimpleServer {
                 StandardMembershipMessage message = (StandardMembershipMessage) msg;
                 StandardMembershipValidator validator = new StandardMembershipValidator(message.getCarNumber()
                         , message.getStartDate(), message.getParkingLot());
-                message.setResult(validator.validateMembership());
                 System.out.println(message.isResult());
-                if (message.isResult()) {
+                boolean alreadyMember = false;
+                List<StandardMemberShipEntity> standardMemberShipEntities = getAll(StandardMemberShipEntity.class);
+                for (StandardMemberShipEntity standardMemberShip:standardMemberShipEntities){
+                    if (message.getId().equals(String.valueOf(standardMemberShip.getId()))
+                            && message.getCarNumber().equals(standardMemberShip.getCarNumber())) {
+                        alreadyMember = true;
+                        break;
+                    }
+                }
+                message.setResult(validator.validateMembership() && !alreadyMember);
+                if (message.isResult() ) {
                     StandardMemberShipEntity standardMemberShipEntity = new StandardMemberShipEntity(Integer.parseInt(message.getId())
                             , message.getCarNumber(), message.getStartDate(), message.getParkingLot());
                     message.setStandardMemberShipEntity(standardMemberShipEntity);
                     message.setFee(calcFeeMembership("Standard Single"));
                 }
                 client.sendToClient(message);
-            } else if (msg instanceof PayStandardMembershipMessage) {
+            }
+            else if (msg instanceof PayStandardMembershipMessage) {
                 PayStandardMembershipMessage message = (PayStandardMembershipMessage) msg;
                 StandardMemberShipEntity standardMemberShipEntity = message.getStandardMemberShipEntity();
                 PayValidator validator = new PayValidator(message.getCardNumber()
@@ -1720,7 +1677,7 @@ public class Main extends SimpleServer {
                 } else if (request.equals("print parking table")){
                     System.out.println("print parking table message");
 // Connect to the database and retrieve the data from the parkinglots table
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
+                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "Polkmn7220@")) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT * FROM parkinglotss");
                         data.clear();
@@ -1752,21 +1709,12 @@ public class Main extends SimpleServer {
 //            }
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
-
-                    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/cps-db", "root", "saedrocks98")) {
-                        Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery("SELECT * FROM prices");
-                        data2.clear();
-
-                        List<Prices> lst = getAll(Prices.class);
-                        message.setPlist(lst);
-                        message.setMessage("prices list is sent");
-                        client.sendToClient(message);
-                    }
-
-
-
-                    if (request.startsWith("attempt to change data")) {
+                    List<Prices> lst = getAll(Prices.class);
+                    message.setPlist(lst);
+                    message.setMessage("prices list is sent");
+                    client.sendToClient(message);
+                }
+                if (request.startsWith("attempt to change data")) {
 
                         int arr[] = message.getChange_prices();
                         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -1794,7 +1742,7 @@ public class Main extends SimpleServer {
                         session.getTransaction().commit();
                         session.clear();
                     }
-                } }catch (Exception e) {
+            }catch (Exception e) {
                 e.printStackTrace();
             }
         }
