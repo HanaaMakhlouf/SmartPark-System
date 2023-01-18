@@ -94,8 +94,6 @@ public class MemberPage {
                 enterFullMember.setEndMemDate(dateTimeEnd);
                 enterFullMember.setId(idMember);
                 enterFullMember.setFee(fee72);
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -122,15 +120,39 @@ public class MemberPage {
 
     }
 
-
-//        String newEndDate = dateTimeEnd.plusDays(28).toString();
-//        statusRenew.setText("After the renew, you will continue as a membership until the date :" +
-//                newEndDate);
-//        statusRenew.setTextFill(Paint.valueOf("#228c22"));
-
-
     @FXML
     void exitParkingLot(ActionEvent event) throws IOException {
+        if(isFullMember){
+            Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../exitFullParking.fxml"));
+            Scene tableViewScene = new Scene(tableViewParent.load());
+            currentWindow.setScene(tableViewScene);
+            currentWindow.show();
+            ExitFullParking exitFullParking = tableViewParent.getController();
+            exitFullParking.setFullMember(isFullMember);
+            exitFullParking.setMemberNumber(memberNumber);
+            exitFullParking.setCarNum(carNumber);
+            exitFullParking.setEndMemDate(dateTimeEnd);
+            exitFullParking.setId(idMember);
+            exitFullParking.setFee(fee72);
+
+        }
+        else {
+            System.out.println("parking lot is:" + memberPark);
+            Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../exitStandardParking.fxml"));
+            Scene tableViewScene = new Scene(tableViewParent.load());
+            currentWindow.setScene(tableViewScene);
+            currentWindow.show();
+            ExitStandardParking exitStandardParking = tableViewParent.getController();
+            exitStandardParking.setFullMember(isFullMember);
+            exitStandardParking.setMemberNumber(memberNumber);
+            exitStandardParking.setCarNum(carNumber);
+            exitStandardParking.setEndMemDate(dateTimeEnd);
+            exitStandardParking.setId(idMember);
+            exitStandardParking.setFee(fee72);
+            exitStandardParking.setParkingLot(memberPark);
+        }
 
     }
 
@@ -143,14 +165,6 @@ public class MemberPage {
 
     @FXML
     void payTheRenewAmount(ActionEvent event) throws IOException {
-//        System.out.println("car " + this.carNumber);
-//        System.out.println("id" + this.idMember);
-//        System.out.println("date end " + this.dateTimeEnd);
-            System.out.println("payTheRenewAmount " );
-            System.out.println("car " + this.carNumber);
-            System.out.println("id" + this.idMember);
-            System.out.println("date end " + this.dateTimeEnd);
-            System.out.println("is full  " + this.isFullMember);
             Stage currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
             FXMLLoader tableViewParent = new FXMLLoader(getClass().getResource("../PayRenewFullMembership.fxml"));
             Scene tableViewScene = new Scene(tableViewParent.load());
@@ -188,6 +202,7 @@ public class MemberPage {
             complaint.setFullMember(this.isFullMember);
             complaint.setMemberPark(memberPark);
             complaint.setCarNumber(this.carNumber);
+            complaint.setFee(fee72);
     }
 
     @FXML

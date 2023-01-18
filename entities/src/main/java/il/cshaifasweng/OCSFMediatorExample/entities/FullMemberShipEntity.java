@@ -28,6 +28,7 @@ public class FullMemberShipEntity implements Serializable {
     private double Hours_Left;
     private String timeEnteredPark;
     private boolean isParked;
+    private String parkedLocation;
 
 
 
@@ -41,9 +42,18 @@ public class FullMemberShipEntity implements Serializable {
         this.Hours_Left = 72;
         this.timeEnteredPark="";
         isParked = false;
+        parkedLocation=null;
     }
 
     public FullMemberShipEntity() {
+    }
+
+    public String getParkedLocation() {
+        return parkedLocation;
+    }
+
+    public void setParkedLocation(String parkedLocation) {
+        this.parkedLocation = parkedLocation;
     }
 
     public boolean isParked() {
@@ -75,7 +85,12 @@ public class FullMemberShipEntity implements Serializable {
     }
 
     public void setHoursLeft(double hoursLeft) {
-        this.Hours_Left = hoursLeft;
+        if(hoursLeft <=0){
+            this.Hours_Left = 0;
+        }
+        else{
+            this.Hours_Left = hoursLeft;
+        }
     }
 
     public String getMembershipID() {
