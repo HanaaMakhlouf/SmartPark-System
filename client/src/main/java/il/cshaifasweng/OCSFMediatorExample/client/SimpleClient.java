@@ -183,6 +183,14 @@ public class SimpleClient extends AbstractClient {
 			EnterStandardMemberMessage message = (EnterStandardMemberMessage) msg;
 			EventBus.getDefault().post(new EnterStandardMemberEvent(message));
 		}
+		else if(msg instanceof ExitFullMemberMessage) {
+			ExitFullMemberMessage message = (ExitFullMemberMessage) msg;
+			EventBus.getDefault().post(new ExitFullParkingLotEvent(message));
+		}
+		else if(msg instanceof ExitStandardMemberMessage) {
+			ExitStandardMemberMessage message = (ExitStandardMemberMessage) msg;
+			EventBus.getDefault().post(new ExitStandardParkingLotEvent(message));
+		}
 		else {
 			Message message = (Message) msg;
 			if (message.getMessage().equals("update submitters IDs")) {

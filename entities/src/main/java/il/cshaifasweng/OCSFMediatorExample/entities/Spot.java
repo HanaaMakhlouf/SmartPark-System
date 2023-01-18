@@ -147,6 +147,13 @@ public class Spot {
         this.saved = saved;
     }
 
+    public void resetSpot(){
+        this.available=true;
+        this.saved=false;
+        this.carNum ="";
+        this.leaving="";
+    }
+
 //    private static final int columns = 3;
 //    private static final int rows = 3;
 }

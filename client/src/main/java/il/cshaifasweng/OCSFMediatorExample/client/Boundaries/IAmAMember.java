@@ -128,7 +128,6 @@ public class IAmAMember {
                             currentWindow.setScene(tableViewScene);
                             currentWindow.show();
                             MemberPage member = tableViewParent.getController();
-                            member.setMemberNumber(memberNumber.getText());
                             memberPark = event.getMsg1().getMemberPark();
                             dateTimeEnd = event.getMsg1().getDateTimeEnd();
                             idMember = event.getMsg1().getMemberId();
@@ -137,6 +136,7 @@ public class IAmAMember {
                             fee72 = event.getMsg1().getFee72();
 
                          //   System.out.println(dateTimeEnd);
+                            member.setMemberNumber(memberNumber.getText());
                             member.setDateTimeEnd(dateTimeEnd);
                             member.setIdMember(idMember);
                             member.setFullMember(isFullMember);

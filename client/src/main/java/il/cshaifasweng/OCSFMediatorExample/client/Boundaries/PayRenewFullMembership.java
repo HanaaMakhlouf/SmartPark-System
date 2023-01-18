@@ -137,13 +137,14 @@ public class PayRenewFullMembership {
     }
 
     public void setFee(double fee) {
+        cost.setText(String.valueOf(fee));
         this.fee = fee;
 
     }
 
     public void setOrderNum(String orderNum) {
+        orderNumber.setText(orderNum);
         this.orderNum = orderNum;
-
     }
 
     public void setId(int id) {

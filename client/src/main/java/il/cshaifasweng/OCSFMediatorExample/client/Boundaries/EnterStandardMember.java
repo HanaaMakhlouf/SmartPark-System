@@ -75,7 +75,6 @@ public class EnterStandardMember {
         String leavingDate1 = null;
         String arrivalHour = arrivalHours.getText();
         String arrivalMinute = arrivalMinutes.getText();
-
         String leavingHour = leavingHours.getText();
         String leavingMinute = leavingMinutes.getText();
         if (arrivalDate.getValue() != null && leavingDate.getValue() != null) {

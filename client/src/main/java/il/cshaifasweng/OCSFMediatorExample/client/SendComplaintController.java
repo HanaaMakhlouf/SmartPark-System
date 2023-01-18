@@ -55,6 +55,7 @@ public class SendComplaintController implements Serializable {
     String memberNumber ;
     boolean isFullMember ;
     private String memberPark;
+    private double fee;
 
     public boolean isFullMember(boolean isFullMember) {
         return this.isFullMember;
@@ -88,6 +89,7 @@ public class SendComplaintController implements Serializable {
             member.setMemberNumber(memberNumber);
             member.setMemberPark(memberPark);
             member.setCarNumber(this.carNumber);
+            member.setFee72(fee);
             System.out.println("full" + this.isFullMember);
 
         }
@@ -174,6 +176,14 @@ public class SendComplaintController implements Serializable {
 
     public void setMemberPark(String memberPark) {
         this.memberPark = memberPark;
+    }
+
+    public double getFee() {
+        return fee;
+    }
+
+    public void setFee(double fee) {
+        this.fee = fee;
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

@@ -123,8 +123,6 @@ public class EnterFullMember {
         memberPage.setDateTimeEnd(this.endMemDate);
         memberPage.setFee72(this.fee);
         memberPage.setIdMember(this.id);
-
-
     }
 
     public boolean isFullMember() {
