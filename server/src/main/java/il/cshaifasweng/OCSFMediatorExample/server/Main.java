@@ -1162,9 +1162,6 @@ public class Main extends SimpleServer {
                 newMsg.setList(lst);
                 client.sendToClient(newMsg);
 
-
-
-
             }
             else if(msg instanceof ShowRequestForManager)
             {
@@ -1195,12 +1192,8 @@ public class Main extends SimpleServer {
                 session.delete(r);
                 session.flush();
                 session.getTransaction().commit();
-
-
             }
-
-            else if(msg instanceof ApproveNewPrices)
-            {
+            else if(msg instanceof ApproveNewPrices) {
                 session.beginTransaction();
                 ApproveNewPrices message = (ApproveNewPrices) msg;
                 List<ChangePricesRequest> lst = getAllWhereIdEquals(ChangePricesRequest.class,message.getReqIDtoApprove(),"requestID");
@@ -1218,28 +1211,6 @@ public class Main extends SimpleServer {
                }
                 session.getTransaction().commit();
 
-            }
-            else if(msg instanceof PayInAdvanceOrderMessage) {
-                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
-                String carNum = message.getCarNumber(),parkingLot = message.getParkingLot();
-                String leavingDate = message.getLeavingDate(),leavingHours = message.getLeavingHours(),leavingMin = message.getLeavingMinutes();
-                String arrivingDate = message.getArrivingDate(),arrivingHours = message.getArrivingHours(),arrivingMin = message.getArrivingMinutes();
-                String cvvCard = message.getCvv() , yearCard = message.getYear() , monthCard = message.getMonth() , cardNum = message.getCardNumber();
-                PayValidator validator= new PayValidator(cardNum ,cvvCard,yearCard,monthCard);
-                message.setResult(validator.validatePayment());
-                if(message.isResult()) {
-                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,message.getOrderId(), leavingMin, leavingDate
-                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
-                    session.beginTransaction();
-                    session.save(newInAdvance);
-                    session.flush();
-                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
-                    session.getTransaction().commit();
-                }
-                /* needed
-                make InAdvanceOrderEntity and add to DB
-                validate payment
-                 */
             } else if(msg instanceof EnterWithOrderMessage) {
                 EnterWithOrderMessage message = (EnterWithOrderMessage) msg;
                 String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
@@ -1620,7 +1591,7 @@ public class Main extends SimpleServer {
             session = sessionFactory.openSession();
 
 
-            initializeData();
+//            initializeData();
         initializeData();
 //
 //            LocalDateTime orderTime = LocalDateTime.now();
