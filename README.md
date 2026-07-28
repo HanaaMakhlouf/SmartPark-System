@@ -2,6 +2,18 @@
 
 A client-server car parking lot management system. Built with **JavaFX** on the client, an **OCSF**-based custom server, and **Hibernate/MySQL** for persistence. Client and server communicate over a shared `EventBus` (mediator pattern) for decoupled, event-driven updates.
 
+## About
+
+SmartPark System digitizes the day-to-day operation of a car parking business: customers can reserve or claim a spot, subscribe to a membership plan, and pay online, while staff manage spots, respond to complaints, and approve pricing changes. The system supports multiple parking lots and models several distinct user roles, each seeing a different view of the same live data:
+
+- **Customers** — enter/exit a lot with or without a prior reservation, sign up as a member, and track their orders, balance, and complaints
+- **Parking lot employees** — handle on-site operations such as disabling/enabling spots
+- **Customer service employees** — respond to customer complaints
+- **Managers** — request price changes and generate reports
+- **General managers** — approve or reject price-change requests and review reports across the business
+
+Because the client and server communicate over persistent socket connections (via OCSF) rather than request/response HTTP calls, updates (new orders, complaint responses, price approvals, etc.) can be pushed to the relevant clients as they happen.
+
 ## Features
 
 - **Parking operations** — enter/exit with or without a reservation, standard and full memberships, spot reservations and cancellations
