@@ -77,10 +77,6 @@ public class EnterWithOrder {
         EnterWithOrderMessage message = new EnterWithOrderMessage(carNum,arrivalMinute,arrivalDate1,arrivalHour
                 ,park,userId);
         SimpleClient.getClient().sendToServer(message);
-//        carNumber.clear();
-//        parkingLot.setText("Choose Parking Lot");
-//        arrivalDate.cancelEdit();
-
         currentWindow = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
     }
 

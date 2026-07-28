@@ -70,13 +70,4 @@ public class LogInController {
                 }
     }
 
-//    private static List<User> getUsers() throws Exception {
-//        CriteriaBuilder builder = session.getCriteriaBuilder();
-//        session.beginTransaction();
-//        CriteriaQuery<User> query = builder.createQuery(User.class);
-//        query.from(Prices.class);
-//        List<User> users = session.createQuery(query).getResultList();
-//        return users;
-//    }
-
 

@@ -47,9 +47,6 @@ public class ComplaintResponseController   {
     @FXML
     private Button backBtn;
 
-//    @FXML
-//    private ComboBox<Integer> comboBox;
-
     @FXML
     private TableColumn<Complaint, Integer> num;
 
@@ -105,7 +102,6 @@ public class ComplaintResponseController   {
                     if(p.getResponse().isEmpty())
                     {
                         mytable.getItems().add(p);
-                      //  comboBox.getItems().add(p.getComplaintId());
                     }
                 }
             }
@@ -145,7 +141,6 @@ public class ComplaintResponseController   {
     @FXML
     void sendResponse(ActionEvent event) throws IOException {
         Integer refund = Integer.valueOf(refundAmount.getText());
-     //   Integer compId = comboBox.getSelectionModel().getSelectedItem();
         Integer compId = mytable.getSelectionModel().getSelectedItem().getComplaintId();
         String respond = responseTxt.getText();
         if(compId != null && refund != null && respond != null) {
@@ -161,7 +156,6 @@ public class ComplaintResponseController   {
             ft.setToValue(0.0);
             ft.setCycleCount(1);
             ft.play();
-         //   comboBox.getItems().remove(comboBox.getSelectionModel().getSelectedItem());
             mytable.getItems().remove(mytable.getSelectionModel().getSelectedItem());
             responseTxt.clear();
             refundAmount.clear();
@@ -187,7 +181,6 @@ public class ComplaintResponseController   {
         timeline.play();
 
         assert backBtn != null : "fx:id=\"backBtn\" was not injected: check your FXML file 'complaintResponse.fxml'.";
-     //   assert comboBox != null : "fx:id=\"comboBox\" was not injected: check your FXML file 'complaintResponse.fxml'.";
         assert complaint != null : "fx:id=\"complaint\" was not injected: check your FXML file 'complaintResponse.fxml'.";
         assert num != null : "fx:id=\"num\" was not injected: check your FXML file 'complaintResponse.fxml'.";
         assert refundAmount != null : "fx:id=\"refundAmount\" was not injected: check your FXML file 'complaintResponse.fxml'.";

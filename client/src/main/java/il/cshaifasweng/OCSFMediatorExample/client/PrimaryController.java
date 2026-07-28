@@ -87,13 +87,6 @@ public class PrimaryController {
 		String userPass = passTxt.getText();
 		logInMessage msg = new logInMessage(userId,userPass);
 		SimpleClient.getClient().sendToServer(msg);
-//		FXMLLoader loader = new FXMLLoader(getClass().getResource("userBoundary.fxml"));
-//		System.out.println("here1");
-//		Stage stage = new Stage();
-//		System.out.println("here2");
-//		stage.setScene(new Scene(loader.load()));
-//		System.out.println("here3");
-//		stage.show();
 	}
 
 //IMPORTANT

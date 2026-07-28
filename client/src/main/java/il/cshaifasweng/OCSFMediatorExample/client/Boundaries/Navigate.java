@@ -18,20 +18,4 @@ public class Navigate {
         window.setScene(tableViewScene);
         window.show();
     }
-
-//    public static void navigateWithFunc(){
-//        FXMLLoader tableViewParent = null;
-//        try {
-//            tableViewParent = new FXMLLoader(getClass().getResource("../userBoundary.fxml"));
-//            Scene tableViewScene = new Scene(tableViewParent.load());
-//
-//            currentWindow.setScene(tableViewScene);
-//            currentWindow.show();
-//            UserBoundaryController user = tableViewParent.getController();
-//            user.setUser(idTxt.getText());
-//            // System.out.println(idTxt.getText());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

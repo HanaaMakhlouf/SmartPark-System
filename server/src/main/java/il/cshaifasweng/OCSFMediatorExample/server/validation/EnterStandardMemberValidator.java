@@ -75,14 +75,3 @@ public class EnterStandardMemberValidator {
 
 
 }
-
-//        for(InAdvanceOrderEntity order : orders){
-//            String orderArrivalTime = order.getArrivalDate()+ " " + order.getArrivalHours() + ":" + order.getArrivalMinutes();
-//            String orderLeavingTime = order.getLeavingDate() + " " + order.getLeavingHours() + ":" + order.getLeavingMinutes();
-//            LocalDateTime orderArrival = LocalDateTime.parse(orderArrivalTime,formatter);
-//            LocalDateTime orderLeaving = LocalDateTime.parse(orderLeavingTime,formatter);
-//            if(order.getCarNumber().equals(carNumber) && ((dateTimeArrival.isAfter(orderArrival) || dateTimeArrival.equals(orderArrival))
-//                    && dateTimeArrival.isBefore(orderLeaving)) && parkingLot.equals(order.getParkingLotName())){
-//                return true;
-//            }
-//        }

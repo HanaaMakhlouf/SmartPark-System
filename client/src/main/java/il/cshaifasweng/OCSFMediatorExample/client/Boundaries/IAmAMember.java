@@ -1,13 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client.Boundaries;
 
 import il.cshaifasweng.OCSFMediatorExample.client.*;
-
-import il.cshaifasweng.OCSFMediatorExample.client.CustomerServiceEmployeeController;
-import il.cshaifasweng.OCSFMediatorExample.client.LogInMemberEvent ;
-
-import il.cshaifasweng.OCSFMediatorExample.client.GeneralManagerController;
-import il.cshaifasweng.OCSFMediatorExample.client.ManagerController;
-import il.cshaifasweng.OCSFMediatorExample.client.LogInMemberEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Messages.MemberLogInMessage;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -15,16 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
@@ -32,29 +15,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-
-import il.cshaifasweng.OCSFMediatorExample.client.*;
-import il.cshaifasweng.OCSFMediatorExample.client.ocsf.logInEvent;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.Message;
-import il.cshaifasweng.OCSFMediatorExample.entities.Messages.logInMessage;
-import il.cshaifasweng.OCSFMediatorExample.entities.ParkingLotEmployee;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import org.greenrobot.eventbus.Subscribe;
-import java.io.IOException;
-import java.sql.SQLOutput;
-import java.time.format.DateTimeFormatter;
-
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import org.greenrobot.eventbus.EventBus;
 
 public class IAmAMember {
     @FXML

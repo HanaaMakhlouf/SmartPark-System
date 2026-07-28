@@ -103,9 +103,6 @@ public class Main extends SimpleServer {
         configuration.addAnnotatedClass(DisabledDataReport.class);
 
 
-
-
-
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -287,30 +284,14 @@ public class Main extends SimpleServer {
         session.save(tmp2);
         session.flush();
         tmp2.setMembershipID("0"+tmp2.getId());
-//        LocalDate dateTime = LocalDate.now() ;
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        LocalDate date = LocalDate.parse(tmp2.getEndingDate(),formatter);
-//        if(dateTime.isAfter(date)){
-//            session.delete(tmp2);
-//        }
         session.flush();
-        // session.getTransaction().commit();
     }
     private static void initFulldMembership(){
         FullMemberShipEntity tmp = new FullMemberShipEntity(123123123,"123123123","20/01/2023");
         session.save(tmp);
         session.flush();
         tmp.setMembershipID("1"+tmp.getId());
-//        LocalDate dateTime = LocalDate.now() ;
-//        String leaving = tmp.getEndingDate();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        LocalDate date = LocalDate.parse(leaving,formatter);
-//
-//        if(dateTime.isAfter(date)){
-//            session.delete(tmp);
-//        }
         session.flush();
-        // session.getTransaction().commit();
     }
     private static void initializeData() throws Exception {
         session.beginTransaction();
@@ -325,15 +306,6 @@ public class Main extends SimpleServer {
             session.delete(s);
             session.flush();
         }
-//        FullMemberShipEntity tmp = new FullMemberShipEntity(208110120,"1234568","29/01/2023");
-//        session.save(tmp);
-//        session.flush();
-//        tmp.setMembershipID("10"+tmp.getId());
-//        StandardMemberShipEntity tmp2 = new StandardMemberShipEntity(208110120,"1234568"
-//                ,"29/01/2023","Haifa Port");
-//        session.save(tmp2);
-//        session.flush();
-//        tmp2.setMembershipID("20"+tmp2.getId());
         initStandardMembership();
         initFulldMembership();
         initInAdvanceOrders();
@@ -432,18 +404,6 @@ public class Main extends SimpleServer {
         TypedQuery<T> allQuery = session.createQuery(criteriaQuery);
         return allQuery.getSingleResult();
     }
-
-
-//    public static List<Spot> getSpotsSorted(String parkId) {
-//        CriteriaBuilder builder = session.getCriteriaBuilder();
-//        CriteriaQuery<Spot> criteriaQuery = builder.createQuery(Spot.class);
-//        Root<Spot> rootEntry = criteriaQuery.from(Spot.class);
-//        criteriaQuery.select(rootEntry);
-//        criteriaQuery.orderBy(builder.asc(rootEntry.get("id_parking")),builder.asc(rootEntry.get("depth_num")),builder.asc(rootEntry.get("width_num"))
-//                ,builder.asc(rootEntry.get("height_num")));
-//        TypedQuery<Spot> allQuery = session.createQuery(criteriaQuery);
-//        return allQuery.getResultList();
-//    }
 
     public static <T> List<T> getAll(Class<T> object) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -1076,20 +1036,8 @@ public class Main extends SimpleServer {
                 InAdvanceOrderValidator validator = new InAdvanceOrderValidator(carNum, parkingLot, arrivingHours
                         , arrivingDate, arrivingMin, leavingHours, leavingDate, leavingMin, parkingLots, inAdvanceOrders);
                 message.setResult(validator.validateOrder());
-//                if(message.isResult()){
-//                    session.beginTransaction();
-//                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum,leavingMin,leavingDate
-//                            ,leavingHours,arrivingMin,arrivingDate, arrivingHours, parkingLot);
-//                    session.save(newInAdvance);
-//                    session.flush();
-//                    session.getTransaction().commit();
-//                    message.setFee(calcFee(arrivingDate,arrivingHours,arrivingMin,leavingDate,leavingHours, leavingMin));
-//                }
-//                System.out.println("about to send msg to client");
-//                System.out.println(message.getResult());
                 message.setFee(calcFee(arrivingDate, arrivingHours, arrivingMin, leavingDate, leavingHours, leavingMin, false));
                 message.setUserId(message.getUserId());
-//                message.setOrderId(String.valueOf((inAdvanceOrders.get(inAdvanceOrders.size()-1).getId())+1));
                 client.sendToClient(message);
             } else if (msg instanceof PayInAdvanceOrderMessage) {
                 PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
@@ -1201,7 +1149,7 @@ public class Main extends SimpleServer {
                 }
                 client.sendToClient(message);
             }
-            else if(msg instanceof StandardMembershipMessage){
+            else if(msg instanceof StandardMembershipMessage) {
                 StandardMembershipMessage message = (StandardMembershipMessage) msg;
                 StandardMembershipValidator validator = new StandardMembershipValidator(message.getCarNumber()
                         , message.getStartDate(), message.getParkingLot());
@@ -1322,11 +1270,7 @@ public class Main extends SimpleServer {
                 session.getTransaction().commit();
             }
             else if(msg instanceof SetComplaintRespondMessage){
-//                System.out.println("Message is here");
                 SetComplaintRespondMessage message = (SetComplaintRespondMessage) msg;
-//                System.out.println(message.getComplaint_id());
-//                System.out.println(message.getRefundAmount());
-//                System.out.println(message.getRes());
                 List<Complaint> list = getAllWhereIdEquals(Complaint.class, String.valueOf(message.getComplaint_id()), "complaintId");
                 session.beginTransaction();
                 Complaint comp = list.get(0);
@@ -1339,29 +1283,6 @@ public class Main extends SimpleServer {
                 user.setBalance(user.getBalance() + message.getRefundAmount());
                 session.update(user);
                 session.getTransaction().commit();
-
-
-//            } else if (msg instanceof PayInAdvanceOrderMessage) {
-//                PayInAdvanceOrderMessage message = (PayInAdvanceOrderMessage) msg;
-//                String carNum = message.getCarNumber(), parkingLot = message.getParkingLot();
-//                String leavingDate = message.getLeavingDate(), leavingHours = message.getLeavingHours(), leavingMin = message.getLeavingMinutes();
-//                String arrivingDate = message.getArrivingDate(), arrivingHours = message.getArrivingHours(), arrivingMin = message.getArrivingMinutes();
-//                String cvvCard = message.getCvv(), yearCard = message.getYear(), monthCard = message.getMonth(), cardNum = message.getCardNumber();
-//                PayValidator validator = new PayValidator(cardNum, cvvCard, yearCard, monthCard);
-//                message.setResult(validator.validatePayment());
-//                if (message.isResult()) {
-//                    InAdvanceOrderEntity newInAdvance = new InAdvanceOrderEntity(carNum, message.getOrderId(), leavingMin, leavingDate
-//                            , leavingHours, arrivingMin, arrivingDate, arrivingHours, parkingLot);
-//                    session.beginTransaction();
-//                    session.save(newInAdvance);
-//                    session.flush();
-//                    newInAdvance.setOrderID("10" + String.valueOf(newInAdvance.getId()));
-//                    session.getTransaction().commit();
-//                }
-                /* needed
-                make InAdvanceOrderEntity and add to DB
-                validate payment
-                 */
             }
             else if(msg instanceof ShowRequestForGM)
             {
@@ -1700,13 +1621,6 @@ public class Main extends SimpleServer {
                     message.setMessage("plzz");
                     client.sendToClient(message);
                 }
-                //we got a request to add a new client as a subscriber.
-//            else if (request.equals("add client")){
-//                SubscribedClient connection = new SubscribedClient(client);
-//                SubscribersList.add(connection);
-//                message.setMessage("client added successfully");
-//                client.sendToClient(message);
-//            }
                 //we got a message from client requesting to echo Hello, so we will send back to client Hello world!
                 else if (request.startsWith("print prices table")) {
                     List<Prices> lst = getAll(Prices.class);
@@ -1747,41 +1661,6 @@ public class Main extends SimpleServer {
             }
         }
     }
-//
-//    public class OrderCheckerThread extends Thread {
-//        private LocalDateTime orderTime;
-//
-//        public OrderCheckerThread(LocalDateTime orderTime) {
-//            this.orderTime = orderTime;
-//        }
-//        @Override
-//        public void run() {
-//            while (true) {
-//                List<Complaint> list = getAll(Complaint.class);
-//                for (int i = 0 ; i < list.size();i++){
-//                    LocalDateTime currentTime = LocalDateTime.now();
-//                    long hoursPassed = list.get(i).getDate().until(currentTime, ChronoUnit.HOURS);
-//                    if (hoursPassed >= 24) {
-//                        // Respond automatically
-//                      //  System.out.println("Order has passed 24 hours, responding automatically...");
-//                        SetComplaintRespondMessage message = new SetComplaintRespondMessage(list.get(i).getComplaintId()
-//                                ,"That's an automatic response, you got 50 ils refund,check you balance ",50);
-//                        try {
-//                            SimpleClient.getClient().sendToServer(message);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        break;
-//                    }
-//                }
-//                try {
-//                    Thread.sleep((long) 1.8e+6); // check every 30 minutes
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
 
     public static void main(String[] args) throws Exception {
 
@@ -1790,16 +1669,7 @@ public class Main extends SimpleServer {
         System.out.println("Server says : hi ");
         try {
             session = sessionFactory.openSession();
-
-
-//            initializeData();
-        initializeData();
-//
-//            LocalDateTime orderTime = LocalDateTime.now();
-//            OrderCheckerThread orderCheckerThread = new OrderCheckerThread(orderTime);
-//            orderCheckerThread.start();
-
-
+            initializeData();
         } catch (HibernateException e)
         {
             e.printStackTrace();

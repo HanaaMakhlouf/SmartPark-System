@@ -53,13 +53,6 @@ public class MainPage {
         logInMessage msg = new logInMessage(userId,userPass);
         SimpleClient.getClient().sendToServer(msg);
         currentWindow = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//		FXMLLoader loader = new FXMLLoader(getClass().getResource("userBoundary.fxml"));
-//		System.out.println("here1");
-//		Stage stage = new Stage();
-//		System.out.println("here2");
-//		stage.setScene(new Scene(loader.load()));
-//		System.out.println("here3");
-//		stage.show();
     }
 
     @Subscribe
@@ -135,12 +128,6 @@ public class MainPage {
         }
     }
 
-    //		Parent tableViewParent = FXMLLoader.load(getClass().getResource("pricesTable.fxml"));
-//		Scene tableViewScene = new Scene(tableViewParent);
-//		Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-//		window.setScene(tableViewScene);
-//		window.show();
-
     @FXML
     void signinmember(ActionEvent event) throws IOException {
         Navigate.navigate(event , "../IAmAMember.fxml");
@@ -149,10 +136,6 @@ public class MainPage {
     @FXML
     void signup(ActionEvent event) throws IOException {
         Navigate.navigate(event , "../signUp.fxml");
-        //   FXMLLoader loader = new FXMLLoader(getClass().getResource("../signUp.fxml"));
-        //  Stage stage = new Stage();
-        // stage.setScene(new Scene(loader.load()));
-        //  stage.show();
     }
 
     @FXML

@@ -51,16 +51,6 @@ public class InAdvanceOrderValidator {
 
     }
     public boolean validateOrder() throws ParseException, IOException {
-//        try {
-//            int d = Integer.parseInt(order.getCarNumber());
-//        } catch (NumberFormatException nfe) {
-//            return false;
-//        }
-//        int d=Integer.parseInt(order.getCarNumber());
-//        if(!(email.equals(user.getEmail()))){
-//            return false;
-//        }
-
         if(arrivalDate == null || arrivalHours == null  || arrivalMinutes == null  ||
         leavingDate == null || leavingHours == null  || leavingMinutes == null  || carNumber == null || parkingLot == null ) {
             return false ;

@@ -133,21 +133,6 @@ public class SimpleServer extends AbstractServer {
 		return null;
 	}
 
-/*	// Accept a new client connection
-	public void acceptClient(Socket clientSocket, String clientUsername) {
-		try {
-			// Create a new ConnectionToClient object for the client
-			ConnectionToClient client = new ConnectionToClient(clientSocket, this);
-			// Set the client's username as an attribute of the connection
-			client.setInfo("username", clientUsername);
-			// Add the client to the server
-			this.addClient(client);
-		} catch (IOException e) {
-			System.out.println("Error accepting client: " + e);
-		}
-	}
-}*/
-
 	public boolean sendtoSpecificClient(int clientId,Message message) throws IOException {
 		try {
 			for (SubscribedClient SubscribedClient : SubscribersList) {
