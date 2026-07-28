@@ -4,6 +4,9 @@
 
 tomcat
 
+# Local DB credentials - copy hibernate.properties.example and fill in your own
+server/src/main/resources/hibernate.properties
+
 #
 # Default excludes
 #
